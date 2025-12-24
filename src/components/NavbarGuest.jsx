@@ -22,9 +22,9 @@ const Navbar = () => {
 
       {/* Menu Navigasi */}
       <div className="flex gap-8 text-sm text-gray-700">
-        <a href="#tentang" className="hover:text-[#991B1F] transition-colors">Tentang</a>
-        <a href="/register" className="hover:text-[#991B1F] transition-colors">Daftar</a>
-        <a href="/login" className="hover:text-[#991B1F] transition-colors">Masuk</a>
+        <a href="#" className="hover:text-[#991B1F] transition-colors">Tentang</a>
+        <a href="#" className="hover:text-[#991B1F] transition-colors">Daftar</a>
+        <a href="#" className="hover:text-[#991B1F] transition-colors">Masuk</a>
       </div>
     </nav>
   );
