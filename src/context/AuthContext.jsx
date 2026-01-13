@@ -11,11 +11,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem("token")
   );
 
-  // =============================
-  // FUNGSI LOGIN
-  // =============================
   const login = async (email, password) => {
-    const response = await api.post("/login", { email, password });
+    const response = await api.post("/login", {
+      email,
+      password,
+    });
+
     const { token, user } = response.data;
 
     localStorage.setItem("token", token);
