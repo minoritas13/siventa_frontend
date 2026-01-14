@@ -38,7 +38,7 @@ const Loan = () => {
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
       <Navbar />
 
-      <main className="flex-grow max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
+      <main className="grow max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
         <header className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
             Peminjaman Aset

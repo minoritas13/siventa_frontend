@@ -93,7 +93,7 @@ const ItemData = () => {
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10 flex-grow">
+      <main className="max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10 grow">
         <section className="mb-6">
           <h1 className="text-xl md:text-2xl font-bold text-gray-800">
             Data Barang
@@ -118,7 +118,7 @@ const ItemData = () => {
 
         <div className="border border-black rounded-xl overflow-hidden shadow-sm mb-4">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[700px]">
+            <table className="w-full text-left border-collapse min-w-175">
               <thead>
                 <tr className="border-b border-black text-[13px] font-bold text-gray-700 bg-white">
                   <th className="py-4 px-6">Asset</th>

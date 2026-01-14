@@ -2,19 +2,26 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Search, Calendar, X, AlertCircle } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 const LoanForm = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [item, setItem] = useState(null);
 
+  // ===== LOGIC STATE =====
+  const [loanDate, setLoanDate] = useState("");
+  const [note, setNote] = useState("");
+  const [qty] = useState(1); // default 1, UI belum ada input qty
+  const [loading, setLoading] = useState(false);
+
+  // ===== FETCH ITEM =====
   useEffect(() => {
     const fetchItem = async () => {
       try {
         const res = await api.get(`/item/${id}`);
-
         const data = res.data.data;
 
         setItem({
@@ -34,11 +41,50 @@ const LoanForm = () => {
     fetchItem();
   }, [id]);
 
+  // ===== SUBMIT LOAN =====
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!loanDate) {
+      alert("Tanggal pinjam wajib diisi");
+      return;
+    }
+
+    if (qty > item.stock) {
+      alert("Jumlah melebihi stok tersedia");
+      return;
+    }
+
+    const payload = {
+      loan_date: loanDate,
+      note: note,
+      items: [
+        {
+          item_id: item.id,
+          qty: qty,
+        },
+      ],
+    };
+
+    try {
+      setLoading(true);
+      await api.post("/loan/store", payload);
+
+      alert("Peminjaman berhasil diajukan");
+      navigate("/loan"); // atau halaman lain sesuai flow Anda
+    } catch (error) {
+      console.error("Gagal mengajukan peminjaman:", error);
+      alert("Terjadi kesalahan saat mengajukan peminjaman");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
       <Navbar />
 
-      <main className="flex-grow max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
+      <main className="grow max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
         <header className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
             Peminjaman Aset
@@ -50,7 +96,6 @@ const LoanForm = () => {
         </header>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
-          {/* Sisi Kiri */}
           <div className="flex-1 order-2 lg:order-1">
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
@@ -62,8 +107,8 @@ const LoanForm = () => {
                 </h2>
               </div>
 
-              <form className="p-6 md:p-8 space-y-6">
-                {/* Pilih Barang */}
+              {/* FORM */}
+              <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
                 <div className="space-y-3">
                   <label className="text-sm font-bold text-gray-700">
                     Pilih Barang
@@ -79,7 +124,6 @@ const LoanForm = () => {
                     />
                   </div>
 
-                  {/* Selected Item Card */}
                   {item && (
                     <div className="relative flex items-center gap-4 p-4 bg-red-50/50 border border-red-100 rounded-2xl">
                       <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden shrink-0">
@@ -117,23 +161,24 @@ const LoanForm = () => {
                   )}
                 </div>
 
-                {/* Tanggal */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                      <Calendar size={16} className="text-[#991B1F]" /> Tanggal
-                      Pinjam
+                      <Calendar size={16} className="text-[#991B1F]" />
+                      Tanggal Pinjam
                     </label>
                     <input
                       type="date"
+                      value={loanDate}
+                      onChange={(e) => setLoanDate(e.target.value)}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#991B1F] outline-none"
                     />
                   </div>
 
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                      <Calendar size={16} className="text-[#991B1F]" /> Tanggal
-                      Kembali
+                      <Calendar size={16} className="text-[#991B1F]" />
+                      Tanggal Kembali
                     </label>
                     <input
                       type="date"
@@ -142,13 +187,14 @@ const LoanForm = () => {
                   </div>
                 </div>
 
-                {/* Keperluan */}
                 <div className="space-y-3">
                   <label className="text-sm font-bold text-gray-700">
                     Keperluan Peminjaman
                   </label>
                   <textarea
                     rows="4"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#991B1F] outline-none resize-none"
                   ></textarea>
                 </div>
@@ -156,20 +202,17 @@ const LoanForm = () => {
                 <div className="flex justify-end pt-4">
                   <button
                     type="submit"
-                    disabled={item?.stock === 0}
+                    disabled={item?.stock === 0 || loading}
                     className="w-full md:w-auto px-10 py-3 bg-[#991B1F] text-white rounded-xl font-bold text-sm shadow-lg hover:bg-red-800 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
-                    Ajukan Peminjaman
+                    {loading ? "Mengajukan..." : "Ajukan Peminjaman"}
                   </button>
                 </div>
               </form>
             </div>
 
-            {/* Riwayat & Sidebar TETAP — TIDAK DIUBAH */}
+            {/* RIWAYAT & SIDEBAR TETAP — TIDAK DIUBAH */}
           </div>
-
-          {/* SISI KANAN TETAP UTUH */}
-          {/* (kode Anda di sini tidak disentuh sama sekali) */}
         </div>
       </main>
 

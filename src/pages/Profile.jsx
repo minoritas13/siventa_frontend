@@ -43,7 +43,7 @@ const Profile = () => {
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
       <Navbar />
 
-      <main className="flex-grow max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
+      <main className="grow max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
         <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Profile Akun</h1>
