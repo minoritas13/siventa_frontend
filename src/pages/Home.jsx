@@ -30,16 +30,17 @@ const Home = () => {
 
         // MAP DATA PINJAMAN (TIDAK UBAH TAMPILAN)
         const mappedLoans = loanRes.data.data.map((item) => ({
-          nama: `Peminjaman oleh ${item.user.name}`,
+          nama: item.nama,
           jumlah: 1,
           masuk: item.loan_date,
           tenggat: item.return_date ?? "-",
-          status: item.status === "dipinjam" ? "Aktif" : "Selesai",
+          status: item.status === "dikembalikan" ? "Selesai" : "Aktif",
         }));
 
-        setUser(userRes.data.data.name);
+        setUser(userRes.data.name);
         setDataPinjaman(mappedLoans);
         setTotalItems(itemRes.data.data.length);
+        
       } catch (error) {
         console.error("Gagal memuat data home:", error);
       } finally {
@@ -53,8 +54,8 @@ const Home = () => {
   // =============================
   // DERIVED DATA
   // =============================
-  const pinjamanAktif = dataPinjaman.filter((item) => item.status === "Aktif");
-
+  const pinjamanAktif = dataPinjaman.filter((item) => item.status !== "dikembalikan");
+  
   const displayedData = showAll ? dataPinjaman : dataPinjaman.slice(0, 3);
   // =============================
   // RENDER
@@ -139,8 +140,8 @@ const Home = () => {
                         <span
                           className={`px-3 md:px-4 py-1 rounded-md text-[9px] md:text-[10px] font-bold text-white shadow-sm inline-block whitespace-nowrap ${
                             item.status === "Aktif"
-                              ? "bg-green-500"
-                              : "bg-orange-400"
+                              ? "bg-orange-500"
+                              : "bg-green-400"
                           }`}
                         >
                           {item.status}

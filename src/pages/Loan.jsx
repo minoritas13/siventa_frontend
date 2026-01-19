@@ -7,14 +7,39 @@ import api from "../services/api";
 
 const Loan = () => {
   const navigate = useNavigate();
+
+  // =============================
+  // STATE
+  // =============================
   const [inventoryData, setInventoryData] = useState([]);
+  const [dataPinjaman, setDataPinjaman] = useState([]);
+  const [loadingLoan, setLoadingLoan] = useState(true);
 
+  // =============================
+  // FETCH DATA (PARALLEL)
+  // =============================
   useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const res = await api.get("/items");
+    let isMounted = true;
 
-        const mappedData = res.data.data.map((item) => ({
+    const fetchData = async () => {
+      try {
+        setLoadingLoan(true);
+
+        const [itemsRes, loansRes] = await Promise.all([
+          api.get("/items"),
+          api.get("/loans"),
+        ]);
+
+        if (!isMounted) return;
+
+        // =============================
+        // ITEMS (AMAN)
+        // =============================
+        const itemsRaw = Array.isArray(itemsRes?.data?.data)
+          ? itemsRes.data.data
+          : [];
+
+        const mappedItems = itemsRaw.map((item) => ({
           id: item.id,
           kode: item.kode,
           asset: item.photo ?? "/img/camera-canon-1300d.jpeg",
@@ -23,17 +48,67 @@ const Loan = () => {
           kondisi: item.kondisi === "baik" ? "null" : "Dipinjam",
           stock: item.stock ?? 0,
           status: item.stock > 0 ? "Tersedia" : "Tidak Tersedia",
+          photo: item.photo,
+          name: item.name,
         }));
 
-        setInventoryData(mappedData);
+        // =============================
+        // LOANS (FIX TOTAL)
+        // =============================
+        const rawLoans = loansRes?.data?.data;
+        const loansArray = Array.isArray(rawLoans)
+          ? rawLoans
+          : rawLoans
+          ? [rawLoans]
+          : [];
+
+        const mappedLoans = loansArray
+          .filter((loan) => loan?.status !== "dikembalikan")
+          .map((loan) => ({
+            id: loan.id,
+            status: loan.status,
+            loan_items: Array.isArray(loan.loan_items)
+              ? loan.loan_items.map((li) => ({
+                  ...li,
+                  item:
+                    li.item ??
+                    mappedItems.find((it) => it.id === li.item_id) ??
+                    null,
+                }))
+              : [],
+          }));
+
+        setInventoryData(mappedItems);
+        setDataPinjaman(mappedLoans);
       } catch (error) {
-        console.error("Gagal fetch items:", error);
+        console.error("Gagal fetch data:", error);
+      } finally {
+        if (isMounted) setLoadingLoan(false);
       }
     };
 
-    fetchItems();
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
+  // =============================
+  // HANDLER
+  // =============================
+  const handleReturn = async (loanId) => {
+    try {
+      await api.put(`/loan/update/${loanId}`);
+      setDataPinjaman((prev) => prev.filter((loan) => loan.id !== loanId));
+    } catch (error) {
+      console.error("Gagal mengembalikan barang:", error);
+    }
+  };
+
+  // =============================
+  // RENDER (TIDAK DIUBAH)
+  // =============================
   return (
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
       <Navbar />
@@ -49,7 +124,7 @@ const Loan = () => {
         </header>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
-          {/* ================= LEFT CONTENT ================= */}
+          {/* LEFT CONTENT */}
           <div className="flex-1 order-2 lg:order-1">
             {/* Filter */}
             <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm mb-8 flex flex-col sm:flex-row flex-wrap gap-4 items-center">
@@ -127,89 +202,65 @@ const Loan = () => {
             </div>
           </div>
 
-          {/* ================= RIGHT SIDEBAR (TIDAK DIUBAH) ================= */}
+          {/* SIDEBAR */}
           <aside className="w-full lg:w-[320px] order-1 lg:order-2">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 lg:sticky lg:top-24">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="font-bold text-gray-900">Status Peminjaman</h2>
                 <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                  2 Aktif
+                  {dataPinjaman.length} Aktif
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-                {/* Menunggu */}
-                <div className="p-4 border border-gray-100 rounded-xl bg-gray-50/50 flex gap-3">
-                  <div className="w-14 h-14 bg-gray-200 rounded-lg shrink-0 overflow-hidden">
-                    <img
-                      src="/img/camera-canon-1300d.jpeg"
-                      alt="mini"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <span className="text-[10px] text-orange-500 font-bold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                      Menunggu
-                    </span>
-                    <h4 className="text-[11px] font-bold text-gray-800 mt-1">
-                      Kamera Canon D1200
-                    </h4>
-                    <p className="text-[9px] text-gray-400 mt-0.5 italic">
-                      Hingga 25 Des 2025
-                    </p>
-                  </div>
-                </div>
+                {loadingLoan ? (
+                  <p className="text-xs text-gray-400 text-center">
+                    Memuat data peminjaman...
+                  </p>
+                ) : dataPinjaman.length === 0 ? (
+                  <p className="text-xs text-gray-400 text-center">
+                    Tidak ada barang yang sedang dipinjam
+                  </p>
+                ) : (
+                  dataPinjaman.map((loan) =>
+                    loan.loan_items.map((li) => (
+                      <div
+                        key={li.id}
+                        className="p-4 border border-green-100 rounded-xl bg-white shadow-md shadow-green-50/50"
+                      >
+                        <div className="flex gap-3 mb-4">
+                          <div className="w-14 h-14 bg-gray-200 rounded-lg overflow-hidden">
+                            <img
+                              src={
+                                li.item?.photo ??
+                                "/img/camera-canon-1300d.jpeg"
+                              }
+                              alt="mini"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
 
-                {/* Dipinjam */}
-                <div className="p-4 border border-green-100 rounded-xl bg-white shadow-md shadow-green-50/50">
-                  <div className="flex gap-3 mb-4">
-                    <div className="w-14 h-14 bg-gray-200 rounded-lg shrink-0 overflow-hidden">
-                      <img
-                        src="/img/camera-canon-1300d.jpeg"
-                        alt="mini"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <span className="text-[10px] text-green-600 font-bold flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-                        Sedang Dipinjam
-                      </span>
-                      <h4 className="text-[11px] font-bold text-gray-800 mt-1">
-                        Kamera Canon D1200
-                      </h4>
-                    </div>
-                  </div>
+                          <div>
+                            <span className="text-[10px] text-green-600 font-bold">
+                              Sedang Dipinjam
+                            </span>
+                            <h4 className="text-[11px] font-bold text-gray-800">
+                              {li.item?.name}
+                            </h4>
+                          </div>
+                        </div>
 
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    <div className="bg-gray-100 p-2 rounded-lg text-center">
-                      <p className="text-[8px] text-gray-400 uppercase font-bold">
-                        Pinjam
-                      </p>
-                      <p className="text-[9px] font-bold text-gray-700">
-                        23 Des
-                      </p>
-                    </div>
-                    <div className="bg-red-50 p-2 rounded-lg border border-red-100 text-center">
-                      <p className="text-[8px] text-red-400 uppercase font-bold">
-                        Deadline
-                      </p>
-                      <p className="text-[9px] font-bold text-red-600">
-                        24 Des
-                      </p>
-                    </div>
-                  </div>
-
-                  <button className="w-full py-2 bg-[#991B1F] text-white text-[10px] rounded-lg font-bold uppercase tracking-wide">
-                    Kembalikan
-                  </button>
-                </div>
+                        <button
+                          onClick={() => handleReturn(loan.id)}
+                          className="w-full py-2 bg-[#991B1F] text-white text-[10px] rounded-lg font-bold uppercase"
+                        >
+                          Kembalikan
+                        </button>
+                      </div>
+                    ))
+                  )
+                )}
               </div>
-
-              <button className="w-full text-center text-[11px] font-bold text-gray-400 mt-6 lg:mt-10 hover:text-gray-600 underline underline-offset-4">
-                Lihat Riwayat Lengkap
-              </button>
             </div>
           </aside>
         </div>
