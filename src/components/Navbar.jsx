@@ -12,7 +12,7 @@ const Navbar = () => {
     const navLinkStyles = ({ isActive }) => {
         return `transition-colors duration-200 ${
             isActive 
-            ? "text-[#991B1F] font-bold border-b-2 border-[#991B1F] md:border-none" 
+            ? "text-[#991B1F] font-bold md:border-b-2 md:border-[#991B1F]" 
             : "text-gray-700 hover:text-[#991B1F]"
         }`;
     };
@@ -37,7 +37,7 @@ const Navbar = () => {
 
                 {/* Menu Navigasi Desktop */}
                 <div className="hidden md:flex gap-8 text-sm font-semibold">
-                    <NavLink to="/employee" className={navLinkStyles}>Beranda</NavLink>
+                    <NavLink to="/user" className={navLinkStyles}>Beranda</NavLink>
                     <NavLink to="/item-data" className={navLinkStyles}>Data Barang</NavLink>
                     <NavLink to="/loan" className={navLinkStyles}>Peminjaman</NavLink>
                     <NavLink to="/profile" className={navLinkStyles}>Profile</NavLink>
@@ -58,7 +58,7 @@ const Navbar = () => {
                 }`}
             >
                 <div className="flex flex-col px-6 py-4 gap-4 text-sm font-semibold">
-                    <NavLink to="/employee" onClick={toggleMenu} className={navLinkStyles}>Beranda</NavLink>
+                    <NavLink to="/user" onClick={toggleMenu} className={navLinkStyles}>Beranda</NavLink>
                     <NavLink to="/item-data" onClick={toggleMenu} className={navLinkStyles}>Data Barang</NavLink>
                     <NavLink to="/loan" onClick={toggleMenu} className={navLinkStyles}>Peminjaman</NavLink>
                     <NavLink to="/profile" onClick={toggleMenu} className={navLinkStyles}>Profile</NavLink>

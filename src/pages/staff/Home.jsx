@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import api from "../services/api"; // Pastikan path axios instance benar
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import api from "../../services/api"; // Pastikan path axios instance benar
 
 const Home = () => {
   // =============================
@@ -37,7 +37,7 @@ const Home = () => {
           status: item.status === "dipinjam" ? "Aktif" : "Selesai",
         }));
 
-        setUser(userRes.data.data.name);
+        setUser(userRes.data.name);
         setDataPinjaman(mappedLoans);
         setTotalItems(itemRes.data.data.length);
       } catch (error) {

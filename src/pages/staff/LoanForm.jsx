@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import { Search, Calendar, X, AlertCircle } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../services/api";
+import api from "../../services/api";
 
 const LoanForm = () => {
   const { id } = useParams();

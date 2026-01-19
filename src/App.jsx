@@ -1,49 +1,64 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext'; // 1. Import AuthProvider
+import ProtectedRoute from './components/ProtectedRoute'; // 2. Import ProtectedRoute
 
+// Import Pages
 import LandingPage from './pages/LandingPage';
-
 import Login from './pages/Login';
 import Register from './pages/Register';
-import ForgetPassword from './pages/ForgetPassword';
 
-import Home from './pages/Home';
-import ItemData from './pages/ItemData';
-import Loan from './pages/Loan';
-import LoanForm from './pages/LoanForm';
-import Profile from './pages/Profile';
-import Help from './pages/Help';
+// Staff Pages
+import Home from './pages/staff/Home';
+import ItemData from './pages/staff/ItemData';
+import Loan from './pages/staff/Loan';
+import LoanForm from './pages/staff/LoanForm';
+import Profile from './pages/staff/Profile';
+import Help from './pages/staff/Help';
+import ItemDetail from './pages/staff/ItemDetail';
 
+// Admin Pages
 import HomeAdmin from './pages/admin/Home';
 import ManageAsset from './pages/admin/ManageAsset';
 import Borrow from './pages/admin/Borrow';
 import Report from './pages/admin/Report';
+import ManageUser from './pages/admin/ManageUser';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
+    // 3. Bungkus dengan AuthProvider agar data user bisa diakses di semua halaman
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* ============================= RUTE PUBLIK ============================= */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgetpassword" element={<ForgetPassword />} />
+          {/* ============================= RUTE STAFF (USER) ============================= */}
+          {/* Semua rute di bawah ini hanya bisa diakses jika role = staff */}
+          <Route path="/user" element={<ProtectedRoute allowedRoles={['staff']}><Home /></ProtectedRoute>} />
+          <Route path="/item-data" element={<ProtectedRoute allowedRoles={['staff']}><ItemData /></ProtectedRoute>} />
+          <Route path="/loan" element={<ProtectedRoute allowedRoles={['staff']}><Loan /></ProtectedRoute>} />
+          <Route path="/loan/form/:id" element={<ProtectedRoute allowedRoles={['staff']}><LoanForm /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute allowedRoles={['staff']}><Profile /></ProtectedRoute>} />
+          <Route path="/help" element={<ProtectedRoute allowedRoles={['staff']}><Help /></ProtectedRoute>} />
+          <Route path="/detail" element={<ProtectedRoute allowedRoles={['staff']}><ItemDetail /></ProtectedRoute>} />
 
-        <Route path="/employee" element={<Home />} />
-        <Route path="/item-data" element={<ItemData />} />
-        <Route path="/loan" element={<Loan />} />
-        <Route path="/loan/form/:id" element={<LoanForm />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/help" element={<Help />} />
+          {/* ============================= RUTE ADMIN ============================= */}
+          {/* Semua rute di bawah ini hanya bisa diakses jika role = admin */}
+          <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><HomeAdmin /></ProtectedRoute>} />
+          <Route path="/manage-asset" element={<ProtectedRoute allowedRoles={['admin']}><ManageAsset /></ProtectedRoute>} />
+          <Route path="/borrow" element={<ProtectedRoute allowedRoles={['admin']}><Borrow /></ProtectedRoute>} />
+          <Route path="/report" element={<ProtectedRoute allowedRoles={['admin']}><Report /></ProtectedRoute>} />
+          <Route path="/manage-user" element={<ProtectedRoute allowedRoles={['admin']}><ManageUser /></ProtectedRoute>} />
 
-        <Route path="/admin" element={<HomeAdmin />} />
-        <Route path="/admin/manage-asset" element={<ManageAsset />} />
-        <Route path="/admin/borrow" element={<Borrow />} />
-        <Route path="/admin/report" element={<Report />} />
-      </Routes>
-    </Router>
-    );
+          {/* FALLBACK: Jika rute tidak ditemukan, arahkan ke login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
 }
 
 export default App;

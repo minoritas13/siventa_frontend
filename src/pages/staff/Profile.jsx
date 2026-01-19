@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import { Mail, Phone, Camera, Lock, LogOut, Save } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import api from "../../services/api";
 
 const Profile = () => {
   const { logout } = useAuth();
@@ -22,7 +22,7 @@ const Profile = () => {
     const fetchMe = async () => {
       try {
         const res = await api.get("/me");
-        setUser(res.data.data ?? res.data);
+        setUser(res.data ?? res.data);
       } catch (error) {
         console.error("Gagal fetch /me:", error);
       }

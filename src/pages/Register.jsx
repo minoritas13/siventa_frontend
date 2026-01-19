@@ -32,7 +32,6 @@ function Register() {
     setLoading(true);
     setError("");
 
-    // Validasi Sederhana
     if (formData.password !== formData.password_confirmation) {
       setError("Konfirmasi kata sandi tidak cocok.");
       setLoading(false);
@@ -46,7 +45,6 @@ function Register() {
     }
 
     try {
-      // Mengirim data ke backend melalui AuthContext
       await register({
         name: formData.name,
         email: formData.email,
@@ -55,9 +53,8 @@ function Register() {
       });
 
       alert("Pendaftaran berhasil! Silakan masuk.");
-      navigate("/login"); // Redirect ke halaman login
+      navigate("/login");
     } catch (err) {
-      // Menangkap pesan error dari backend
       setError(err.response?.data?.message || "Pendaftaran gagal. Coba lagi.");
     } finally {
       setLoading(false);
@@ -77,22 +74,6 @@ function Register() {
             {error}
           </div>
         )}
-
-        {/* Google Button */}
-        <div className="flex justify-start mb-6">
-          <button className="w-1/2 flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 transition-colors cursor-pointer text-sm font-medium">
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="google"
-              className="w-5 h-5"
-            />
-            <span className="truncate text-black">Sign in with Google</span>
-          </button>
-        </div>
-
-        <div className="text-center mb-6">
-          <span className="text-black text-sm">atau daftar</span>
-        </div>
 
         <form onSubmit={handleRegister} className="space-y-5">
           {/* Input Email */}
@@ -182,15 +163,6 @@ function Register() {
             {loading ? "Memproses..." : "Daftar"}
           </button>
         </form>
-
-        <div className="mt-4">
-          <Link
-            to="/forgetpassword"
-            className="text-sm text-[#991B1F] hover:underline font-medium"
-          >
-            Lupa kata sandi?
-          </Link>
-        </div>
       </div>
 
       <p className="mt-8 text-sm text-gray-800 font-medium">

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // 1. Tambahkan useNavigate
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate(); // 2. Inisialisasi navigate
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,10 +17,15 @@ function Login() {
     setError("");
 
     try {
-      await login(email, password);
-
-      // redirect setelah login sukses
-      window.location.href = "/employee";
+      // 3. Ambil data user yang dikembalikan oleh fungsi login
+      const user = await login(email, password);
+      
+      // 4. Logika pengalihan berdasarkan role
+      if (user && user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/user");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Login gagal");
     } finally {
@@ -36,26 +42,6 @@ function Login() {
 
         {/* ERROR MESSAGE */}
         {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
-
-        {/* Google Button */}
-        <div className="flex justify-start">
-          <button
-            type="button"
-            className="w-1/2 flex items-center justify-center gap-2 py-2.5 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-colors cursor-pointer text-sm font-medium"
-          >
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="google"
-              className="w-5 h-5"
-            />
-            <span className="truncate text-black">Sign in with Google</span>
-          </button>
-        </div>
-
-        {/* Divider */}
-        <div className="text-center my-6">
-          <span className="text-black text-sm">atau masuk</span>
-        </div>
 
         <div className="space-y-4">
           <input
@@ -93,16 +79,6 @@ function Login() {
         >
           {loading ? "Memproses..." : "Masuk"}
         </button>
-
-        {/* Link Lupa Kata Sandi */}
-        <div className="mt-4">
-          <Link
-            to="/forgetpassword"
-            className="text-sm text-[#991B1F] hover:underline font-medium"
-          >
-            Lupa kata sandi?
-          </Link>
-        </div>
       </div>
 
       {/* Link Daftar */}

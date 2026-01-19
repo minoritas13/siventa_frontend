@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FaDownload, FaPlus, FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Tambahkan untuk navigasi
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import api from "../services/api";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import api from "../../services/api";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";

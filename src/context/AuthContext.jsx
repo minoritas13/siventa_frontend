@@ -15,11 +15,7 @@ export const AuthProvider = ({ children }) => {
   // FUNGSI LOGIN
   // =============================
   const login = async (email, password) => {
-    const response = await api.post("/login", {
-      email,
-      password,
-    });
-
+    const response = await api.post("/login", { email, password });
     const { token, user } = response.data;
 
     localStorage.setItem("token", token);
@@ -27,6 +23,8 @@ export const AuthProvider = ({ children }) => {
 
     setToken(token);
     setUser(user);
+
+    return user; // <--- Kembalikan data user di sini
   };
 
   // =============================
