@@ -22,7 +22,7 @@ const Profile = () => {
     const fetchMe = async () => {
       try {
         const res = await api.get("/me");
-        setUser(res.data.data ?? res.data);
+        setUser(res.data);
       } catch (error) {
         console.error("Gagal fetch /me:", error);
       }
@@ -196,12 +196,11 @@ const Profile = () => {
                   </label>
                   <textarea
                     readOnly
-                    rows="2"
+                    rows={2}
+                    defaultValue={`Jl. Abdi Negara No.2, Gulak Galik, Kec. Tlk. Betung Utara, Kota
+Bandar Lampung, Lampung 35214`}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default resize-none"
-                  >
-                    Jl. Abdi Negara No.2, Gulak Galik, Kec. Tlk. Betung Utara, Kota
-                    Bandar Lampung, Lampung 35214
-                  </textarea>
+                  />
                 </div>
               </div>
             </div>
