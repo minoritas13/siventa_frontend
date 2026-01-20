@@ -22,7 +22,7 @@ const Profile = () => {
     const fetchMe = async () => {
       try {
         const res = await api.get("/me");
-        setUser(res.data);
+        setUser(res.data.data);
       } catch (error) {
         console.error("Gagal fetch /me:", error);
       }
@@ -156,7 +156,7 @@ const Profile = () => {
                 {/* NIK DIGANTI EMAIL */}
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-medium text-gray-400 uppercase">
-                    NIK
+                    Email
                   </label>
                   <input
                     type="text"
@@ -172,7 +172,7 @@ const Profile = () => {
                   </label>
                   <input
                     type="text"
-                    value="Departemen Redaksi"
+                    value={user?.divisi || "Belum Di isi"}
                     readOnly
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
                   />
@@ -180,11 +180,11 @@ const Profile = () => {
 
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-medium text-gray-400 uppercase">
-                    Jabatan
+                    Role
                   </label>
                   <input
                     type="text"
-                    value="Staff Redaksi"
+                    value={user?.role || "tes"}
                     readOnly
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
                   />
