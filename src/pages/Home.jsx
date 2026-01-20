@@ -29,18 +29,17 @@ const Home = () => {
         ]);
 
         // MAP DATA PINJAMAN (TIDAK UBAH TAMPILAN)
-        const mappedLoans = loanRes.data.data.map((item) => ({
-          nama: item.nama,
-          jumlah: 1,
-          masuk: item.loan_date,
-          tenggat: item.return_date ?? "-",
-          status: item.status === "dikembalikan" ? "Selesai" : "Aktif",
+        const mappedLoans = loanRes.data.data.map((loan) => ({
+          nama: loan.loan_items.map((li) => li.item?.name).join(", "),
+          jumlah: loan.loan_items.reduce((sum, li) => sum + li.qty, 0),
+          masuk: loan.loan_date,
+          tenggat: loan.return_date ?? "-",
+          status: loan.status === "dikembalikan" ? "Selesai" : "Aktif",
         }));
 
-        setUser(userRes.data.name);
+        setUser(userRes.data.data.name);
         setDataPinjaman(mappedLoans);
         setTotalItems(itemRes.data.data.length);
-        
       } catch (error) {
         console.error("Gagal memuat data home:", error);
       } finally {
@@ -54,8 +53,10 @@ const Home = () => {
   // =============================
   // DERIVED DATA
   // =============================
-  const pinjamanAktif = dataPinjaman.filter((item) => item.status !== "dikembalikan");
-  
+  const pinjamanAktif = dataPinjaman.filter(
+    (item) => item.status !== "dikembalikan"
+  );
+
   const displayedData = showAll ? dataPinjaman : dataPinjaman.slice(0, 3);
   // =============================
   // RENDER

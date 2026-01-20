@@ -16,7 +16,7 @@ const Loan = () => {
   const [loadingLoan, setLoadingLoan] = useState(true);
 
   // =============================
-  // FETCH DATA (PARALLEL)
+  // FETCH DATA
   // =============================
   useEffect(() => {
     let isMounted = true;
@@ -27,13 +27,13 @@ const Loan = () => {
 
         const [itemsRes, loansRes] = await Promise.all([
           api.get("/items"),
-          api.get("/loans"),
+          api.get("/loans"), // RESPONSE OBJECT
         ]);
 
         if (!isMounted) return;
 
         // =============================
-        // ITEMS (AMAN)
+        // ITEMS
         // =============================
         const itemsRaw = Array.isArray(itemsRes?.data?.data)
           ? itemsRes.data.data
@@ -53,27 +53,37 @@ const Loan = () => {
         }));
 
         // =============================
-        // LOANS (FIX TOTAL)
+        // LOAN (OBJECT → ARRAY)
         // =============================
-        const rawLoans = loansRes?.data?.data;
-        const loansArray = Array.isArray(rawLoans)
-          ? rawLoans
-          : rawLoans
-          ? [rawLoans]
+        // =============================
+        // LOANS (RESOURCE COLLECTION)
+        // =============================
+        const rawLoans = Array.isArray(loansRes?.data?.data)
+          ? loansRes.data.data
           : [];
 
-        const mappedLoans = loansArray
+        const mappedLoans = rawLoans
           .filter((loan) => loan?.status !== "dikembalikan")
           .map((loan) => ({
             id: loan.id,
             status: loan.status,
+            loan_date: loan.loan_date,
+            return_date: loan.return_date,
+            note: loan.note,
+            user: loan.user ?? null,
+
             loan_items: Array.isArray(loan.loan_items)
               ? loan.loan_items.map((li) => ({
-                  ...li,
-                  item:
-                    li.item ??
-                    mappedItems.find((it) => it.id === li.item_id) ??
-                    null,
+                  id: li.id,
+                  qty: li.qty,
+                  item: li.item
+                    ? {
+                        id: li.item.id,
+                        name: li.item.name,
+                        photo: li.item.photo,
+                        code: li.item.code,
+                      }
+                    : null,
                 }))
               : [],
           }));
@@ -95,7 +105,7 @@ const Loan = () => {
   }, []);
 
   // =============================
-  // HANDLER
+  // HANDLER RETURN
   // =============================
   const handleReturn = async (loanId) => {
     try {
@@ -124,9 +134,8 @@ const Loan = () => {
         </header>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
-          {/* LEFT CONTENT */}
+          {/* LEFT */}
           <div className="flex-1 order-2 lg:order-1">
-            {/* Filter */}
             <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm mb-8 flex flex-col sm:flex-row flex-wrap gap-4 items-center">
               <div className="relative w-full sm:flex-1">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -154,7 +163,6 @@ const Loan = () => {
               </div>
             </div>
 
-            {/* Grid Aset */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {inventoryData.map((item) => (
                 <div
@@ -232,8 +240,7 @@ const Loan = () => {
                           <div className="w-14 h-14 bg-gray-200 rounded-lg overflow-hidden">
                             <img
                               src={
-                                li.item?.photo ??
-                                "/img/camera-canon-1300d.jpeg"
+                                li.item?.photo ?? "/img/camera-canon-1300d.jpeg"
                               }
                               alt="mini"
                               className="w-full h-full object-cover"
@@ -241,9 +248,6 @@ const Loan = () => {
                           </div>
 
                           <div>
-                            <span className="text-[10px] text-green-600 font-bold">
-                              Sedang Dipinjam
-                            </span>
                             <h4 className="text-[11px] font-bold text-gray-800">
                               {li.item?.name}
                             </h4>
