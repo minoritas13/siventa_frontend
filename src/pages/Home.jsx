@@ -65,6 +65,7 @@ const Home = () => {
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Navbar />
 
+      
       <main className="max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
         {/* Header Welcome */}
         <section className="mb-8 md:mb-10 text-center md:text-left">
@@ -103,6 +104,8 @@ const Home = () => {
               Daftar Barang Pinjaman
             </h2>
           </div>
+
+          {console.log(mappedLoans)}
 
           <div className="border border-black rounded-lg overflow-hidden shadow-sm mb-4">
             <div className="overflow-x-auto">
