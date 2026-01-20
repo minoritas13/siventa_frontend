@@ -12,7 +12,7 @@ const Navbar = () => {
     const navLinkStyles = ({ isActive }) => {
         return `transition-colors duration-200 ${
             isActive 
-            ? "text-[#991B1F] font-bold md:border-b-2 md:border-[#991B1F]" 
+            ? "text-[#991B1F] font-bold" // Bagian border-b-2 telah dihapus di sini
             : "text-gray-700 hover:text-[#991B1F]"
         }`;
     };

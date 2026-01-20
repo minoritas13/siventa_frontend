@@ -32,26 +32,16 @@ export const AuthProvider = ({ children }) => {
   // =============================
   const register = async (userData) => {
     try {
-      // Menyesuaikan dengan data yang dikirim dari Register.js
-      // Backend biasanya butuh: name, email, password, password_confirmation
-      const response = await api.post("/register", userData);
-      return response.data;
-    } catch (error) {
-      // Re-throw error agar bisa ditangkap oleh catch di Register.js
-      throw error;
-    }
-  };
+      const payload = {
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+        password_confirmation: userData.password_confirmation,
+        role: "staff", 
+        divisi: "Uji Coba" // Pastikan ejaannya huruf kecil semua
+      };
 
-  // =============================
-  // FUNGSI RESET PASSWORD
-  // =============================
-  const resetPassword = async (email, password, password_confirmation) => {
-    try {
-      const response = await api.post("/reset-password", {
-        email,
-        password,
-        password_confirmation,
-      });
+      const response = await api.post("/register", payload);
       return response.data;
     } catch (error) {
       throw error;
@@ -77,7 +67,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     // JANGAN LUPA: Tambahkan 'register' ke dalam value Provider
-    <AuthContext.Provider value={{ user, token, login, logout, register, resetPassword }}>
+    <AuthContext.Provider value={{ user, token, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

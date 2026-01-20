@@ -17,10 +17,8 @@ function Login() {
     setError("");
 
     try {
-      // 3. Ambil data user yang dikembalikan oleh fungsi login
       const user = await login(email, password);
       
-      // 4. Logika pengalihan berdasarkan role
       if (user && user.role === "admin") {
         navigate("/admin");
       } else {

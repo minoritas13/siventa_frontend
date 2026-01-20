@@ -73,10 +73,6 @@ const ItemDetail = () => {
               </div>
               <p className="text-gray-600 text-sm md:text-base leading-relaxed italic">"{item.deskripsi}"</p>
             </div>
-
-            <button className="w-full md:w-max px-12 py-4 bg-[#991B1F] text-white rounded-xl text-sm font-bold shadow-xl hover:bg-red-800 transition active:scale-95">
-              + Ajukan Peminjaman Barang
-            </button>
           </div>
         </section>
 
