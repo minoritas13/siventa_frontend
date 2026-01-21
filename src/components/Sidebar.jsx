@@ -9,28 +9,24 @@ const Sidebar = () => {
   const { logout } = useAuth(); 
   const navigate = useNavigate();
   
-  // State untuk data profil admin (Nama & Email dinamis)
-  const [adminData, setAdminData] = useState({
-    name: "Admin",
-    email: "admin@antara.co.id"
-  });
+  // State untuk data profil (User Object)
+  const [user, setUser] = useState(null);
 
   // =============================
-  // FETCH DATA ADMIN (BACKEND)
+  // FETCH DATA USER (IDENTIK DENGAN PROFILE)
   // =============================
   useEffect(() => {
-    const fetchAdminProfile = async () => {
+    const fetchProfile = async () => {
       try {
         const res = await api.get("/me");
-        setAdminData({
-          name: res.data.name,
-          email: res.data.email
-        });
+        // Mengambil data dari res.data.data atau res.data sesuai struktur API Anda
+        const userData = res.data.data || res.data;
+        setUser(userData);
       } catch (error) {
-        console.error("Gagal mengambil profil admin:", error);
+        console.error("Gagal mengambil profil sidebar:", error);
       }
     };
-    fetchAdminProfile();
+    fetchProfile();
   }, []);
 
   // =============================
@@ -84,13 +80,13 @@ const Sidebar = () => {
               <span>SIVE</span><span className="text-black">NTA</span>
             </h1>
           </div>
-          <p className="text-[10px] opacity-80 leading-tight uppercase font-bold tracking-widest">Administrator Mode</p>
+          <p className="text-[10px] leading-tight font-normal tracking-widest">Sistem Inventaris Biro ANTARA Lampung</p>
         </div>
 
         {/* NAV LINKS */}
         <div className="flex-1 overflow-y-auto py-6 px-4">
           <div className="mb-8">
-            <p className="text-[10px] font-bold uppercase opacity-60 mb-4 ml-4 tracking-widest">MENU UTAMA</p>
+            <p className="text-[10px] font-medium uppercase opacity-60 mb-4 ml-4 tracking-widest">MENU UTAMA</p>
             <nav className="space-y-1">
               {menuUtama.map((item) => (
                 <NavLink
@@ -107,7 +103,7 @@ const Sidebar = () => {
           </div>
 
           <div>
-            <p className="text-[10px] font-bold uppercase opacity-60 mb-4 ml-4 tracking-widest">LAINNYA</p>
+            <p className="text-[10px] font-medium uppercase opacity-60 mb-4 ml-4 tracking-widest">LAINNYA</p>
             <nav className="space-y-1">
               {menuLainnya.map((item) => (
                 <NavLink
@@ -123,16 +119,26 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* FOOTER USER INFO */}
+        {/* FOOTER USER INFO (DISAMAKAN DENGAN HALAMAN PROFILE) */}
         <div className="p-4 border-t border-white/10 bg-black/10">
           <div className="flex items-center gap-3 mb-4 p-2">
             <div className="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden bg-gray-200 shrink-0">
-              {/* MENGGUNAKAN FOTO SEBELUMNYA */}
-              <img src="/foto-andi.png" alt="Profile" className="w-full h-full object-cover" />
+              {/* LOGIKA FOTO IDENTIK DENGAN PROFILE */}
+              <img 
+                src={user?.photo 
+                    ? `${process.env.REACT_APP_API_URL}/storage/${user.photo}` 
+                    : `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=ffffff&color=991B1F`} 
+                alt="Profile" 
+                className="w-full h-full object-cover" 
+              />
             </div>
             <div className="truncate">
-              <h2 className="text-[12px] font-bold leading-none truncate">{adminData.name}</h2>
-              <p className="text-[10px] opacity-60 truncate">{adminData.email}</p>
+              <h2 className="text-[12px] font-bold leading-none truncate">
+                {user?.name || "Loading..."}
+              </h2>
+              <p className="text-[10px] opacity-60 truncate mt-1">
+                {user?.email || "Memuat email..."}
+              </p>
             </div>
           </div>
           <button 
