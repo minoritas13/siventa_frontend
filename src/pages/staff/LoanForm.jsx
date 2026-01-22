@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { Search, Calendar, X, AlertCircle } from "lucide-react";
+import { Search, Calendar, X, AlertCircle, ClipboardList } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 
@@ -90,7 +90,7 @@ const LoanForm = () => {
             Peminjaman Aset
           </h1>
           <p className="text-sm md:text-base text-gray-500 mt-1">
-            Hallo, Andi silakan lengkapi formulir di bawah ini untuk mengajukan
+            Hallo, silakan lengkapi formulir di bawah ini untuk mengajukan
             peminjaman aset.
           </p>
         </header>
@@ -100,7 +100,7 @@ const LoanForm = () => {
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
                 <div className="bg-[#991B1F] p-2 rounded-lg text-white">
-                  <Search size={18} />
+                  <ClipboardList size={18} />
                 </div>
                 <h2 className="font-bold text-gray-800">
                   Formulir Pengajuan Aset
@@ -110,20 +110,6 @@ const LoanForm = () => {
               {/* FORM */}
               <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
                 <div className="space-y-3">
-                  <label className="text-sm font-bold text-gray-700">
-                    Pilih Barang
-                  </label>
-
-                  <div className="relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <input
-                      type="text"
-                      disabled
-                      value={item?.name ?? ""}
-                      className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50 cursor-not-allowed"
-                    />
-                  </div>
-
                   {item && (
                     <div className="relative flex items-center gap-4 p-4 bg-red-50/50 border border-red-100 rounded-2xl">
                       <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden shrink-0">
@@ -146,17 +132,10 @@ const LoanForm = () => {
                         <h4 className="text-sm font-bold text-gray-800">
                           {item.name}
                         </h4>
-                        <p className="text-[11px] text-gray-500 italic leading-none">
+                        <p className="text-[11px] text-gray-500 leading-none">
                           Tersedia {item.stock} Unit
                         </p>
                       </div>
-
-                      <button
-                        type="button"
-                        className="p-1 hover:bg-red-100 rounded-full transition-colors"
-                      >
-                        <X size={18} className="text-gray-400" />
-                      </button>
                     </div>
                   )}
                 </div>
@@ -195,7 +174,7 @@ const LoanForm = () => {
                     rows="4"
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#991B1F] outline-none resize-none"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#991B1F] outline-none resize-none mt-2.5"
                   ></textarea>
                 </div>
 

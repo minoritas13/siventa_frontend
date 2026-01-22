@@ -59,10 +59,10 @@ const Home = () => {
         // 1. Hitung Statistik
         const totalAset = allItems.length;
         const asetAktif = allItems.filter(
-          (item) => item.kondisi === "baik"
+          (item) => item.condition === "baik"
         ).length;
         const asetRusak = allItems.filter(
-          (item) => item.kondisi === "rusak ringan"
+          (item) => item.condition === "rusak ringan"
         ).length;
         const totalDipinjam = allLoans.filter(
           (loan) => loan.status === "dipinjam"

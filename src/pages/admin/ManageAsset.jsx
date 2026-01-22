@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import { Search, Plus, Download, Trash2, Eye, Archive } from "lucide-react";
 import api from "../../services/api";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 const ManageAsset = () => {
   const navigate = useNavigate();
 
   const handleView = (id) => {
     navigate(`/items/${id}`);
+  };
+
+  const handleAddAsset = () => {
+    navigate("/add-asset");
   };
 
   const handleDelete = async (id) => {
@@ -84,7 +88,10 @@ const ManageAsset = () => {
               />
             </div>
 
-            <button className="flex items-center gap-2 bg-[#991B1F] text-white px-6 py-2.5 rounded-lg text-sm font-bold">
+            <button
+              className="flex items-center gap-2 bg-[#991B1F] text-white px-6 py-2.5 rounded-lg text-sm font-bold"
+              onClick={handleAddAsset}
+            >
               <Plus size={18} />
               Tambah Aset
             </button>
@@ -136,7 +143,7 @@ const ManageAsset = () => {
                 {items.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 text-[11px] font-medium uppercase text-gray-600">
-                      {item.kode}
+                      {item.code}
                     </td>
 
                     <td className="px-6 py-4">
@@ -158,17 +165,17 @@ const ManageAsset = () => {
                     </td>
 
                     <td className="px-6 py-4 text-center text-sm text-gray-600">
-                      {item.kategori_id?.[1] || "-"}
+                      {item.category?.name || "-"}
                     </td>
 
                     <td className="px-6 py-4 text-center">
                       <span
                         className={`px-4 py-1 rounded-full text-[10px] text-white
                         ${
-                          item.kondisi === "baik" ? "bg-blue-600" : "bg-red-600"
+                          item.condition === "baik" ? "bg-blue-600" : "bg-red-600"
                         }`}
                       >
-                        {item.kondisi}
+                        {item.condition}
                       </span>
                     </td>
 

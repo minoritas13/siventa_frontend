@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute'; // 2. Import Protected
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ResetPassword from './pages/ResetPassword';
 
 // Staff Pages
 import Home from './pages/staff/Home';
@@ -23,6 +24,8 @@ import ManageAsset from './pages/admin/ManageAsset';
 import Borrow from './pages/admin/Borrow';
 import Report from './pages/admin/Report';
 import ManageUser from './pages/admin/ManageUser';
+import AddAsset from './pages/admin/AddAsset';
+import EditAsset from './pages/admin/EditAsset';
 
 function App() {
   return (
@@ -34,6 +37,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* ============================= RUTE STAFF (USER) ============================= */}
           {/* Semua rute di bawah ini hanya bisa diakses jika role = staff */}
@@ -52,6 +56,9 @@ function App() {
           <Route path="/borrow" element={<ProtectedRoute allowedRoles={['admin']}><Borrow /></ProtectedRoute>} />
           <Route path="/report" element={<ProtectedRoute allowedRoles={['admin']}><Report /></ProtectedRoute>} />
           <Route path="/manage-user" element={<ProtectedRoute allowedRoles={['admin']}><ManageUser /></ProtectedRoute>} />
+          <Route path="/add-asset" element={<ProtectedRoute allowedRoles={['admin']}><AddAsset /></ProtectedRoute>} />
+          <Route path="/edit-asset" element={<ProtectedRoute allowedRoles={['admin']}><EditAsset /></ProtectedRoute>} />
+           <Route path="/add-asset" element={<ProtectedRoute allowedRoles={['admin']}><AddAsset /></ProtectedRoute>} />
 
           {/* FALLBACK: Jika rute tidak ditemukan, arahkan ke login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
