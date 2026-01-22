@@ -11,8 +11,8 @@ const EditAsset = () => {
       {/* Main Content */}
       <main className="flex-1 p-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">Formulir Tambah Aset</h1>
-          <p className="text-gray-500">Tambah atau edit detail barang inventaris</p>
+          <h1 className="text-2xl font-bold text-gray-800">Formulir Edit Aset</h1>
+          <p className="text-gray-500">Edit detail barang inventaris</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -35,7 +35,7 @@ const EditAsset = () => {
               <label className="block text-sm font-semibold text-gray-700 mb-1">Kode Barang</label>
               <input
                 type="text"
-                placeholder="Camera sony-HD-1280"
+                placeholder="Masukkan kode barang"
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
               />
             </div>
@@ -45,7 +45,7 @@ const EditAsset = () => {
               <label className="block text-sm font-semibold text-gray-700 mb-1">Nama Barang</label>
               <input
                 type="text"
-                placeholder="Masukkan nama barang lengkap (ex; camera sony 1280)"
+                placeholder="Masukkan nama barang lengkap"
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
               />
             </div>
@@ -73,13 +73,12 @@ const EditAsset = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Status Ketersediaan</label>
-                <select className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none appearance-none bg-white">
-                  <option>Pilih Status</option>
-                  <option>Tersedia</option>
-                  <option>Dipinjam</option>
-                  <option>Dalam Perbaikan</option>
-                </select>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Jumlah Barang</label>
+                <input
+                  type="text"
+                  placeholder="Masukkan jumlah barang"
+                  className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+                />
               </div>
             </div>
 

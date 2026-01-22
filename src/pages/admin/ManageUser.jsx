@@ -1,24 +1,15 @@
 import React from 'react';
 import Sidebar from '../../components/Sidebar';
-import { Package, CheckCircle, Wrench, Bell, Box } from 'lucide-react';
+import { Users, Search, Filter, Trash2, ChevronDown, UserPlus } from 'lucide-react';
 
 const ManageUser = () => {
-  // Data dummy kartu ringkasan sesuai desain (Horizontal)
-  const stats = [
-    { label: 'Total Aset', value: '40', icon: <Box size={20} />, bg: 'bg-[#991B1F]' },
-    { label: 'Aset Aktif', value: '35', icon: <CheckCircle size={20} />, bg: 'bg-[#991B1F]' },
-    { label: 'Aset Rusak', value: '5', icon: <Wrench size={20} />, bg: 'bg-[#991B1F]' },
-    { label: 'Dipinjam', value: '10', icon: <Package size={20} />, bg: 'bg-[#991B1F]' },
-  ];
-
-  // Data dummy tabel pinjaman sesuai kolom di desain
-  const pinjaman = [
-    { staff: 'Budi Santoso', divisi: 'Redaksi Foto', kode: 'CAM CANON D1200-001', barang: 'Sony Alpha A7 III', pinjam: '12 Oktober 2025', kembali: '14 Oktober 2025', status: 'Selesai', color: 'bg-[#53EC53]', text: 'text-white', foto: '/foto-andi.png' },
-    { staff: 'Siti Aminah', divisi: 'Redaksi Video', kode: 'CAM CANON D1200-001', barang: 'DJI Ronin S', pinjam: '13 Oktober 2025', kembali: '21 Oktober 2025', status: 'Selesai', color: 'bg-[#53EC53]', text: 'text-white', foto: '/foto-andi.png' },
-    { staff: 'Rizky Pratama', divisi: 'IT Support', kode: 'CAM CANON D1200-001', barang: 'MacBook Pro M2', pinjam: '12 Oktober 2025', kembali: '21 Oktober 2025', status: 'Selesai', color: 'bg-[#53EC53]', text: 'text-white', foto: '/foto-andi.png' },
-    { staff: 'Anton Wijaya', divisi: 'Redaksi Video', kode: 'CAM CANON D1200-001', barang: 'Sennheiser Mic Kit', pinjam: '12 Oktober 2025', kembali: '21 Oktober 2025', status: 'Terlambat', color: 'bg-[#FF0000]', text: 'text-white', foto: '/foto-andi.png' },
-    { staff: 'Dewi Lestari', divisi: 'Koresponden', kode: 'CAM CANON D1200-001', barang: 'Lensa Canon 70-200mm', pinjam: '12 Oktober 2025', kembali: '21 Oktober 2025', status: 'Dipinjam', color: 'bg-[#FBBF24]', text: 'text-white', foto: '/foto-andi.png' },
-    { staff: 'Anton Wijaya', divisi: 'Redaksi Video', kode: 'CAM CANON D1200-001', barang: 'Sennheiser Mic Kit', pinjam: '12 Oktober 2025', kembali: '21 Oktober 2025', status: 'Terlambat', color: 'bg-[#FF0000]', text: 'text-white', foto: '/foto-andi.png' },
+  // DATA DUMMY (Sesuai format desain gambar yang Anda berikan)
+  const users = [
+    { id: 1, name: 'Budi Santoso', email: 'budi@antara.id', role: 'Admin', status: 'Aktif', roleColor: 'bg-[#991B1F]', division: 'Biro Lampung' },
+    { id: 2, name: 'Siti Aminah', email: 'siti@antara.id', role: 'Staff', status: 'Aktif', roleColor: 'bg-orange-400', division: 'Reporter' },
+    { id: 3, name: 'Rizky Pratama', email: 'rizky02@antara.id', role: 'Staff', status: 'Aktif', roleColor: 'bg-orange-400', division: 'Teknisi' },
+    { id: 4, name: 'Dewi Lestari', email: 'dewiles@antara.id', role: 'Staff', status: 'Aktif', roleColor: 'bg-orange-400', division: 'Administrasi' },
+    { id: 5, name: 'Anton Wijaya', email: 'anton20wij@antara.id', role: 'Staff', status: 'Aktif', roleColor: 'bg-orange-400', division: 'Reporter' },
   ];
 
   return (
@@ -26,104 +17,113 @@ const ManageUser = () => {
       <Sidebar />
 
       <main className="flex-1 p-4 md:p-10 pt-20 md:pt-10 overflow-x-hidden">
-        {/* Header Dashboard */}
-        <header className="mb-8">
-          <h1 className="text-xl md:text-2xl font-bold text-black">Dashboard Overview</h1>
-          <p className="text-gray-500 text-xs md:text-sm">Selamat datang kembali, pantau inventaris kantor hari ini.</p>
+        {/* Header Section - Identik dengan Home */}
+        <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold text-black font-sans">Manajemen Pengguna</h1>
+            <p className="text-gray-500 text-xs md:text-sm">Kelola data akses, peran, dan status akun pengguna SIVENTA.</p>
+          </div>
+          <button className="flex items-center gap-2 bg-[#991B1F] text-white px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold shadow-sm hover:scale-105 transition-all">
+            <UserPlus size={18} />
+            Tambah User
+          </button>
         </header>
 
-        {/* Section Ringkasan Aset (Kartu Horizontal sesuai Desain) */}
-        <section className="mb-10">
-          <h2 className="text-lg md:text-xl font-bold text-black mb-6">Ringkasan Aset</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {stats.map((stat, index) => (
-              <div key={index} className={`${stat.bg} text-white rounded-xl p-5 flex items-center gap-4 shadow-sm`}>
-                <div className="bg-white text-[#991B1F] p-3 rounded-full flex items-center justify-center shrink-0">
-                  {stat.icon}
-                </div>
-                <div>
-                  <p className="text-[11px] font-medium opacity-90 uppercase tracking-tight leading-none mb-1">{stat.label}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                </div>
-              </div>
-            ))}
+        {/* Toolbar Section - Padding & Border Radius Match Home */}
+        <div className="mb-6 flex flex-col md:flex-row gap-4 justify-between items-center">
+          <div className="relative w-full md:max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input 
+              type="text" 
+              placeholder="Cari nama staf atau email..." 
+              className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#991B1F]/10 focus:border-[#991B1F] shadow-sm transition-all"
+            />
           </div>
-        </section>
-
-        {/* Section Daftar Pinjaman */}
-        <section className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-5 border-b border-gray-100 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Bell size={20} className="text-[#991B1F]" />
-              <h3 className="font-bold text-gray-800">Daftar Pinjaman</h3>
+          
+          <div className="flex gap-2 w-full md:w-auto">
+            <div className="flex-1 md:flex-none flex items-center justify-between gap-6 px-5 py-3 bg-white border border-gray-200 rounded-2xl text-sm text-gray-600 cursor-pointer hover:bg-gray-50 shadow-sm transition-all font-medium">
+              <span>Role: Semua</span>
+              <ChevronDown size={16} />
             </div>
-            <button className="text-[#991B1F] text-xs font-bold hover:underline">
-              Lihat Semua
+            <button className="p-3 bg-white border border-gray-200 rounded-2xl text-gray-600 hover:bg-gray-50 shadow-sm transition-all">
+              <Filter size={20} />
             </button>
+          </div>
+        </div>
+
+        {/* Table Container - rounded-2xl & shadow-sm senada dengan Card Home */}
+        <section className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="p-6 border-b border-gray-100 flex items-center gap-3">
+            <div className="bg-[#991B1F]/10 p-2 rounded-lg text-[#991B1F]">
+              <Users size={20} />
+            </div>
+            <h3 className="font-bold text-gray-800">Daftar Pengguna Sistem</h3>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left min-w-[900px]">
+            <table className="w-full text-left min-w-[850px]">
               <thead>
                 <tr className="bg-gray-50 text-[10px] uppercase tracking-wider text-gray-400 font-bold border-b border-gray-100">
-                  <th className="px-6 py-4">Staff Peminjam</th>
-                  <th className="px-6 py-4">Kode Barang</th>
-                  <th className="px-6 py-4">Nama Barang</th>
-                  <th className="px-6 py-4">Tanggal Pinjam</th>
-                  <th className="px-6 py-4">Tanggal Kembali</th>
-                  <th className="px-6 py-4 text-center">Status</th>
+                  <th className="px-8 py-5">Nama Pengguna</th>
+                  <th className="px-8 py-5">Email</th>
+                  <th className="px-8 py-5 text-center">Role</th>
+                  <th className="px-8 py-5 text-center">Status Akun</th>
+                  <th className="px-8 py-5 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {pinjaman.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        {/* Container Foto Profil */}
-                        <div className="w-9 h-9 rounded-full bg-gray-200 overflow-hidden shrink-0 border border-gray-100">
-                          {item.foto ? (
-                            <img 
-                              src={item.foto} 
-                              alt={item.staff} 
-                              className="w-full h-full object-cover" 
-                            />
-                          ) : (
-                            // Fallback jika foto tidak ada (menggunakan inisial atau UI Avatars)
-                            <img 
-                              src={`https://ui-avatars.com/api/?name=${item.staff}&background=random`} 
-                              alt="avatar" 
-                            />
-                          )}
+                {users.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-8 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0 border border-gray-100 shadow-sm">
+                          <img 
+                            src={`https://ui-avatars.com/api/?name=${user.name}&background=random&color=fff`} 
+                            alt="avatar" 
+                            className="w-full h-full object-cover"
+                          />
                         </div>
-                        
-                        {/* Informasi Staff */}
                         <div>
-                          <p className="text-sm font-bold text-gray-800 leading-tight">{item.staff}</p>
-                          <p className="text-[11px] text-gray-400 font-medium">{item.divisi}</p>
+                          <p className="text-sm font-bold text-gray-800 leading-tight">{user.name}</p>
+                          <p className="text-[11px] text-gray-400 font-medium mt-0.5 uppercase tracking-tighter">{user.division}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-[11px] font-medium text-gray-500 uppercase tracking-tighter">
-                      {item.kode}
-                    </td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-700">
-                      {item.barang}
-                    </td>
-                    <td className="px-6 py-4 text-[12px] text-gray-600">
-                      {item.pinjam}
-                    </td>
-                    <td className="px-6 py-4 text-[12px] text-gray-600">
-                      {item.kembali}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className={`${item.color} ${item.text} text-[10px] font-normal px-4 py-1.5 rounded-full shadow-sm`}>
-                        {item.status}
+                    <td className="px-8 py-4 text-sm text-gray-600 font-medium">{user.email}</td>
+                    <td className="px-8 py-4 text-center">
+                      <span className={`${user.roleColor} text-white text-[10px] px-5 py-1.5 rounded-full shadow-sm font-bold min-w-[75px] inline-block`}>
+                        {user.role}
                       </span>
+                    </td>
+                    <td className="px-8 py-4 text-center">
+                      <span className="bg-green-100 text-green-600 border border-green-200 text-[10px] px-5 py-1.5 rounded-full font-extrabold shadow-sm inline-block">
+                        AKTIF
+                      </span>
+                    </td>
+                    <td className="px-8 py-4 text-center">
+                      <button className="p-2.5 bg-red-50 text-[#991B1F] hover:bg-[#991B1F] hover:text-white rounded-xl transition-all shadow-sm">
+                        <Trash2 size={18} />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Footer - Senada dengan Home */}
+          <div className="p-6 bg-gray-50/30 border-t border-gray-100 flex justify-between items-center">
+            <p className="text-xs text-gray-400 font-semibold uppercase tracking-widest">
+              Menampilkan {users.length} Total Pengguna
+            </p>
+            <div className="flex gap-3">
+              <button className="px-5 py-2 text-[11px] border border-gray-200 rounded-xl text-gray-300 font-bold cursor-not-allowed bg-white">
+                SEBELUMNYA
+              </button>
+              <button className="px-5 py-2 text-[11px] border border-[#991B1F] text-[#991B1F] rounded-xl font-bold hover:bg-[#991B1F] hover:text-white transition-all bg-white shadow-sm">
+                SELANJUTNYA
+              </button>
+            </div>
           </div>
         </section>
       </main>

@@ -77,16 +77,6 @@ function Login() {
         >
           {loading ? "Memproses..." : "Masuk"}
         </button>
-
-        {/* Link Lupa Kata Sandi */}
-        <div className="mt-4">
-          <Link
-            to="/forgetpassword"
-            className="text-sm text-[#991B1F] hover:underline font-medium"
-          >
-            Lupa kata sandi?
-          </Link>
-        </div>
       </div>
 
       {/* Link Daftar */}
