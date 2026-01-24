@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 const ManageAsset = () => {
   const navigate = useNavigate();
 
-  const handleView = (id) => {
-    navigate(`/items/${id}`);
+  const handleEdit = (id) => {
+    navigate(`/edit-asset/${id}`);
   };
 
   const handleAddAsset = () => {
@@ -182,7 +182,10 @@ const ManageAsset = () => {
 
                     <td className="px-6 py-4">
                       <div className="flex justify-center gap-2">
-                        <button className="p-1.5 bg-blue-600 text-white rounded">
+                        <button
+                          className="p-1.5 bg-blue-600 text-white rounded"
+                          onClick={() => handleEdit(item.id)}
+                        >
                           <Eye size={14} />
                         </button>
                         <button
