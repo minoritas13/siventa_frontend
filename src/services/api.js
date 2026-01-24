@@ -1,7 +1,10 @@
 import axios from "axios";
 
+export const API_BASE_URL = "http://103.63.25.222/api";
+export const STORAGE_URL = "http://103.63.25.222/storage";
+
 const api = axios.create({
-  baseURL: "http://103.63.25.222/api",
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import { Search, Plus, Download, Trash2, Eye, Archive } from "lucide-react";
 import api from "../../services/api";
-import {  useNavigate } from "react-router-dom";
+import { STORAGE_URL } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 const ManageAsset = () => {
   const navigate = useNavigate();
@@ -151,9 +152,7 @@ const ManageAsset = () => {
                         <img
                           src={
                             item.photo
-                              ? `${import.meta.env.VITE_STORAGE_URL}/${
-                                  item.photo
-                                }`
+                              ? `${STORAGE_URL}/${item.photo}`
                               : "/img/default.png"
                           }
                           className="w-10 h-10 rounded-lg object-cover"
@@ -172,7 +171,9 @@ const ManageAsset = () => {
                       <span
                         className={`px-4 py-1 rounded-full text-[10px] text-white
                         ${
-                          item.condition === "baik" ? "bg-blue-600" : "bg-red-600"
+                          item.condition === "baik"
+                            ? "bg-blue-600"
+                            : "bg-red-600"
                         }`}
                       >
                         {item.condition}
