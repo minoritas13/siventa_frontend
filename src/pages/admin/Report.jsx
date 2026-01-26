@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import { Search, Download, FileText, Filter, ChevronLeft, ChevronRight, ClipboardList, Box } from 'lucide-react';
 
 const Report = () => {
   const [activeTab, setActiveTab] = useState('inventaris');
+  const [item,setItem] = useState([]);
+  const [loan,setLoan] = useState([]);
+
+  useEffect(() => {
+    
+  })
+
 
   // Data Dummy Laporan Inventaris
   const dataInventaris = [

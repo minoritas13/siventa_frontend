@@ -41,15 +41,14 @@ const Loan = () => {
 
         const mappedItems = items.map((item) => ({
           id: item.id,
-          kode: item.kode,
+          kode: item.code,
           nama: item.name,
           asset: item.photo ?? "/img/camera-canon-1300d.jpeg",
-          kategoriId: Array.isArray(item.kategori_id)
-            ? item.kategori_id[0]
-            : item.kategori_id,
-          kategoriNama: Array.isArray(item.kategori_id)
-            ? item.kategori_id[1]
-            : "Tanpa Kategori",
+
+          // ⬇️ INI YANG PENTING
+          kategoriId: item.category?.id ?? item.category_id,
+          kategoriNama: item.category?.name ?? "Tanpa Kategori",
+
           stock: item.stock ?? 0,
           status: item.stock > 0 ? `Tersedia ${item.stock}` : "Habis",
           createdAt: item.created_at,
