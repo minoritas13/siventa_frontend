@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import api from "../../services/api"; // axios instance
+import api from "../../services/api";
 
 const Home = () => {
   // =============================
@@ -21,19 +21,18 @@ const Home = () => {
       try {
         setLoading(true);
 
-        // PARALLEL REQUEST (BEST PRACTICE)
         const [loanRes, itemRes, userRes] = await Promise.all([
           api.get("/loans"),
           api.get("/items"),
           api.get("/me"),
         ]);
 
-        // MAP DATA PINJAMAN (TIDAK UBAH TAMPILAN)
         const mappedLoans = loanRes.data.data.map((loan) => ({
+          kode: loan.loan_items.map((li) => li.item?.code || "-").join(", "),
           nama: loan.loan_items.map((li) => li.item?.name).join(", "),
-          jumlah: loan.loan_items.reduce((sum, li) => sum + li.qty, 0),
           masuk: loan.loan_date,
           tenggat: loan.return_date ?? "-",
+          keperluan: loan.purpose || "-",
           status: loan.status === "dikembalikan" ? "Selesai" : "Aktif",
         }));
 
@@ -97,84 +96,81 @@ const Home = () => {
         </section>
 
         {/* Tabel Daftar Barang Pinjaman */}
-        <section>
-          <div className="flex justify-between items-end mb-4">
-            <h2 className="text-lg md:text-xl font-bold text-gray-800">
-              Daftar Barang Pinjaman
-            </h2>
+        <section className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="p-5 border-b border-gray-100 flex justify-between items-center">
+            <h3 className="font-bold text-gray-800 text-lg">Daftar Barang Pinjaman</h3>
           </div>
 
-          <div className="border border-black rounded-lg overflow-hidden shadow-sm mb-4">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-black text-xs md:text-sm font-bold text-gray-700 bg-white">
-                    <th className="py-4 px-4 md:px-6">Nama Barang</th>
-                    <th className="py-4 px-4 text-center">Jumlah</th>
-                    <th className="py-4 px-4 text-center whitespace-nowrap">
-                      Tanggal Masuk
-                    </th>
-                    <th className="py-4 px-4 text-center">Tenggat</th>
-                    <th className="py-4 px-4 text-center">Status</th>
-                  </tr>
-                </thead>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-[10px] md:text-[11px] uppercase tracking-wider text-gray-400 font-bold border-b border-gray-100">
+                  <th className="px-6 py-4">Kode Barang</th>
+                  <th className="px-6 py-4">Nama Barang</th>
+                  <th className="px-6 py-4 text-center">Tanggal Pinjam</th>
+                  <th className="px-6 py-4 text-center">Tanggal Tenggat</th>
+                  <th className="px-6 py-4">Keperluan</th>
+                  <th className="px-6 py-4 text-center">Status</th>
+                </tr>
+              </thead>
 
-                <tbody className="text-xs md:text-sm text-gray-600">
-                  {displayedData.map((item, index) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-none"
-                    >
-                      <td className="py-4 md:py-5 px-4 md:px-6 font-medium text-gray-800">
-                        {item.nama}
-                      </td>
-                      <td className="py-4 md:py-5 px-4 text-center">
-                        {item.jumlah}
-                      </td>
-                      <td className="py-4 md:py-5 px-4 text-center">
-                        {item.masuk}
-                      </td>
-                      <td className="py-4 md:py-5 px-4 text-center">
-                        {item.tenggat}
-                      </td>
-                      <td className="py-4 md:py-5 px-4 text-center">
-                        <span
-                          className={`px-3 md:px-4 py-1 rounded-md text-[9px] md:text-[10px] font-bold text-white shadow-sm inline-block whitespace-nowrap ${
-                            item.status === "Aktif"
-                              ? "bg-orange-500"
-                              : "bg-green-400"
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-
-                  {!loading && dataPinjaman.length === 0 && (
-                    <tr>
-                      <td
-                        colSpan="5"
-                        className="text-center py-6 text-gray-400"
+              <tbody className="divide-y divide-gray-100">
+                {displayedData.map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    {/* KODE */}
+                    <td className="px-6 py-4 text-[12px] uppercase">
+                      {item.kode}
+                    </td>
+                    {/* NAMA */}
+                    <td className="px-6 py-4 text-[12px] uppercase">
+                      {item.nama}
+                    </td>
+                    {/* PINJAM */}
+                    <td className="px-6 py-4 text-center text-[12px]">
+                      {item.masuk}
+                    </td>
+                    {/* TENGGAT */}
+                    <td className="px-6 py-4 text-center text-[12px]">
+                      {item.tenggat}
+                    </td>
+                    {/* KEPERLUAN */}
+                    <td className="px-6 py-4 text-[12px] min-w-[150px]">
+                      {item.keperluan}
+                    </td>
+                    {/* STATUS */}
+                    <td className="px-6 py-4 text-center">
+                      <span
+                        className={`text-[10px] px-4 py-1.5 rounded-full shadow-sm font-medium text-white whitespace-nowrap ${
+                          item.status === "Aktif" ? "bg-orange-500" : "bg-[#53EC53]"
+                        }`}
                       >
-                        Tidak ada data pinjaman
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
 
-          <div className="flex justify-end mb-6">
-            <button
-              onClick={() => setShowAll((prev) => !prev)}
-              className="text-[#991B1F] text-xs font-bold hover:underline transition-all"
-            >
-              {showAll ? "Tampilkan Sedikit" : "Lihat Semua"}
-            </button>
+                {!loading && dataPinjaman.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="text-center py-10 text-gray-400 text-sm">
+                      Tidak ada data pinjaman
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </section>
+
+        {/* Button Lihat Semua dipindah ke bawah section */}
+        <div className="flex justify-end mt-4 mb-10">
+          <button
+            onClick={() => setShowAll((prev) => !prev)}
+            className="text-[#C4161C] text-xs font-medium hover:underline transition-all"
+          >
+            {showAll ? "Tampilkan Sedikit" : "Lihat Semua"}
+          </button>
+        </div>
       </main>
 
       <Footer />
@@ -183,10 +179,10 @@ const Home = () => {
 };
 
 // =============================
-// COMPONENT STAT CARD (TIDAK DIUBAH)
+// COMPONENT STAT CARD
 // =============================
 const StatCard = ({ title, value, subValue }) => (
-  <div className="bg-[#991B1F] text-white p-4 md:p-5 rounded-lg relative overflow-hidden shadow-md group cursor-pointer active:scale-95 transition-all">
+  <div className="bg-[#C4161C] text-white p-4 md:p-5 rounded-lg relative overflow-hidden shadow-md group cursor-pointer active:scale-95 transition-all">
     <p className="text-[9px] md:text-[10px] text-center font-medium mb-1 uppercase tracking-wider">
       {title}
     </p>
@@ -194,7 +190,7 @@ const StatCard = ({ title, value, subValue }) => (
     <p className="text-[9px] md:text-[10px] text-center opacity-80">
       {subValue}
     </p>
-    <span className="hidden md:block absolute bottom-2 right-3 text-[8px] font-bold opacity-70 group-hover:opacity-100 transition-opacity">
+    <span className="hidden md:block absolute bottom-2 right-3 text-[10px] font-medium opacity-70 group-hover:opacity-100 transition-opacity">
       Lihat
     </span>
   </div>

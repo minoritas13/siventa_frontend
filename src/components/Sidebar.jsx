@@ -9,7 +9,6 @@ const Sidebar = () => {
   const { logout } = useAuth(); 
   const navigate = useNavigate();
   
-  // State untuk data profil (User Object)
   const [user, setUser] = useState(null);
 
   // =============================
@@ -19,7 +18,6 @@ const Sidebar = () => {
     const fetchProfile = async () => {
       try {
         const res = await api.get("/me");
-        // Mengambil data dari res.data.data atau res.data sesuai struktur API Anda
         const userData = res.data.data || res.data;
         setUser(userData);
       } catch (error) {
@@ -55,10 +53,10 @@ const Sidebar = () => {
     <>
       {/* MOBILE HEADER */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between p-4 bg-white border-b shadow-sm">
-        <button onClick={() => setIsOpen(true)} className="text-[#991B1F]">
+        <button onClick={() => setIsOpen(true)} className="text-[#C4161C]">
           <Menu size={26} />
         </button>
-        <h1 className="font-black text-[#991B1F] tracking-tight pr-3">SIVENTA</h1>
+        <h1 className="font-black text-[#C4161C] tracking-tight pr-3">SIVENTA</h1>
       </div>
 
       {/* OVERLAY */}
@@ -68,7 +66,7 @@ const Sidebar = () => {
 
       {/* SIDEBAR ASIDE */}
       <aside
-        className={`fixed md:sticky top-0 inset-y-0 left-0 z-50 w-[280px] h-screen bg-[#991B1F] flex flex-col text-white transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+        className={`fixed md:sticky top-0 inset-y-0 left-0 z-50 w-[280px] h-screen bg-[#C4161C] flex flex-col text-white transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         {/* LOGO SECTION */}
         <div className="p-8 text-center border-b border-white/20 relative">
@@ -76,7 +74,7 @@ const Sidebar = () => {
             <X size={20} />
           </button>
           <div className="bg-white inline-block px-4 py-0.5 mb-2 rounded-sm">
-            <h1 className="text-[#991B1F] text-2xl font-black tracking-tighter">
+            <h1 className="text-[#C4161C] text-2xl font-black tracking-tighter">
               <span>SIVE</span><span className="text-black">NTA</span>
             </h1>
           </div>
@@ -94,7 +92,7 @@ const Sidebar = () => {
                   to={item.path}
                   end={item.path === "/admin"}
                   onClick={() => setIsOpen(false)}
-                  className={({ isActive }) => `flex items-center gap-4 px-6 py-3 rounded-xl transition-all font-bold ${isActive ? "bg-white text-[#991B1F] shadow-md" : "hover:bg-white/10 text-white"}`}
+                  className={({ isActive }) => `flex items-center gap-4 px-6 py-3 rounded-xl transition-all font-bold ${isActive ? "bg-white text-[#C4161C] shadow-md" : "hover:bg-white/10 text-white"}`}
                 >
                   {item.icon} <span className="text-[15px]">{item.name}</span>
                 </NavLink>
@@ -110,7 +108,7 @@ const Sidebar = () => {
                   key={item.name}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={({ isActive }) => `flex items-center gap-4 px-6 py-3 rounded-xl transition-all font-bold ${isActive ? "bg-white text-[#991B1F] shadow-lg" : "hover:bg-white/10 text-white"}`}
+                  className={({ isActive }) => `flex items-center gap-4 px-6 py-3 rounded-xl transition-all font-bold ${isActive ? "bg-white text-[#C4161C] shadow-lg" : "hover:bg-white/10 text-white"}`}
                 >
                   {item.icon} <span className="text-[15px]">{item.name}</span>
                 </NavLink>
@@ -143,7 +141,7 @@ const Sidebar = () => {
           </div>
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white hover:text-[#991B1F] text-white py-2 rounded-lg text-xs font-semibold transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white hover:text-[#AA1419] text-white py-2 rounded-lg text-xs font-semibold transition-colors"
           >
             <LogOut size={16} /> Keluar
           </button>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // 1. Tambahkan useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const { login } = useAuth();
-  const navigate = useNavigate(); // 2. Inisialisasi navigate
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +39,7 @@ function Login() {
         </h2>
 
         {/* ERROR MESSAGE */}
-        {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
+        {error && <div className="mb-4 text-sm text-[#C4161C]">{error}</div>}
 
         <div className="space-y-4">
           <input
@@ -47,7 +47,7 @@ function Login() {
             placeholder="Email / Username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#991B1F] focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
           />
 
           <input
@@ -55,7 +55,7 @@ function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#991B1F] focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
           />
         </div>
 
@@ -64,7 +64,7 @@ function Login() {
             type="checkbox"
             checked={remember}
             onChange={(e) => setRemember(e.target.checked)}
-            className="w-4 h-4 rounded border-gray-300 accent-[#991B1F] focus:ring-[#991B1F]"
+            className="w-4 h-4 rounded border-gray-300 accent-[#C4161C] focus:ring-[#C4161C]"
           />
           <span className="text-sm text-gray-600">Tetap masuk</span>
         </div>
@@ -73,7 +73,7 @@ function Login() {
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full py-3 bg-[#991B1F] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98]"
+          className="w-full py-3 bg-[#C4161C] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98]"
         >
           {loading ? "Memproses..." : "Masuk"}
         </button>
@@ -84,7 +84,7 @@ function Login() {
         Belum punya akun?{" "}
         <Link
           to="/register"
-          className="text-[#991B1F] cursor-pointer hover:underline font-bold"
+          className="text-[#C4161C] cursor-pointer hover:underline font-bold"
         >
           Daftar dong Bestie
         </Link>

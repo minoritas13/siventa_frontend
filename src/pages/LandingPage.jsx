@@ -19,7 +19,7 @@ function LandingPage() {
             <div className="md:w-1/2 space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900">
                 Kelola Aset Kantor <br />
-                Lebih <span className="text-red-700">Efisien</span>
+                Lebih <span className="text-[#C4161C]">Efisien</span>
             </h1>
 
             <p className="text-lg leading-relaxed pb-1 inline-block">
@@ -29,7 +29,7 @@ function LandingPage() {
             </p>
 
             <div className="flex space-x-4 pt-4">
-                <button className="bg-red-700 text-white px-6 py-3 rounded-md font-semibold flex items-center hover:bg-red-800 transition">
+                <button className="bg-[#C4161C] text-white px-6 py-3 rounded-md font-semibold flex items-center hover:bg-[#AA1419] transition">
                 Pelajari Lebih Lanjut <span className="ml-2">↓</span>
                 </button>
                 <button className="border border-gray-300 text-gray-700 px-8 py-3 rounded-md font-semibold hover:bg-gray-50 transition">
@@ -54,7 +54,7 @@ function LandingPage() {
             <h2 className="text-2xl font-bold mb-4 flex justify-center items-center gap-2">
                 <span>Tentang</span>
                 <span className="flex">
-                <span className="text-[#991B1F]">SIVE</span>
+                <span className="text-[#C4161C]">SIVE</span>
                 <span className="text-black">NTA</span>
                 </span>
             </h2>
@@ -89,7 +89,7 @@ function LandingPage() {
                 <h2 className="text-2xl font-bold mb-4 flex justify-center items-center gap-2">
                 <span>Tujuan</span>
                 <span className="flex">
-                    <span className="text-[#991B1F]">SIVE</span>
+                    <span className="text-[#C4161C]">SIVE</span>
                     <span className="text-black">NTA</span>
                 </span>
                 </h2>
@@ -112,7 +112,7 @@ function LandingPage() {
                 <h2 className="text-2xl font-bold mb-4 flex justify-center items-center gap-2">
                 <span>Manfaat</span>
                 <span className="flex">
-                    <span className="text-[#991B1F]">SIVE</span>
+                    <span className="text-[#C4161C]">SIVE</span>
                     <span className="text-black">NTA</span>
                 </span>
                 </h2>
@@ -136,7 +136,7 @@ function LandingPage() {
             <h2 className="text-2xl font-bold mb-4 flex justify-center items-center gap-2">
                 <span>Fitur Utama</span>
                 <span className="flex">
-                <span className="text-[#991B1F]">SIVE</span>
+                <span className="text-[#C4161C]">SIVE</span>
                 <span className="text-black">NTA</span>
                 </span>
             </h2>

@@ -4,7 +4,7 @@ import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
     return (
-        <footer className="bg-[#991B1F] text-white py-8 px-12">
+        <footer className="bg-[#C4161C] text-white py-8 px-12">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-start gap-10">
             
             {/* Kolom 1: Logo (Rata Kiri) */}

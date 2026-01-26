@@ -23,11 +23,11 @@ const ItemData = () => {
         // SESUAIKAN DENGAN LOGIKA LOANFORM
         const mappedData = res.data.data.map((item) => ({
           id: item.id,
-          asset: item.photo ?? "/img/camera-canon-1300d.jpeg", // Fallback sama dengan LoanForm
+          asset: item.photo ?? "/img/camera-canon-1300d.jpeg",
           nama: item.name,
           kategori: item.kategori_id?.[1] ?? "-",
-          stock: item.stock ?? 0, // Ambil nilai stok asli
-          status: (item.stock ?? 0) > 0 ? "Tersedia" : "Tidak Tersedia", // Logika ketersediaan
+          stock: item.stock ?? 0,
+          status: (item.stock ?? 0) > 0 ? "Tersedia" : "Tidak Tersedia",
           kode: item.kode,
         }));
 
@@ -104,53 +104,56 @@ const ItemData = () => {
           {/* Navigasi langsung ke halaman Loan */}
           <button 
             onClick={() => navigate("/loan")}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-[#991B1F] text-white rounded-md text-[11px] font-bold hover:bg-[#7f1619] transition-all shadow-sm w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-[#C4161C] text-white rounded-md text-[11px] font-bold hover:bg-[#AA1419] transition-all shadow-sm w-full sm:w-auto"
           >
             <FaPlus className="text-xs" /> Pinjam Barang
           </button>
         </div>
 
-        <div className="border border-black rounded-xl overflow-hidden shadow-sm mb-4">
+        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm mb-4">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
-                <tr className="border-b border-black text-[13px] font-bold text-gray-700 bg-white">
-                  <th className="py-4 px-6">Asset</th>
+                {/* Header mengikuti style Home/Admin: bg-gray-50 & uppercase */}
+                <tr className="bg-gray-50 text-[10px] md:text-[11px] uppercase tracking-wider text-gray-400 font-bold border-b border-gray-100">
+                  <th className="py-4 px-6">Kode Barang</th>
                   <th className="py-4 px-6">Nama Barang</th>
                   <th className="py-4 px-6">Kategori</th>
-                  <th className="py-4 px-6">Stok Tersedia</th>
-                  <th className="py-4 px-6">Status</th>
+                  <th className="py-4 px-6 text-center">Jumlah</th>
+                  <th className="py-4 px-6 text-center">Status</th>
                   <th className="py-4 px-6 text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="text-[13px] text-gray-600 bg-white">
+              <tbody className="divide-y divide-gray-100 bg-white">
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="py-10 text-center text-gray-400">Memuat data...</td>
+                    <td colSpan="6" className="py-16 text-center text-gray-400 text-sm">
+                      Memuat data inventaris...
+                    </td>
                   </tr>
                 ) : (
                   displayedItems.map((item) => (
-                    <tr key={item.id} className="border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors">
+                    <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                       <td className="py-4 px-6">
-                        <div className="w-10 h-10 md:w-12 md:h-12 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                          <img
-                            src={item.asset}
-                            alt="asset"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
+                        <span className="text-[12px] uppercase">
+                          {item.kode}
+                        </span>
                       </td>
-                      <td className="py-4 px-6 font-medium text-gray-800">
-                        <div className="flex flex-col">
-                          <span>{item.nama}</span>
-                          <span className="text-[10px] text-gray-400 uppercase tracking-tighter">{item.kode}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6">{item.kategori}</td>
-                      <td className="py-4 px-6 font-normal">{item.stock} Unit</td>
                       <td className="py-4 px-6">
-                        <span className={`px-3 py-1.5 rounded-md text-[10px] font-bold text-white shadow-sm inline-block whitespace-nowrap ${
-                          item.status === "Tersedia" ? "bg-green-500" : "bg-red-500"
+                        <span className="text-[12px] uppercase">
+                          {item.nama}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="px-6 py-4 text-[12px]">{item.kategori}</span>
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        <span className="px-6 py-4 text-[12px]">{item.stock} Unit</span>
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        {/* Status Badge dalam bentuk Kapsul (Rounded Full) */}
+                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-medium text-white shadow-sm inline-block whitespace-nowrap ${
+                          item.status === "Tersedia" ? "bg-[#53EC53]" : "bg-red-500"
                         }`}>
                           {item.status}
                         </span>
@@ -158,7 +161,8 @@ const ItemData = () => {
                       <td className="py-4 px-6 text-center">
                         <button 
                           onClick={() => navigate(`/loan/form/${item.id}`)}
-                          className="p-2 text-gray-600 hover:text-[#991B1F] transition-colors"
+                          className="p-2.5 bg-gray-50 rounded-lg text-gray-400 hover:text-[#991B1F] hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
+                          title="Lihat Detail"
                         >
                           <FaEye className="text-base" />
                         </button>
@@ -175,7 +179,7 @@ const ItemData = () => {
           <div className="flex justify-end mb-6">
             <button 
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-[#991B1F] text-xs font-bold hover:underline transition-all"
+              className="text-[#C4161C] text-xs font-bold hover:underline transition-all"
             >
               {isExpanded ? "Tampilkan Sedikit" : `Lihat Semua (${inventoryData.length} Barang)`}
             </button>

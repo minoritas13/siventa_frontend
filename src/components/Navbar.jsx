@@ -12,8 +12,8 @@ const Navbar = () => {
     const navLinkStyles = ({ isActive }) => {
         return `transition-colors duration-200 ${
             isActive 
-            ? "text-[#991B1F] font-bold" // Bagian border-b-2 telah dihapus di sini
-            : "text-gray-700 hover:text-[#991B1F]"
+            ? "text-[#C4161C] font-bold"
+            : "text-gray-700 hover:text-[#AA1419]"
         }`;
     };
 
@@ -24,7 +24,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-3">
                     <div className="flex flex-col items-center">
                         <h1 className="text-lg font-bold leading-none">
-                            <span className="text-[#991B1F]">SIVE</span>
+                            <span className="text-[#C4161C]">SIVE</span>
                             <span className="text-black">NTA</span>
                         </h1>
                         <img 
