@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { Search, ChevronDown } from "lucide-react";
+import { Search } from "lucide-react";
 import { MdAssignmentReturn } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -35,7 +35,6 @@ const Loan = () => {
 
         if (!isMounted) return;
 
-        /* ===== ITEMS ===== */
         const items = Array.isArray(itemsRes?.data?.data)
           ? itemsRes.data.data
           : [];
@@ -54,9 +53,8 @@ const Loan = () => {
           stock: item.stock ?? 0,
           status: item.stock > 0 ? `Tersedia ${item.stock}` : "Habis",
           createdAt: item.created_at,
-        });
+        }));
 
-        /* ===== LOANS ===== */
         const loansRaw = Array.isArray(loansRes?.data?.data)
           ? loansRes.data.data
           : [];
@@ -81,7 +79,9 @@ const Loan = () => {
     };
 
     fetchAll();
-    return () => (isMounted = false);
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   /* ================= FILTER & SORT ================= */
@@ -113,23 +113,21 @@ const Loan = () => {
     }
   };
 
-  /* ================= RENDER ================= */
   return (
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
       <Navbar />
 
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 md:px-12 py-8">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Peminjaman Aset</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-3xl font-bold">Peminjaman Aset</h1>
+          <p className="text-sm text-gray-500">
             Ajukan dan kelola peminjaman barang kantor.
           </p>
         </header>
 
         <div className="flex flex-col lg:flex-row gap-10">
-          {/* ================= LEFT ================= */}
+          {/* LEFT */}
           <div className="flex-1">
-            {/* FILTER */}
             <div className="bg-white border rounded-xl p-4 mb-8 flex flex-wrap gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -164,7 +162,6 @@ const Loan = () => {
               </select>
             </div>
 
-            {/* GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredInventory.map((item) => (
                 <div
@@ -191,13 +188,13 @@ const Loan = () => {
                       </span>
                     </div>
 
-                    <h3 className="font-bold text-sm mb-4 line-clamp-2">
+                    <h3 className="font-bold text-sm mb-4">
                       {item.nama}
                     </h3>
 
                     <button
                       onClick={() => navigate(`/loan/form/${item.id}`)}
-                      className="w-full py-2 bg-[#991B1F] text-white rounded-lg text-sm"
+                      className="w-full py-2 bg-[#991B1F] text-white rounded-lg"
                     >
                       + Pinjam Barang
                     </button>
@@ -207,7 +204,7 @@ const Loan = () => {
             </div>
           </div>
 
-          {/* ================= SIDEBAR ================= */}
+          {/* SIDEBAR */}
           <aside className="w-full lg:w-[320px]">
             <div className="bg-white p-6 rounded-2xl border shadow sticky top-24">
               <h2 className="font-bold mb-4">
@@ -223,26 +220,28 @@ const Loan = () => {
                   Tidak ada peminjaman aktif
                 </p>
               ) : (
-                dataPinjaman.map((loan) =>
-                  loan.loan_items.map((li) => (
-                    <div
-                      key={li.id}
-                      className="border rounded-xl p-4 mb-3"
-                    >
-                      <p className="text-xs font-bold mb-2">
-                        {li.item?.name}
-                      </p>
-
-                      <button
-                        onClick={() => handleReturn(loan.id)}
-                        className="w-full py-2 text-[10px] bg-[#991B1F] text-white rounded-lg flex items-center justify-center gap-2"
+                dataPinjaman.map((loan) => (
+                  <React.Fragment key={loan.id}>
+                    {loan.loan_items.map((li) => (
+                      <div
+                        key={li.id}
+                        className="border rounded-xl p-4 mb-3"
                       >
-                        <MdAssignmentReturn size={14} />
-                        Kembalikan
-                      </button>
-                    </div>
-                  ))
-                )
+                        <p className="text-xs font-bold mb-2">
+                          {li.item?.name}
+                        </p>
+
+                        <button
+                          onClick={() => handleReturn(loan.id)}
+                          className="w-full py-2 text-[10px] bg-[#991B1F] text-white rounded-lg flex items-center justify-center gap-2"
+                        >
+                          <MdAssignmentReturn size={14} />
+                          Kembalikan
+                        </button>
+                      </div>
+                    ))}
+                  </React.Fragment>
+                ))
               )}
             </div>
           </aside>
