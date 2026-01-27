@@ -85,7 +85,7 @@ const ManageAsset = () => {
               <input
                 type="text"
                 placeholder="Cari nama atau kode aset..."
-                className="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm bg-gray-50"
+                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-red-500 transition-all"
               />
             </div>
 
@@ -100,8 +100,8 @@ const ManageAsset = () => {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
-          <div className="p-5 border-b flex items-center gap-2 text-[#991B1F]">
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="p-5 flex items-center gap-2 text-[#991B1F]">
             <Archive size={20} />
             <h2 className="font-bold text-gray-800">Daftar Barang</h2>
           </div>
@@ -118,7 +118,7 @@ const ManageAsset = () => {
                 </tr>
               </thead>
 
-              <tbody className="divide-y">
+              <tbody className="">
                 {loading && (
                   <tr>
                     <td

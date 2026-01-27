@@ -1,33 +1,130 @@
-import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/Sidebar';
-import { Search, Download, FileText, Filter, ChevronLeft, ChevronRight, ClipboardList, Box } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import Sidebar from "../../components/Sidebar";
+import {
+  Search,
+  Download,
+  FileText,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  Box,
+} from "lucide-react";
+import api from "../../services/api";
+import { STORAGE_URL } from "../../services/api";
 
 const Report = () => {
-  const [activeTab, setActiveTab] = useState('inventaris');
-  const [item,setItem] = useState([]);
-  const [loan,setLoan] = useState([]);
+  const [activeTab, setActiveTab] = useState("inventaris");
+  const [item, setItem] = useState([]);
+  const [loan, setLoan] = useState([]);
 
   useEffect(() => {
-    
-  })
+    const fetchData = async () => {
+      const [itemRes, loanRes] = await Promise.all([
+        api.get("/items"),
+        api.get("/allLoans"),
+      ]);
 
+      const mappedData = itemRes.data.data.map((item) => ({
+        id: item.id,
+        kode_barang: item.code,
+        nama_barang: item.name,
+        kategori: item.category?.name ?? "-",
+        jumlah_barang: item.stock,
+        kondisi: item.condition,
+        umur_barang: `${item.umur_barang} tahun`,
+        tanggal_perolehan: item.tanggal_perolehan,
+        nilai_perolehan: Number(item.nilai_perolehan).toLocaleString("id-ID"),
+        deskripsi: item.description,
+        foto: item.photo,
+        dibuat_pada: item.created_at,
+        diperbarui_pada: item.updated_at,
+      }));
 
-  // Data Dummy Laporan Inventaris
-  const dataInventaris = [
-    { kode: 'CAM CANON D1200-001', nama: 'Sony Alpha A7 III', kategori: 'Fotografi dan Video', status: 'Tersedia', kondisi: 'Baik', img: '/img/camera-canon-1300d.jpeg' },
-    { kode: 'CAM CANON D1200-001', nama: 'Sony Alpha A7 III', kategori: 'Elektronik', status: 'Tersedia', kondisi: 'Baik', img: '/img/camera-canon-1300d.jpeg' },
-    { kode: 'CAM CANON D1200-001', nama: 'MacBook Pro M2', kategori: 'Furniture', status: 'Dipinjam', kondisi: 'Rusak', img: '/img/camera-canon-1300d.jpeg' },
-    { kode: 'CAM CANON D1200-001', nama: 'Lensa Canon 70-200mm', kategori: 'Fotografi dan Video', status: 'Dipinjam', kondisi: 'Baik', img: '/img/camera-canon-1300d.jpeg' },
-    { kode: 'CAM CANON D1200-001', nama: 'Sennheiser Mic Kit', kategori: 'Elektronik', status: 'Tersedia', kondisi: 'Rusak', img: '/img/camera-canon-1300d.jpeg' },
-  ];
+      const dataPeminjaman = loanRes.data.data.flatMap((loan) =>
+        loan.loan_items.map((loanItem) => ({
+          staff: loan.user?.name ?? "-",
+          divisi: "-", // tidak ada di API, isi default
+          kode: loanItem.item?.code ?? "-",
+          barang: loanItem.item?.name ?? "-",
+          pinjam: new Date(loan.loan_date).toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          }),
+          kembali: loan.return_date
+            ? new Date(loan.return_date).toLocaleDateString("id-ID", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
+            : "-",
+          status: loan.status,
+          foto: loanItem.item?.photo
+            ? `/storage/${loanItem.item.photo}`
+            : "/foto-default.png",
+        }))
+      );
+
+      setItem(mappedData);
+      setLoan(dataPeminjaman);
+    };
+
+    fetchData();
+  }, []);
 
   // Data Dummy Laporan Peminjaman
   const dataPeminjaman = [
-    { staff: 'Budi Santoso', divisi: 'Redaksi Foto', kode: 'CAM CANON D1200-001', barang: 'Sony Alpha A7 III', pinjam: '12 Oktober 2025', kembali: '14 Oktober 2025', status: 'Selesai', foto: '/foto-andi.png' },
-    { staff: 'Siti Aminah', divisi: 'Redaksi Video', kode: 'CAM CANON D1200-001', barang: 'DJI Ronin S', pinjam: '13 Oktober 2025', kembali: '21 Oktober 2025', status: 'Selesai', foto: '/foto-andi.png' },
-    { staff: 'Rizky Pratama', divisi: 'IT Support', kode: 'CAM CANON D1200-001', barang: 'MacBook Pro M2', pinjam: '12 Oktober 2025', kembali: '21 Oktober 2025', status: 'Selesai', foto: '/foto-andi.png' },
-    { staff: 'Anton Wijaya', divisi: 'Redaksi Video', kode: 'CAM CANON D1200-001', barang: 'Sennheiser Mic Kit', pinjam: '12 Oktober 2025', kembali: '21 Oktober 2025', status: 'Terlambat', foto: '/foto-andi.png' },
-    { staff: 'Dewi Lestari', divisi: 'Koresponden', kode: 'CAM CANON D1200-001', barang: 'Lensa Canon 70-200mm', pinjam: '12 Oktober 2025', kembali: '21 Oktober 2025', status: 'Dipinjam', foto: '/foto-andi.png' },
+    {
+      staff: "Budi Santoso",
+      divisi: "Redaksi Foto",
+      kode: "CAM CANON D1200-001",
+      barang: "Sony Alpha A7 III",
+      pinjam: "12 Oktober 2025",
+      kembali: "14 Oktober 2025",
+      status: "Selesai",
+      foto: "/foto-andi.png",
+    },
+    {
+      staff: "Siti Aminah",
+      divisi: "Redaksi Video",
+      kode: "CAM CANON D1200-001",
+      barang: "DJI Ronin S",
+      pinjam: "13 Oktober 2025",
+      kembali: "21 Oktober 2025",
+      status: "Selesai",
+      foto: "/foto-andi.png",
+    },
+    {
+      staff: "Rizky Pratama",
+      divisi: "IT Support",
+      kode: "CAM CANON D1200-001",
+      barang: "MacBook Pro M2",
+      pinjam: "12 Oktober 2025",
+      kembali: "21 Oktober 2025",
+      status: "Selesai",
+      foto: "/foto-andi.png",
+    },
+    {
+      staff: "Anton Wijaya",
+      divisi: "Redaksi Video",
+      kode: "CAM CANON D1200-001",
+      barang: "Sennheiser Mic Kit",
+      pinjam: "12 Oktober 2025",
+      kembali: "21 Oktober 2025",
+      status: "Terlambat",
+      foto: "/foto-andi.png",
+    },
+    {
+      staff: "Dewi Lestari",
+      divisi: "Koresponden",
+      kode: "CAM CANON D1200-001",
+      barang: "Lensa Canon 70-200mm",
+      pinjam: "12 Oktober 2025",
+      kembali: "21 Oktober 2025",
+      status: "Dipinjam",
+      foto: "/foto-andi.png",
+    },
   ];
 
   return (
@@ -38,7 +135,9 @@ const Report = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-800 leading-tight">Manajemen Laporan</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800 leading-tight">
+              Manajemen Laporan
+            </h1>
             <p className="text-xs md:text-sm text-gray-500 max-w-2xl mt-1">
               Kelola laporan inventaris dan peminjaman secara berkala.
             </p>
@@ -49,23 +148,28 @@ const Report = () => {
           </button>
         </div>
 
+        {console.log(loan)}
+
         {/* Container Utama Laporan */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          
           {/* Tab Navigation */}
           <div className="flex border-b border-gray-100 px-6 pt-5 gap-8 overflow-x-auto scrollbar-hide">
-            <button 
-              onClick={() => setActiveTab('inventaris')}
+            <button
+              onClick={() => setActiveTab("inventaris")}
               className={`pb-4 text-sm font-bold flex items-center gap-2 transition-all border-b-2 whitespace-nowrap ${
-                activeTab === 'inventaris' ? 'border-[#991B1F] text-[#991B1F]' : 'border-transparent text-gray-400 hover:text-gray-600'
+                activeTab === "inventaris"
+                  ? "border-[#991B1F] text-[#991B1F]"
+                  : "border-transparent text-gray-400 hover:text-gray-600"
               }`}
             >
               <Box size={18} /> Laporan Inventaris
             </button>
-            <button 
-              onClick={() => setActiveTab('peminjaman')}
+            <button
+              onClick={() => setActiveTab("peminjaman")}
               className={`pb-4 text-sm font-bold flex items-center gap-2 transition-all border-b-2 whitespace-nowrap ${
-                activeTab === 'peminjaman' ? 'border-[#991B1F] text-[#991B1F]' : 'border-transparent text-gray-400 hover:text-gray-600'
+                activeTab === "peminjaman"
+                  ? "border-[#991B1F] text-[#991B1F]"
+                  : "border-transparent text-gray-400 hover:text-gray-600"
               }`}
             >
               <ClipboardList size={18} /> Laporan Peminjaman
@@ -75,21 +179,24 @@ const Report = () => {
           {/* Search & Filter Section */}
           <div className="p-5 flex flex-col md:flex-row gap-4 items-center bg-white">
             <div className="relative w-full md:w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-              <input 
-                type="text" 
-                placeholder="Cari nama staf atau barang ..." 
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={16}
+              />
+              <input
+                type="text"
+                placeholder="Cari nama staf atau barang ..."
                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-red-500 transition-all"
               />
             </div>
-            
+
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-              {activeTab === 'inventaris' && (
+              {activeTab === "inventaris" && (
                 <select className="flex-1 md:w-44 p-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-500 focus:outline-none shadow-sm cursor-pointer">
                   <option>Semua Kategori</option>
                 </select>
               )}
-              
+
               <select className="flex-1 md:w-40 p-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-500 focus:outline-none shadow-sm cursor-pointer">
                 <option>Status</option>
               </select>
@@ -105,12 +212,14 @@ const Report = () => {
             <table className="w-full text-left min-w-[850px]">
               <thead>
                 <tr className="bg-gray-50/50 text-[10px] uppercase font-bold text-gray-400 tracking-wider border-y border-gray-100">
-                  {activeTab === 'inventaris' ? (
+                  {activeTab === "inventaris" ? (
                     <>
                       <th className="px-6 py-4">Kode Barang</th>
                       <th className="px-6 py-4">Nama Barang</th>
                       <th className="px-6 py-4">Kategori</th>
-                      <th className="px-6 py-4 text-center">Status</th>
+                      <th className="px-6 py-4">Nilai Perolehan</th>
+                      <th className="px-6 py-4">Tanggal Perolehan</th>
+                      <th className="px-6 py-4">Umur Barang</th>
                       <th className="px-6 py-4 text-center">Kondisi</th>
                     </>
                   ) : (
@@ -126,90 +235,130 @@ const Report = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {activeTab === 'inventaris' ? (
-                  dataInventaris.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="px-6 py-5 text-[11px] font-medium text-gray-500 uppercase tracking-tighter">
-                        {item.kode}
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <img 
-                            src={item.img} 
-                            alt={item.nama} 
-                            className="w-10 h-10 rounded-lg object-cover shadow-sm border border-gray-100 shrink-0" 
-                          />
-                          <span className="text-xs font-bold text-gray-800">{item.nama}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5 text-xs text-gray-600 font-medium italic">
-                        {item.kategori}
-                      </td>
-                      <td className="px-6 py-5 text-center">
-                        <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold text-white shadow-sm ${item.status === 'Tersedia' ? 'bg-green-400' : 'bg-orange-400'}`}>
-                          {item.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5 text-center">
-                        <span className={`px-5 py-1.5 rounded-full text-[10px] font-bold text-white shadow-sm ${item.kondisi === 'Baik' ? 'bg-blue-600' : 'bg-red-600'}`}>
-                          {item.kondisi}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  dataPeminjaman.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full border border-gray-200 overflow-hidden shrink-0 shadow-sm">
-                             <img 
-                                src={item.foto} 
-                                alt={item.staff} 
+                {activeTab === "inventaris"
+                  ? item.map((item, id) => (
+                      <tr
+                        key={id}
+                        className="hover:bg-gray-50/80 transition-colors"
+                      >
+                        <td className="px-6 py-5 text-[11px] font-medium text-gray-500 uppercase tracking-tighter">
+                          {item.kode_barang}
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={
+                                item.foto
+                                  ? `${STORAGE_URL}/${item.foto}`
+                                  : "/img/default.png"
+                              }
+                              alt={item.nama_barang}
+                              className="w-10 h-10 rounded-lg object-cover shadow-sm border border-gray-100 shrink-0"
+                            />
+                            <span className="text-xs font-bold text-gray-800">
+                              {item.nama_barang}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5 text-xs text-gray-600 font-medium italic">
+                          {item.kategori}
+                        </td>
+                        <td className="px-6 py-5 text-xs text-gray-600 font-medium italic">
+                          {item.nilai_perolehan}
+                        </td>
+                        <td className="px-6 py-5 text-xs text-gray-600 font-medium italic">
+                          {item.tanggal_perolehan}
+                        </td>
+                        <td className="px-6 py-5 text-xs text-gray-600 font-medium italic">
+                          {item.umur_barang}
+                        </td>
+                        <td className="px-6 py-5 text-center">
+                          <span
+                            className={`px-5 py-1.5 rounded-full text-[10px] font-bold text-white shadow-sm ${
+                              item.kondisi === "baik"
+                                ? "bg-blue-600"
+                                : "bg-red-600"
+                            }`}
+                          >
+                            {item.kondisi}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  : loan.map((item, id) => (
+                      <tr
+                        key={id}
+                        className="hover:bg-gray-50/80 transition-colors"
+                      >
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-full border border-gray-200 overflow-hidden shrink-0 shadow-sm">
+                              <img
+                                src={
+                                  item.foto
+                                    ? `${STORAGE_URL}/${item.foto}`
+                                    : "/img/default.png"
+                                }
+                                alt={item.staff}
                                 className="w-full h-full object-cover"
-                                onError={(e) => { e.target.src = `https://ui-avatars.com/api/?name=${item.staff}&background=random` }}
-                             />
+                                onError={(e) => {
+                                  e.target.src = `https://ui-avatars.com/api/?name=${item.staff}&background=random`;
+                                }}
+                              />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-gray-800 leading-tight">
+                                {item.staff}
+                              </p>
+                              <p className="text-[10px] text-gray-400 font-medium">
+                                {item.divisi}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-xs font-bold text-gray-800 leading-tight">{item.staff}</p>
-                            <p className="text-[10px] text-gray-400 font-medium">{item.divisi}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5 text-[11px] font-medium text-gray-500 uppercase tracking-tighter">
-                        {item.kode}
-                      </td>
-                      <td className="px-6 py-5 text-xs font-bold text-gray-700">
-                        {item.barang}
-                      </td>
-                      <td className="px-6 py-5 text-[11px] text-gray-600">
-                        {item.pinjam}
-                      </td>
-                      <td className="px-6 py-5 text-[11px] text-gray-600">
-                        {item.kembali}
-                      </td>
-                      <td className="px-6 py-5 text-center">
-                        <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold text-white shadow-sm uppercase ${
-                          item.status === 'Selesai' ? 'bg-green-400' : 
-                          item.status === 'Terlambat' ? 'bg-red-600' : 
-                          'bg-orange-400'
-                        }`}>
-                          {item.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                        </td>
+                        <td className="px-6 py-5 text-[11px] font-medium text-gray-500 uppercase tracking-tighter">
+                          {item.kode}
+                        </td>
+                        <td className="px-6 py-5 text-xs font-bold text-gray-700">
+                          {item.barang}
+                        </td>
+                        <td className="px-6 py-5 text-[11px] text-gray-600">
+                          {item.pinjam}
+                        </td>
+                        <td className="px-6 py-5 text-[11px] text-gray-600">
+                          {item.kembali}
+                        </td>
+                        <td className="px-6 py-5 text-center">
+                          <span
+                            className={`px-4 py-1.5 rounded-full text-[10px] font-bold text-white shadow-sm uppercase ${
+                              item.status === "dipinjam"
+                                ? "bg-green-400"
+                                : item.status === "terlambat"
+                                ? "bg-red-600"
+                                : "bg-orange-400"
+                            }`}
+                          >
+                            {item.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
           </div>
 
           {/* Footer Pagination */}
           <div className="p-5 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center text-[11px] text-gray-500 font-medium gap-4">
-            <p className="text-center sm:text-left">Menampilkan 1 sampai 5 dari 5 data laporan</p>
+            <p className="text-center sm:text-left">
+              Menampilkan 1 sampai 5 dari 5 data laporan
+            </p>
             <div className="flex gap-2 w-full sm:w-auto">
-              <button className="flex-1 sm:flex-none px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">Sebelumnya</button>
-              <button className="flex-1 sm:flex-none px-4 py-2 border border-red-200 text-[#991B1F] rounded-xl hover:bg-red-50 transition-all font-bold">Selanjutnya</button>
+              <button className="flex-1 sm:flex-none px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
+                Sebelumnya
+              </button>
+              <button className="flex-1 sm:flex-none px-4 py-2 border border-red-200 text-[#991B1F] rounded-xl hover:bg-red-50 transition-all font-bold">
+                Selanjutnya
+              </button>
             </div>
           </div>
         </div>
