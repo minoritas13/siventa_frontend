@@ -44,7 +44,7 @@ const Report = () => {
       const dataPeminjaman = loanRes.data.data.flatMap((loan) =>
         loan.loan_items.map((loanItem) => ({
           staff: loan.user?.name ?? "-",
-          divisi: "-", // tidak ada di API, isi default
+          divisi: "-", 
           kode: loanItem.item?.code ?? "-",
           barang: loanItem.item?.name ?? "-",
           pinjam: new Date(loan.loan_date).toLocaleDateString("id-ID", {
