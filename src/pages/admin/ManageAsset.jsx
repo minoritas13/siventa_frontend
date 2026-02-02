@@ -100,14 +100,14 @@ const ManageAsset = () => {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
           <div className="p-5 flex items-center gap-2 text-[#991B1F]">
             <Archive size={20} />
             <h2 className="font-bold text-gray-800">Daftar Barang</h2>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
+            <table className="w-full text-left divide-y divide-gray-100">
               <thead>
                 <tr className="bg-gray-50 text-[11px] font-bold text-gray-500 uppercase">
                   <th className="px-6 py-4">Kode Barang</th>
@@ -118,7 +118,7 @@ const ManageAsset = () => {
                 </tr>
               </thead>
 
-              <tbody className="">
+              <tbody className="divide-y divide-gray-100">
                 {loading && (
                   <tr>
                     <td

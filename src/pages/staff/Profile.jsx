@@ -155,8 +155,12 @@ const Profile = () => {
                 <div className="flex items-center gap-4">
                   <div className="bg-[#C4161C] p-2.5 rounded-full text-white shrink-0"><Mail size={18} /></div>
                   <div className="overflow-hidden">
-                    <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Email Kantor</p>
-                    <p className="text-sm text-gray-700 font-medium truncate">{user?.email || "-"}</p>
+                    <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
+                      Email Kantor
+                    </p>
+                    <p className="text-sm text-gray-700 font-medium truncate">
+                      {user?.email || "-"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -184,17 +188,55 @@ const Profile = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                {[
-                  { label: "Nama Lengkap", value: user?.name },
-                  { label: "Email", value: user?.email },
-                  { label: "Unit Kerja/Divisi", value: user?.divisi },
-                  { label: "Jabatan", value: user?.role === 'admin' ? 'Administrator' : 'Staff' },
-                ].map((item, i) => (
-                  <div key={i} className="space-y-1.5">
-                    <label className="text-[11px] font-medium text-gray-400 uppercase">{item.label}</label>
-                    <input type="text" value={item.value || ""} readOnly className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none" />
-                  </div>
-                ))}
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                    Nama Lengkap
+                  </label>
+                  <input
+                    type="text"
+                    value={user?.name || "-"}
+                    readOnly
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
+                  />
+                </div>
+
+                {/* NIK DIGANTI EMAIL */}
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    value={user?.email || "-"}
+                    readOnly
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                    Unit Kerja/Divisi
+                  </label>
+                  <input
+                    type="text"
+                    value={user?.divisi || "-"}
+                    readOnly
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                    Role
+                  </label>
+                  <input
+                    type="text"
+                    value={user?.role || "-"}
+                    readOnly
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
+                  />
+                </div>
+
                 <div className="md:col-span-2 space-y-1.5">
                   <label className="text-[11px] font-medium text-gray-400 uppercase">Alamat Kantor</label>
                   <textarea readOnly rows="2" className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none resize-none" defaultValue="Jl. Abdi Negara No.2, Gulak Galik, Kec. Tlk. Betung Utara, Bandar Lampung" />
