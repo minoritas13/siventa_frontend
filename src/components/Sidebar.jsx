@@ -15,16 +15,20 @@ const Sidebar = () => {
   // FETCH DATA USER (IDENTIK DENGAN PROFILE)
   // =============================
   useEffect(() => {
+    let isMounted = true;
+    
     const fetchProfile = async () => {
       try {
         const res = await api.get("/me");
         const userData = res.data.data || res.data;
-        setUser(userData);
+        if (isMounted) setUser(userData);
       } catch (error) {
         console.error("Gagal mengambil profil sidebar:", error);
       }
     };
+
     fetchProfile();
+    return () => { isMounted = false }; // Cleanup function
   }, []);
 
   // =============================

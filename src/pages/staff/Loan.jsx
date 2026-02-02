@@ -76,10 +76,27 @@ const Loan = () => {
     .sort((a, b) => sortBy === "terbaru" ? new Date(b.createdAt) - new Date(a.createdAt) : new Date(a.createdAt) - new Date(b.createdAt));
 
   const handleReturn = async (loanId) => {
+    // 1. Tambahkan konfirmasi agar tidak tidak sengaja tertekan
+    const confirmReturn = window.confirm("Apakah Anda yakin ingin mengembalikan barang ini?");
+    if (!confirmReturn) return;
+
     try {
-      await api.put(`/loan/update/${loanId}`);
+      // 2. Kirim payload status 'dikembalikan' dan tanggal hari ini
+      const payload = { 
+        status: "dikembalikan", 
+        return_date: new Date().toISOString().slice(0, 10) 
+      };
+
+      await api.put(`/loan/update/${loanId}`, payload);
+
+      // 3. Update state di UI agar item yang dikembalikan langsung hilang dari sidebar
       setDataPinjaman((prev) => prev.filter((l) => l.id !== loanId));
-    } catch (error) { console.error("Gagal mengembalikan:", error); }
+      
+      alert("Barang berhasil dikembalikan!");
+    } catch (error) {
+      console.error("Gagal mengembalikan:", error);
+      alert(error.response?.data?.message || "Terjadi kesalahan saat mengembalikan barang.");
+    }
   };
 
   return (

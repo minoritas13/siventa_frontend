@@ -27,14 +27,22 @@ const Home = () => {
           api.get("/me"),
         ]);
 
-        const mappedLoans = loanRes.data.data.map((loan) => ({
-          kode: loan.loan_items.map((li) => li.item?.code || "-").join(", "),
-          nama: loan.loan_items.map((li) => li.item?.name).join(", "),
-          masuk: loan.loan_date,
-          tenggat: loan.return_date ?? "-",
-          keperluan: loan.purpose || "-",
-          status: loan.status === "dikembalikan" ? "Selesai" : "Aktif",
-        }));
+        const mappedLoans = loanRes.data.data.map((loan) => {
+          let statusLabel = "Menunggu";
+          if (loan.status === "dipinjam") statusLabel = "Aktif";
+          if (loan.status === "dikembalikan") statusLabel = "Selesai";
+          if (loan.status === "ditolak") statusLabel = "Ditolak";
+
+          return {
+            kode: loan.loan_items.map((li) => li.item?.code || "-").join(", "),
+            nama: loan.loan_items.map((li) => li.item?.name).join(", "),
+            masuk: loan.loan_date,
+            tenggat: loan.return_date ?? "-",
+            keperluan: loan.note || "-", 
+            status: statusLabel,
+            rawStatus: loan.status,
+          };
+        });
 
         setUser(userRes.data.data.name);
         setDataPinjaman(mappedLoans);
@@ -53,7 +61,7 @@ const Home = () => {
   // DERIVED DATA
   // =============================
   const pinjamanAktif = dataPinjaman.filter(
-    (item) => item.status !== "dikembalikan"
+    (item) => item.rawStatus === "dipinjam"
   );
 
   const displayedData = showAll ? dataPinjaman : dataPinjaman.slice(0, 3);
@@ -141,7 +149,11 @@ const Home = () => {
                     <td className="px-6 py-4 text-center">
                       <span
                         className={`text-[10px] px-4 py-1.5 rounded-full shadow-sm font-medium text-white whitespace-nowrap ${
-                          item.status === "Aktif" ? "bg-orange-500" : "bg-[#53EC53]"
+                          item.status === "Aktif" 
+                            ? "bg-blue-600" 
+                            : item.status === "Menunggu" 
+                            ? "bg-orange-500" 
+                            : "bg-[#53EC53]" // Selesai
                         }`}
                       >
                         {item.status}

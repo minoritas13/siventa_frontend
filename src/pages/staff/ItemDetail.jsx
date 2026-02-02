@@ -1,117 +1,154 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { Plus } from "lucide-react"; // Ikon plus untuk tombol sesuai gambar
+import { Plus } from "lucide-react";
+import api from "../../services/api";
 
 const ItemDetail = () => {
   const navigate = useNavigate();
+  const { id } = useParams(); // Mengambil ID dari URL
+  
+  const [item, setItem] = useState(null);
+  const [similarItems, setSimilarItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Data utama sesuai gambar
-  const item = {
-    nama: "Kamera Canon D1200 + Tripod",
-    kategori: "Fotografi dan Video",
-    stock: 3,
-    status: "Tersedia",
-    deskripsi: "Kamera ini digunakan untuk kegiatan liputan diluar yang diperkenankan digunakan untuk kebutuhan liputan.",
-    asset: "/img/camera-canon-1300d.jpeg", 
-  };
+  useEffect(() => {
+    const fetchDetailAndSimilar = async () => {
+      try {
+        setLoading(true);
+        // 1. Ambil detail item yang diklik dari ItemData
+        const resDetail = await api.get(`/item/${id}`);
+        const currentItem = resDetail.data.data;
+        setItem(currentItem);
 
-  // Data barang serupa sesuai gambar
-  const similarItems = [
-    { id: 1, nama: "Kamera Canon D1200 + Tripod", kategori: "Fotografi dan Video", status: "Tersedia", stock: 3, asset: "/img/camera-canon-1300d.jpeg" },
-    { id: 2, nama: "Kamera SONY HRX-NX100", kategori: "Fotografi dan Video", status: "Terpinjam", stock: 0, asset: "/img/camera-sony.jpeg" },
-    { id: 3, nama: "Laptop Lenovo IdeaPad", kategori: "Elektronik", status: "Rusak", stock: 0, asset: "/img/laptop.jpeg" },
-    { id: 4, nama: "Tripod Kamera", kategori: "Fotografi dan Video", status: "Rusak", stock: 0, asset: "/img/tripod.jpeg" },
-  ];
+        // 2. Ambil semua data barang untuk mencari yang serupa
+        const resAll = await api.get("/items");
+        const allItems = resAll.data.data;
+
+        // 3. FILTER: Cari barang dengan kategori sama, tapi bukan dirinya sendiri
+        const filtered = allItems.filter(
+          (val) => val.category_id === currentItem.category_id && val.id !== currentItem.id
+        );
+
+        setSimilarItems(filtered);
+        
+        // Penting: Scroll ke atas jika pindah dari satu detail ke detail lainnya
+        window.scrollTo(0, 0); 
+      } catch (error) {
+        console.error("Gagal memuat data detail:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetailAndSimilar();
+  }, [id]); // Re-run setiap kali ID di URL berubah
+
+  if (loading) return <div className="p-20 text-center font-bold">Memuat Detail Barang...</div>;
+  if (!item) return <div className="p-20 text-center font-bold text-red-500">Barang tidak ditemukan.</div>;
 
   return (
     <div className="flex flex-col min-h-screen bg-white font-sans text-gray-800">
       <Navbar />
-
       <main className="grow max-w-7xl mx-auto w-full px-4 md:px-12 py-10">
-        {/* HEADER JUDUL HALAMAN */}
-        <header className="mb-10">
-          <h1 className="text-2xl font-bold mb-1">Detail Barang</h1>
-          <p className="text-sm text-gray-500 max-w-xl">
-            Daftar lengkap inventaris kantor, cek ketersediaan, dan ajukan peminjaman barang kantor.
-          </p>
-        </header>
-
-        {/* SECTION DETAIL (Layout Sesuai Foto) */}
+        
+        {/* INFO BARANG UTAMA */}
         <section className="flex flex-col md:flex-row gap-10 mb-20">
-          {/* Sisi Kiri: Gambar Besar */}
           <div className="w-full md:w-1/3">
             <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm aspect-[4/3]">
-              <img src={item.asset} alt={item.nama} className="w-full h-full object-cover" />
+              <img 
+                src={item.photo ? `${process.env.REACT_APP_API_URL}/storage/${item.photo}` : "/img/camera-canon-1300d.jpeg"} 
+                alt={item.name} 
+                className="w-full h-full object-cover" 
+              />
             </div>
           </div>
 
-          {/* Sisi Kanan: Info & Deskripsi */}
           <div className="w-full md:w-2/3 flex flex-col">
             <div className="mb-6">
-              <span className="inline-block px-4 py-1 bg-[#53EC53] text-white text-[11px] font-bold rounded-md mb-3">
-                {item.status} : {item.stock}
+              <span className={`inline-block px-4 py-1 text-white text-[11px] font-bold rounded-md mb-3 ${item.stock > 0 ? "bg-[#53EC53]" : "bg-red-500"}`}>
+                {item.stock > 0 ? `Tersedia : ${item.stock}` : "Stok Habis"}
               </span>
-              <h2 className="text-2xl font-bold mb-1">{item.nama}</h2>
-              <p className="text-sm text-gray-500 font-medium">{item.kategori}</p>
+              <h2 className="text-2xl font-bold mb-1 uppercase">{item.name}</h2>
+              <p className="text-sm text-gray-500 font-medium">{item.category?.name || "Kategori Umum"}</p>
             </div>
 
             <div className="mt-1">
               <h3 className="text-sm font-bold mb-3">Deskripsi Barang</h3>
-              <div className="p-5 border border-red-200 rounded-xl min-h-[130px] bg-white flex">
+              <div className="p-5 border border-red-200 rounded-xl min-h-[130px] bg-white">
                 <p className="text-sm leading-relaxed text-gray-700">
-                  {item.deskripsi}
+                  {item.deskripsi || "Belum ada deskripsi untuk barang ini."}
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION BARANG SERUPA */}
+        {/* SECTION BARANG SERUPA (Filtered Otomatis) */}
         <section>
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-1">Barang Serupa</h2>
-            <p className="text-sm text-gray-500">
-              Daftar lengkap inventaris kantor, cek ketersediaan, dan ajukan peminjaman barang kantor.
-            </p>
+            <p className="text-sm text-gray-500">Koleksi lainnya di kategori {item.category?.name}.</p>
           </div>
 
+          {/* SECTION BARANG SERUPA (Identik dengan Style Loan.js) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {similarItems.map((sItem, index) => (
-              <div key={index} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-                <div className="h-40 bg-gray-50 relative">
-                  <img src={sItem.asset} alt={sItem.nama} className="w-full h-full object-cover" />
-                </div>
-                
-                <div className="p-4 flex flex-col grow">
-                  <div className="flex justify-between items-start mb-2">
-                    <p className="text-[10px] text-gray-400 font-bold uppercase">{sItem.kategori}</p>
-                    <span className={`text-[9px] px-2 py-0.5 rounded text-white font-bold uppercase ${
-                      sItem.status === "Tersedia" ? "bg-[#53EC53]" : 
-                      sItem.status === "Terpinjam" ? "bg-orange-400" : "bg-red-500"
-                    }`}>
-                      {sItem.status === "Tersedia" ? `${sItem.status}: ${sItem.stock}` : sItem.status}
-                    </span>
-                  </div>
+            {similarItems.length > 0 ? (
+              similarItems.slice(0, 4).map((sItem) => (
+                <div key={sItem.id} className="group bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col">
                   
-                  <h4 className="text-[11px] font-bold mb-4 grow line-clamp-2 uppercase">
-                    {sItem.nama}
-                  </h4>
+                  {/* GAMBAR DENGAN BADGE STATUS */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={sItem.photo ? `${process.env.REACT_APP_API_URL}/storage/${sItem.photo}` : "/img/camera-canon-1300d.jpeg"} 
+                      alt={sItem.name} 
+                      className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className={`px-3 py-1 rounded-full text-[9px] font-bold text-white shadow-sm ${sItem.stock > 0 ? "bg-[#53EC53]" : "bg-red-500"}`}>
+                        {sItem.stock > 0 ? `TERSEDIA: ${sItem.stock}` : "HABIS"}
+                      </span>
+                    </div>
+                  </div>
 
-                  <button 
-                    onClick={() => navigate(`/loan/form/${sItem.id}`)}
-                    className="w-full py-2 bg-[#C4161C] text-white text-[10px] font-bold rounded flex items-center justify-center gap-2 hover:bg-[#AA1419] transition-all"
-                  >
-                    <Plus size={14} /> PINJAM BARANG
-                  </button>
+                  {/* INFO ITEM */}
+                  <div className="p-5 flex flex-col grow">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                      {sItem.category?.name || "Kategori"}
+                    </p>
+                    <h3 className="font-bold text-gray-800 text-sm mb-1 uppercase leading-tight h-10 line-clamp-2">
+                      {sItem.name}
+                    </h3>
+                    {/* Tambahan Kode Barang agar sama dengan halaman Loan */}
+                    <p className="text-[10px] font-mono text-gray-400 mb-5">
+                      {sItem.code || "KODE-BARANG"}
+                    </p>
+
+                    {/* Tombol Pinjam Barang sesuai halaman Loan */}
+                    <button
+                      onClick={() => navigate(`/loan/form/${sItem.id}`)}
+                      className="w-full mt-auto py-3 bg-[#C4161C] text-white rounded-xl text-[11px] font-bold hover:opacity-90 transition-all shadow-sm active:scale-95"
+                    >
+                      + PINJAM BARANG
+                    </button>
+                    
+                    {/* Tombol Lihat Detail (Opsional: Jika ingin tetap ada akses ke detail) */}
+                    <button
+                      onClick={() => navigate(`/item-detail/${sItem.id}`)}
+                      className="w-full mt-2 py-1.5 text-[#C4161C] text-[10px] font-bold hover:underline"
+                    >
+                      Lihat Detail
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="col-span-full text-center py-10 text-gray-400 italic">Tidak ada barang serupa lainnya.</p>
+            )}
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   );

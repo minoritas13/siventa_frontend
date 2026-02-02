@@ -47,7 +47,10 @@ function App() {
           <Route path="/loan/form/:id" element={<ProtectedRoute allowedRoles={['staff']}><LoanForm /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute allowedRoles={['staff']}><Profile /></ProtectedRoute>} />
           <Route path="/help" element={<ProtectedRoute allowedRoles={['staff']}><Help /></ProtectedRoute>} />
-          <Route path="/detail" element={<ProtectedRoute allowedRoles={['staff']}><ItemDetail /></ProtectedRoute>} />
+          <Route 
+            path="/item-detail/:id" 
+            element={<ProtectedRoute allowedRoles={['staff']}><ItemDetail /></ProtectedRoute>} 
+          />
 
           {/* ============================= RUTE ADMIN ============================= */}
           {/* Semua rute di bawah ini hanya bisa diakses jika role = admin */}

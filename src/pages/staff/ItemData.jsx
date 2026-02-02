@@ -160,7 +160,7 @@ const ItemData = () => {
                       </td>
                       <td className="py-4 px-6 text-center">
                         <button 
-                          onClick={() => navigate(`/loan/form/${item.id}`)}
+                          onClick={() => navigate(`/item-detail/${item.id}`)} // Ubah dari /loan/form menjadi /item-detail
                           className="p-2.5 bg-gray-50 rounded-lg text-gray-400 hover:text-[#AA1419] hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
                           title="Lihat Detail"
                         >
