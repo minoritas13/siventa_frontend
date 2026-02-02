@@ -170,7 +170,7 @@ const Profile = () => {
                       Email Kantor
                     </p>
                     <p className="text-sm text-gray-700 font-medium truncate">
-                      {user?.email || "budi@antara.co.id"}
+                      {user?.email || "-"}
                     </p>
                   </div>
                 </div>
@@ -205,7 +205,7 @@ const Profile = () => {
                   </label>
                   <input
                     type="text"
-                    value={user?.name || "Andi Budi Waseso"}
+                    value={user?.name || "-"}
                     readOnly
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
                   />
@@ -218,7 +218,7 @@ const Profile = () => {
                   </label>
                   <input
                     type="text"
-                    value={user?.email || "180827543234550"}
+                    value={user?.email || "-"}
                     readOnly
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
                   />
@@ -230,7 +230,7 @@ const Profile = () => {
                   </label>
                   <input
                     type="text"
-                    value={user?.divisi || "Belum Di isi"}
+                    value={user?.divisi || "-"}
                     readOnly
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
                   />
@@ -242,7 +242,7 @@ const Profile = () => {
                   </label>
                   <input
                     type="text"
-                    value={user?.role || "tes"}
+                    value={user?.role || "-"}
                     readOnly
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default"
                   />

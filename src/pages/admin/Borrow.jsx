@@ -24,33 +24,41 @@ const Borrow = () => {
       try {
         const res = await api.get("/allLoans");
 
-        const mappedLoans = res.data.data.flatMap((loan) =>
-          loan.loan_items.map((loanItem) => ({
-            id : loan.id,
-            staff: loan.user?.name ?? "-",
-            divisi: "-",
-            kode: loanItem.item?.code ?? "-",
-            barang: loanItem.item?.name ?? "-",
-            pinjam: new Date(loan.loan_date).toLocaleDateString("id-ID", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            }),
-            kembali: loan.return_date
-              ? new Date(loan.return_date).toLocaleDateString("id-ID", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })
-              : "-",
-            status: loan.status,
-            foto: loanItem.item?.photo
-              ? `/storage/${loanItem.item.photo}`
-              : "/foto-default.png",
-          }))
-        );
+        const mappedLoans = res.data.data.map((loan) => ({
+          id: loan.id,
+          staff: loan.user?.name ?? "-",
+          divisi: "-",
 
-        setLoan(res.data.data);
+          // ⬅️ JOIN NAMA BARANG
+          barang: loan.loan_items
+            .map((li) => li.item?.name)
+            .filter(Boolean)
+            .join(", "),
+
+          pinjam: new Date(loan.loan_date).toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          }),
+
+          kembali: loan.return_date
+            ? new Date(loan.return_date).toLocaleDateString("id-ID", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
+            : "-",
+
+          status: loan.status,
+          note: loan.note,
+
+          // ⬅️ AMBIL FOTO ITEM PERTAMA (OPSIONAL)
+          foto: loan.loan_items[0]?.item?.photo
+            ? `/storage/${loan.loan_items[0].item.photo}`
+            : "/foto-default.png",
+        }));
+
+        setLoan(mappedLoans);
       } catch (error) {
         console.error("Gagal mengambil data aset", error);
       }
@@ -58,6 +66,43 @@ const Borrow = () => {
 
     fetchItems();
   }, []);
+
+  const filteredLoans = React.useMemo(() => {
+    if (activeTab === "pengajuan") {
+      return loans.filter((item) => item.status === "menunggu");
+    }
+
+    if (activeTab === "aktif") {
+      return loans.filter((item) => item.status === "dipinjam");
+    }
+
+    // riwayat → semua status
+    return loans;
+  }, [activeTab, loans]);
+
+  const handleUpdateStatus = async (loanId, status) => {
+    const confirmText =
+      status === "dipinjam"
+        ? "Setujui peminjaman ini?"
+        : "Konfirmasi pengembalian barang?";
+
+    if (!window.confirm(confirmText)) return;
+
+    try {
+      const payload =
+        status === "dikembalikan"
+          ? { status, return_date: new Date().toISOString().slice(0, 10) }
+          : { status };
+
+      await api.put(`/loan/update/${loanId}`, payload);
+
+      setLoan((prev) =>
+        prev.map((loan) => (loan.id === loanId ? { ...loan, status } : loan))
+      );
+    } catch (error) {
+      alert(error.response?.data?.message || "Gagal memperbarui status");
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 font-sans">
@@ -221,7 +266,7 @@ const Borrow = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {loans.map((item) => (
+                {filteredLoans.map((item) => (
                   <tr
                     key={item.id}
                     className="hover:bg-gray-50 transition-colors"
@@ -270,10 +315,10 @@ const Borrow = () => {
                     {activeTab === "pengajuan" && (
                       <td className="px-6 py-4">
                         <p className="text-[11px] text-gray-600 font-medium">
-                          {item.jadwal}
+                          {item.pinjam}
                         </p>
                         <p className="text-[10px] text-red-500 font-bold">
-                          {item.durasi}
+                          {item.kembali}
                         </p>
                       </td>
                     )}
@@ -281,10 +326,10 @@ const Borrow = () => {
                     {(activeTab === "aktif" || activeTab === "riwayat") && (
                       <>
                         <td className="px-6 py-4 text-[11px] text-gray-600 font-medium">
-                          {item.tglPinjam}
+                          {item.pinjam}
                         </td>
                         <td className="px-6 py-4 text-[11px] text-gray-600 font-medium">
-                          {item.tglKembali}
+                          {item.kembali}
                         </td>
                       </>
                     )}
@@ -292,7 +337,7 @@ const Borrow = () => {
                     {activeTab === "pengajuan" && (
                       <td className="px-6 py-4">
                         <span className="bg-orange-50 text-orange-600 text-[10px] px-2 py-1 rounded font-bold">
-                          {item.keperluan}
+                          {item.note}
                         </span>
                       </td>
                     )}
@@ -301,9 +346,9 @@ const Borrow = () => {
                       <td className="px-6 py-4 text-center">
                         <span
                           className={`px-3 py-1 rounded-full text-[10px] font-bold ${
-                            item.status === "Selesai"
+                            item.status === "dikembalikan"
                               ? "bg-green-100 text-green-600"
-                              : item.status === "Dipinjam"
+                              : item.status === "dipinjam"
                               ? "bg-orange-100 text-orange-600"
                               : "bg-red-100 text-red-600"
                           }`}
@@ -321,12 +366,22 @@ const Borrow = () => {
                             <button className="text-red-500 hover:bg-red-50 p-1 rounded transition-colors">
                               <X size={18} />
                             </button>
-                            <button className="bg-blue-600 text-white flex items-center gap-1 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-blue-700 transition-all">
+                            <button
+                              className="bg-blue-600 text-white flex items-center gap-1 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-blue-700 transition-all"
+                              onClick={() =>
+                                handleUpdateStatus(item.id, "dipinjam")
+                              }
+                            >
                               <Check size={14} /> Setujui
                             </button>
                           </>
                         ) : activeTab === "aktif" ? (
-                          <button className="border border-gray-200 text-gray-600 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-gray-50 transition-all">
+                          <button
+                            className="border border-gray-200 text-gray-600 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-gray-50 transition-all"
+                            onClick={() =>
+                              handleUpdateStatus(item.id, "dikembalikan")
+                            }
+                          >
                             Konfirmasi pengembalian
                           </button>
                         ) : (
