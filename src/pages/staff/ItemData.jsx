@@ -25,10 +25,10 @@ const ItemData = () => {
           id: item.id,
           asset: item.photo ?? "/img/camera-canon-1300d.jpeg",
           nama: item.name,
-          kategori: item.kategori_id?.[1] ?? "-",
+          kategori: item.category?.name || item.category_id?.name || "-",
           stock: item.stock ?? 0,
           status: (item.stock ?? 0) > 0 ? "Tersedia" : "Tidak Tersedia",
-          kode: item.kode,
+          kode: item.code,
         }));
 
         setInventoryData(mappedData);
@@ -97,7 +97,7 @@ const ItemData = () => {
         <div className="flex flex-col sm:flex-row justify-end gap-3 mb-6">
           <button
             onClick={exportPDF}
-            className="flex items-center justify-center gap-2 px-4 py-2 border border-black rounded-md text-[11px] font-bold text-gray-700 hover:bg-gray-50 transition-all w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 px-4 py-2 border border-[#C4161C] rounded-md text-[11px] font-bold text-[#C4161C] hover:bg-gray-50 transition-all w-full sm:w-auto"
           >
             <FaDownload className="text-xs" /> Eksport PDF
           </button>
@@ -145,7 +145,7 @@ const ItemData = () => {
                         </span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="px-6 py-4 text-[12px]">{item.kategori}</span>
+                        <span className="text-[12px] uppercase">{item.kategori}</span>
                       </td>
                       <td className="py-4 px-6 text-center">
                         <span className="px-6 py-4 text-[12px]">{item.stock} Unit</span>
@@ -161,7 +161,7 @@ const ItemData = () => {
                       <td className="py-4 px-6 text-center">
                         <button 
                           onClick={() => navigate(`/loan/form/${item.id}`)}
-                          className="p-2.5 bg-gray-50 rounded-lg text-gray-400 hover:text-[#991B1F] hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
+                          className="p-2.5 bg-gray-50 rounded-lg text-gray-400 hover:text-[#AA1419] hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
                           title="Lihat Detail"
                         >
                           <FaEye className="text-base" />

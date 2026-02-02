@@ -109,7 +109,7 @@ const Profile = () => {
             <p className="text-sm text-gray-500 mt-1">Kelola informasi pribadi dan keamanan akun anda.</p>
           </div>
           <button
-            className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-1.5 border border-[#991B1F] text-[#991B1F] rounded-lg text-sm font-semibold hover:bg-red-50 transition"
+            className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-1.5 border border-[#C4161C] text-[#C4161C] rounded-lg text-sm font-semibold hover:bg-red-50 transition"
             onClick={handleLogout}
           >
             <LogOut size={16} /> Keluar
@@ -129,7 +129,7 @@ const Profile = () => {
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
                 <button 
                   onClick={handlePhotoClick}
-                  className="absolute bottom-1 right-1 bg-[#991B1F] text-white p-2 rounded-full border-2 border-white hover:bg-red-700 transition"
+                  className="absolute bottom-1 right-1 bg-[#C4161C] text-white p-2 rounded-full border-2 border-white hover:bg-[#AA1419] transition"
                 >
                   <Camera size={14} />
                 </button>
@@ -153,17 +153,17 @@ const Profile = () => {
               </div>
               <div className="p-4 space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="bg-[#991B1F] p-2.5 rounded-full text-white shrink-0"><Mail size={18} /></div>
+                  <div className="bg-[#C4161C] p-2.5 rounded-full text-white shrink-0"><Mail size={18} /></div>
                   <div className="overflow-hidden">
                     <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Email Kantor</p>
                     <p className="text-sm text-gray-700 font-medium truncate">{user?.email || "-"}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="bg-[#991B1F] p-2.5 rounded-full text-white shrink-0"><Phone size={18} /></div>
+                  <div className="bg-[#C4161C] p-2.5 rounded-full text-white shrink-0"><Phone size={18} /></div>
                   <div>
                     <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Nomor Telepon</p>
-                    <p className="text-sm text-gray-700 font-medium">{formData.phone}</p>
+                    <p className="text-sm text-gray-700 font-medium">{formData.phone || "-"}</p>
                   </div>
                 </div>
               </div>
@@ -177,7 +177,7 @@ const Profile = () => {
                 <h3 className="text-lg font-bold text-gray-900">Informasi Pribadi</h3>
                 <button 
                   onClick={() => setIsEditing(true)}
-                  className="text-[#991B1F] text-xs font-semibold hover:underline"
+                  className="text-[#C4161C] text-xs font-semibold hover:underline"
                 >
                   Edit Data
                 </button>
@@ -205,7 +205,7 @@ const Profile = () => {
             {/* KEAMANAN */}
             <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm">
               <div className="flex items-center gap-3 mb-6">
-                <div className="bg-[#991B1F] p-2.5 rounded-full text-white shrink-0">
+                <div className="bg-[#C4161C] p-2.5 rounded-full text-white shrink-0">
                   <Lock size={18} />
                 </div>
                 <div>
@@ -220,10 +220,10 @@ const Profile = () => {
                   <input
                     type="email"
                     placeholder="Masukkan email saat ini"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 focus:ring-1 focus:ring-red-600 outline-none"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 focus:ring-1 focus:ring-[#C4161C] outline-none"
                   />
                 </div>
-                <button className="w-full md:w-auto bg-[#991B1F] text-white px-6 py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition shadow-md">
+                <button className="w-full md:w-auto bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#AA1419] transition shadow-md">
                   <Save size={18} />
                   Berikutnya
                 </button>
@@ -251,7 +251,7 @@ const Profile = () => {
                 <input 
                   type="text" 
                   required
-                  className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none text-sm"
+                  className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C4161C] outline-none text-sm"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                 />
@@ -263,7 +263,7 @@ const Profile = () => {
                 <input 
                   type="text" 
                   placeholder="Contoh: 08123456789"
-                  className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none text-sm"
+                  className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C4161C] outline-none text-sm"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
                 />
@@ -273,7 +273,7 @@ const Profile = () => {
               <div>
                 <label className="text-[11px] font-bold text-gray-400 uppercase">Unit Kerja / Divisi</label>
                 <select 
-                  className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none text-sm bg-white"
+                  className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C4161C] outline-none text-sm bg-white"
                   value={formData.divisi}
                   onChange={(e) => setFormData({...formData, divisi: e.target.value})}
                 >
@@ -297,7 +297,7 @@ const Profile = () => {
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="flex-1 px-4 py-2.5 bg-[#991B1F] text-white rounded-xl font-bold text-sm hover:bg-red-800 transition disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 bg-[#C4161C] text-white rounded-xl font-bold text-sm hover:bg-[#AA1419] transition disabled:opacity-50"
                 >
                   {loading ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>

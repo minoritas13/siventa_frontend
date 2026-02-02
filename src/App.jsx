@@ -58,7 +58,6 @@ function App() {
           <Route path="/manage-user" element={<ProtectedRoute allowedRoles={['admin']}><ManageUser /></ProtectedRoute>} />
           <Route path="/add-asset" element={<ProtectedRoute allowedRoles={['admin']}><AddAsset /></ProtectedRoute>} />
           <Route path="/edit-asset/:id" element={<ProtectedRoute allowedRoles={['admin']}><EditAsset /></ProtectedRoute>} />
-           <Route path="/add-asset" element={<ProtectedRoute allowedRoles={['admin']}><AddAsset /></ProtectedRoute>} />
 
           {/* FALLBACK: Jika rute tidak ditemukan, arahkan ke login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
