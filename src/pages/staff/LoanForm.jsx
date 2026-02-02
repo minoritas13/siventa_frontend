@@ -103,7 +103,7 @@ const LoanForm = () => {
           <div className="flex-1 order-2 lg:order-1">
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
-                <div className="bg-[#991B1F] p-2 rounded-lg text-white">
+                <div className="bg-[#C4161C] p-2 rounded-lg text-white">
                   <ClipboardList size={18} />
                 </div>
                 <h2 className="font-bold text-gray-800">Formulir Pengajuan Aset</h2>
@@ -132,27 +132,27 @@ const LoanForm = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                      <Calendar size={16} className="text-[#991B1F]" /> Tanggal Pinjam
+                      <Calendar size={16} className="text-[#C4161C]" /> Tanggal Pinjam
                     </label>
                     <input
                       type="date"
                       required
                       value={loanDate}
                       onChange={(e) => setLoanDate(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#991B1F]"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#C4161C]"
                     />
                   </div>
 
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                      <Calendar size={16} className="text-[#991B1F]" /> Tanggal Kembali
+                      <Calendar size={16} className="text-[#C4161C]" /> Tanggal Kembali
                     </label>
                     <input
                       type="date"
                       required
                       value={returnDate} // 6. Hubungkan dengan state returnDate
                       onChange={(e) => setReturnDate(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#991B1F]"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#C4161C]"
                     />
                   </div>
                 </div>
@@ -165,7 +165,7 @@ const LoanForm = () => {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     placeholder="Contoh: Liputan acara peresmian gedung..."
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#991B1F] resize-none"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#C4161C] resize-none"
                   ></textarea>
                 </div>
 
@@ -173,7 +173,7 @@ const LoanForm = () => {
                   <button
                     type="submit"
                     disabled={item.stock === 0 || loading}
-                    className="w-full md:w-auto px-10 py-3 bg-[#991B1F] text-white rounded-xl font-bold text-sm shadow-lg hover:bg-red-800 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="w-full md:w-auto px-10 py-3 bg-[#C4161C] text-white rounded-xl font-bold text-sm shadow-lg hover:bg-[#991B1F] transition-all disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
                     {loading ? "Mengajukan..." : "Ajukan Peminjaman"}
                   </button>
