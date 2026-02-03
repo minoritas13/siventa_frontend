@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar"; // Memastikan Navbar terimport
-import Footer from "../components/Footer"; // Memastikan Footer terimport
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { useSearchParams } from "react-router-dom";
 import api from "../services/api";
 
@@ -43,7 +43,7 @@ function ResetPassword() {
     <div className="min-h-screen flex flex-col bg-white font-sans">
       <Navbar />
 
-      <main className="flex-grow flex flex-col justify-center items-center px-4 py-12">
+      <main className="grow flex flex-col justify-center items-center px-4 py-12">
         <form onSubmit={submitResetPassword}>
           <div className="w-full max-w-md border border-gray-200 rounded-lg p-8 shadow-sm">
             <h2 className="text-center text-2xl font-bold mb-6 text-black">
@@ -51,23 +51,7 @@ function ResetPassword() {
             </h2>
 
             <div className="space-y-5">
-              {/* email */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">
-                  email
-                </label>
-                <input
-                  type="password"
-                  placeholder="Password Baru"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#991B1F] focus:border-transparent outline-none transition-all"
-                />
-              </div>
-
-              {/* Input Kata Sandi Baru */}
-
+              {/* Password Baru */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   Kata Sandi Baru
@@ -82,7 +66,7 @@ function ResetPassword() {
                 />
               </div>
 
-              {/* Input Konfirmasi Kata Sandi */}
+              {/* Konfirmasi Password */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   Konfirmasi Kata Sandi
@@ -91,19 +75,26 @@ function ResetPassword() {
                   type="password"
                   placeholder="Konfirmasi Password"
                   value={passwordConfirmation}
-                  onChange={(e) => setPasswordConfirmation(e.target.value)}
+                  onChange={(e) =>
+                    setPasswordConfirmation(e.target.value)
+                  }
                   required
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#991B1F] focus:border-transparent outline-none transition-all"
                 />
               </div>
             </div>
 
-            {/* Tombol Masuk */}
+            {message && (
+              <p className="mt-4 text-sm text-center text-red-600">
+                {message}
+              </p>
+            )}
+
             <button
               disabled={loading}
-              className="w-full py-3 bg-[#991B1F] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98] mt-6"
+              className="w-full py-3 bg-[#C4161C] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98] mt-6"
             >
-              {loading ? "Processing..." : "Reset Password"}
+              {loading ? "Memproses..." : "Reset Password"}
             </button>
           </div>
         </form>
