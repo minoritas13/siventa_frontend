@@ -23,6 +23,8 @@ const Profile = () => {
     name: "",
     phone: "",
     divisi: "",
+    email: "", // Tambahkan ini
+    role: "",  // Tambahkan ini
   });
 
   // =========================
@@ -34,11 +36,12 @@ const Profile = () => {
       const userData = res.data.data || res.data;
       setUser(userData);
       
-      // Sinkronkan form dengan data user dari backend
       setFormData({
         name: userData.name || "",
-        phone: userData.phone || "",
+        phone: userData.phone || "", // Sesuai kolom di DB
         divisi: userData.divisi || "",
+        email: userData.email || "", // WAJIB untuk backend
+        role: userData.role || "",   // WAJIB untuk backend
       });
     } catch (error) {
       console.error("Gagal fetch data profile:", error);
@@ -58,12 +61,20 @@ const Profile = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.put("/user/update", formData); // Sesuaikan endpoint backend Anda
-      await fetchMe(); // Refresh data
+      // Kirim formData lengkap (name, email, role, divisi, phone)
+      await api.put(`/users/update/${user.id}`, formData); 
+
+      await fetchMe(); 
       setIsEditing(false);
       alert("Profil berhasil diperbarui!");
     } catch (error) {
-      alert("Gagal memperbarui profil. Silakan coba lagi.");
+      if (error.response?.data?.errors) {
+        // Menampilkan pesan error validasi spesifik dari Laravel
+        const messages = Object.values(error.response.data.errors).flat().join("\n");
+        alert("Validasi Gagal:\n" + messages);
+      } else {
+        alert("Gagal memperbarui profil.");
+      }
     } finally {
       setLoading(false);
     }
@@ -76,17 +87,26 @@ const Profile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Validasi ukuran file (Opsional, misal max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      return alert("Ukuran file terlalu besar (Maksimal 2MB)");
+    }
+
     const data = new FormData();
     data.append("photo", file);
 
     try {
       setLoading(true);
-      await api.post("/user/photo", data); // Sesuaikan endpoint backend
-      await fetchMe();
+      await api.post("/user/photo", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      
+      await fetchMe(); // Ambil data terbaru untuk menampilkan foto baru
       alert("Foto profil berhasil diperbarui!");
     } catch (error) {
-      console.error(error);
-      alert("Gagal mengunggah foto.");
+      alert(error.response?.data?.message || "Gagal mengunggah foto.");
     } finally {
       setLoading(false);
     }
@@ -180,7 +200,16 @@ const Profile = () => {
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-gray-900">Informasi Pribadi</h3>
                 <button 
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => {
+                    setFormData({
+                      name: user?.name || "",
+                      phone: user?.phone || "",
+                      divisi: user?.divisi || "",
+                      email: user?.email || "", // Tambahkan ini agar tidak hilang saat edit
+                      role: user?.role || "",   // Tambahkan ini agar tidak hilang saat edit
+                    });
+                    setIsEditing(true);
+                  }}
                   className="text-[#C4161C] text-xs font-semibold hover:underline"
                 >
                   Edit Data
@@ -257,17 +286,34 @@ const Profile = () => {
               </div>
 
               <div className="space-y-6">
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-medium text-gray-400 uppercase">Email</label>
-                  <input
-                    type="email"
-                    placeholder="Masukkan email saat ini"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 focus:ring-1 focus:ring-[#C4161C] outline-none"
-                  />
+                {/* Mengubah div ini menjadi flex dan gap-4 */}
+                <div className="flex flex-col md:flex-row gap-4">
+                  
+                  {/* Input Pertama - Gunakan w-full agar responsif */}
+                  <div className="flex-1 space-y-1.5">
+                    <label className="text-[11px] font-medium text-gray-400 uppercase">Email Lama</label>
+                    <input
+                      type="email"
+                      placeholder="Masukkan email lama"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 focus:ring-1 focus:ring-[#C4161C] outline-none"
+                    />
+                  </div>
+
+                  {/* Input Kedua */}
+                  <div className="flex-1 space-y-1.5">
+                    <label className="text-[11px] font-medium text-gray-400 uppercase">Email Baru</label>
+                    <input
+                      type="email"
+                      placeholder="Masukkan email baru"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 focus:ring-1 focus:ring-[#C4161C] outline-none"
+                    />
+                  </div>
+
                 </div>
-                <button className="w-full md:w-auto bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#AA1419] transition shadow-md">
+
+                <button className="w-full md:w-auto bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 hover:bg-[#AA1419] transition shadow-md">
                   <Save size={18} />
-                  Berikutnya
+                  Simpan Perubahan
                 </button>
               </div>
             </div>
@@ -287,6 +333,9 @@ const Profile = () => {
             </div>
 
             <form onSubmit={handleUpdateProfile} className="p-6 space-y-4">
+              <input type="hidden" value={formData.email} />
+              <input type="hidden" value={formData.role} />
+              
               {/* Nama Lengkap */}
               <div>
                 <label className="text-[11px] font-bold text-gray-400 uppercase">Nama Lengkap</label>
