@@ -26,11 +26,35 @@ function ResetPassword() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
               />
             </div>
+
+            {/* Input Kata Sandi Baru */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">
+                Kata Sandi Baru
+              </label>
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            {/* Input Konfirmasi Kata Sandi */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">
+                Konfirmasi Kata Sandi
+              </label>
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
+              />
+            </div>
           </div>
 
           {/* Tombol Masuk */}
           <button className="w-full py-3 bg-[#C4161C] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98] mt-6">
-            Lanjutkan
+            Konfirmasi Kata Sandi
           </button>
         </div>
       </main>
