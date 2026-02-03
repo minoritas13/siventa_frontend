@@ -1,8 +1,8 @@
-import React from "react";
-import Navbar from "../../components/Navbar"; // Memastikan Navbar terimport
-import Footer from "../../components/Footer"; // Memastikan Footer terimport
+import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar"; // Memastikan Navbar terimport
+import Footer from "../components/Footer"; // Memastikan Footer terimport
 import { useSearchParams } from "react-router-dom";
-import api from "../../services/api";
+import api from "../services/api";
 
 function ResetPassword() {
   const [params] = useSearchParams();
@@ -51,6 +51,21 @@ function ResetPassword() {
             </h2>
 
             <div className="space-y-5">
+              {/* email */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  email
+                </label>
+                <input
+                  type="password"
+                  placeholder="Password Baru"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#991B1F] focus:border-transparent outline-none transition-all"
+                />
+              </div>
+
               {/* Input Kata Sandi Baru */}
 
               <div>
@@ -84,7 +99,10 @@ function ResetPassword() {
             </div>
 
             {/* Tombol Masuk */}
-            <button disabled={loading} className="w-full py-3 bg-[#991B1F] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98] mt-6">
+            <button
+              disabled={loading}
+              className="w-full py-3 bg-[#991B1F] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98] mt-6"
+            >
               {loading ? "Processing..." : "Reset Password"}
             </button>
           </div>

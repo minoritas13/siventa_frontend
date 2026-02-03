@@ -70,7 +70,7 @@ function Register() {
 
         {/* ERROR MESSAGE */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-[#C4161C] text-sm rounded-lg">
             {error}
           </div>
         )}
@@ -88,7 +88,7 @@ function Register() {
               value={formData.email}
               onChange={handleChange}
               placeholder="Email"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#991B1F] focus:border-transparent outline-none transition-all"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
             />
           </div>
 
@@ -105,7 +105,7 @@ function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#991B1F] outline-none"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#C4161C] outline-none"
               />
             </div>
             <div className="flex-1">
@@ -119,7 +119,7 @@ function Register() {
                 value={formData.password_confirmation}
                 onChange={handleChange}
                 placeholder="Ulangi Password"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#991B1F] outline-none"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#C4161C] outline-none"
               />
             </div>
           </div>
@@ -136,7 +136,7 @@ function Register() {
               value={formData.name}
               onChange={handleChange}
               placeholder="Nama lengkap"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#991B1F] focus:border-transparent outline-none transition-all"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
             />
           </div>
 
@@ -147,7 +147,7 @@ function Register() {
               id="terms"
               checked={agreeTerms}
               onChange={(e) => setAgreeTerms(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 accent-[#991B1F] focus:ring-[#991B1F]"
+              className="w-4 h-4 rounded border-gray-300 accent-[#C4161C] focus:ring-[#C4161C]"
             />
             <label htmlFor="terms" className="text-sm text-black">
               Saya menerima Ketentuan Penggunaan
@@ -158,7 +158,7 @@ function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-[#991B1F] hover:bg-[#7f1619] text-white font-bold rounded-md transition-all shadow-md active:scale-[0.98] disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-[#C4161C] hover:bg-[#AA1419] text-white font-bold rounded-md transition-all shadow-md active:scale-[0.98] disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {loading ? "Memproses..." : "Daftar"}
           </button>
@@ -169,7 +169,7 @@ function Register() {
         Sudah punya akun?{" "}
         <Link
           to="/login"
-          className="text-[#991B1F] cursor-pointer hover:underline font-bold"
+          className="text-[#C4161C] cursor-pointer hover:underline font-medium"
         >
           Masuk
         </Link>

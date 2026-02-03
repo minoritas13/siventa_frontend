@@ -22,6 +22,8 @@ const Profile = () => {
     name: "",
     phone: "",
     divisi: "",
+    email: "", // Tambahkan ini
+    role: "",  // Tambahkan ini
   });
 
   // =========================
@@ -36,8 +38,10 @@ const Profile = () => {
       // Sinkronkan form dengan data user dari backend
       setFormData({
         name: userData.name || "",
-        phone: userData.phone || "",
+        phone: userData.phone || "", // Sesuai kolom di DB
         divisi: userData.divisi || "",
+        email: userData.email || "", // WAJIB untuk backend
+        role: userData.role || "",   // WAJIB untuk backend
       });
     } catch (error) {
       console.error("Gagal fetch data profile:", error);
@@ -57,12 +61,20 @@ const Profile = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.put("/user/update", formData);
-      await fetchMe(); // Refresh data
+      // Kirim formData lengkap (name, email, role, divisi, phone)
+      await api.put(`/users/update/${user.id}`, formData); 
+
+      await fetchMe(); 
       setIsEditing(false);
       alert("Profil berhasil diperbarui!");
     } catch (error) {
-      alert("Gagal memperbarui profil. Silakan coba lagi.");
+      if (error.response?.data?.errors) {
+        // Menampilkan pesan error validasi spesifik dari Laravel
+        const messages = Object.values(error.response.data.errors).flat().join("\n");
+        alert("Validasi Gagal:\n" + messages);
+      } else {
+        alert("Gagal memperbarui profil.");
+      }
     } finally {
       setLoading(false);
     }
@@ -75,17 +87,26 @@ const Profile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Validasi ukuran file (Opsional, misal max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      return alert("Ukuran file terlalu besar (Maksimal 2MB)");
+    }
+
     const data = new FormData();
     data.append("photo", file);
 
     try {
       setLoading(true);
-      await api.post("/user/photo", data);
-      await fetchMe();
+      await api.post("/user/photo", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      
+      await fetchMe(); // Ambil data terbaru untuk menampilkan foto baru
       alert("Foto profil berhasil diperbarui!");
     } catch (error) {
-      console.error(error);
-      alert("Gagal mengunggah foto.");
+      alert(error.response?.data?.message || "Gagal mengunggah foto.");
     } finally {
       setLoading(false);
     }
@@ -228,11 +249,18 @@ const Profile = () => {
           <div className="lg:col-span-8 space-y-8">
             <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-gray-900">
-                  Informasi Pribadi
-                </h3>
-                <button
-                  onClick={() => setIsEditing(true)}
+                <h3 className="text-lg font-bold text-gray-900">Informasi Pribadi</h3>
+                <button 
+                  onClick={() => {
+                    setFormData({
+                      name: user?.name || "",
+                      phone: user?.phone || "",
+                      divisi: user?.divisi || "",
+                      email: user?.email || "", // Tambahkan ini agar tidak hilang saat edit
+                      role: user?.role || "",   // Tambahkan ini agar tidak hilang saat edit
+                    });
+                    setIsEditing(true);
+                  }}
                   className="text-[#C4161C] text-xs font-semibold hover:underline"
                 >
                   Edit Data
@@ -358,6 +386,9 @@ const Profile = () => {
             </div>
 
             <form onSubmit={handleUpdateProfile} className="p-6 space-y-4">
+              <input type="hidden" value={formData.email} />
+              <input type="hidden" value={formData.role} />
+              
               {/* Nama Lengkap */}
               <div>
                 <label className="text-[11px] font-bold text-gray-400 uppercase">

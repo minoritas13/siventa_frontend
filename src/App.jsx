@@ -12,6 +12,8 @@ import ProtectedRoute from "./components/ProtectedRoute"; // 2. Import Protected
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 
 // Staff Pages
 import Home from "./pages/staff/Home";
@@ -21,7 +23,7 @@ import LoanForm from "./pages/staff/LoanForm";
 import Profile from "./pages/staff/Profile";
 import Help from "./pages/staff/Help";
 import ItemDetail from "./pages/staff/ItemDetail";
-import ResetPassword from "./pages/staff/ResetPassword";
+
 
 // Admin Pages
 import HomeAdmin from "./pages/admin/Home";
@@ -42,6 +44,8 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           {/* ============================= RUTE STAFF (USER) ============================= */}
           {/* Semua rute di bawah ini hanya bisa diakses jika role = staff */}
@@ -98,14 +102,6 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["staff"]}>
                 <ItemDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/resetPassword"
-            element={
-              <ProtectedRoute allowedRoles={["staff"]}>
-                <ResetPassword />
               </ProtectedRoute>
             }
           />

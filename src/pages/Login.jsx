@@ -31,9 +31,18 @@ function Login() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin();
+  };
+
+  const handleForgotPassword = () => {
+    navigate("/forgot-password")
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center px-4 font-sans">
-      <div className="w-full max-w-md border border-gray-200 rounded-lg p-8 shadow-sm">
+      <form onSubmit={handleSubmit} className="w-full max-w-md border border-gray-200 rounded-lg p-8 shadow-sm">
         <h2 className="text-center text-2xl font-bold mb-6 text-black">
           Masuk SIVENTA
         </h2>
@@ -42,14 +51,20 @@ function Login() {
         {error && <div className="mb-4 text-sm text-[#C4161C]">{error}</div>}
 
         <div className="space-y-4">
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
+            Email
+          </label>
           <input
             type="email"
-            placeholder="Email / Username"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
           />
 
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
+            Password
+          </label>
           <input
             type="password"
             placeholder="Password"
@@ -70,21 +85,27 @@ function Login() {
         </div>
 
         {/* Tombol Masuk */}
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className="w-full py-3 bg-[#C4161C] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98]"
-        >
+        <button onClick={handleLogin}disabled={loading} className="w-full py-3 bg-[#C4161C] hover:opacity-90 text-white font-semibold rounded-lg transition-all shadow-md active:scale-[0.98]">
           {loading ? "Memproses..." : "Masuk"}
         </button>
-      </div>
+
+        {/* Lupa Kata Sandi */}
+        <div className="mt-4">
+          <Link
+            to="/forgot-password"
+            className="text-sm text-[#C4161C] hover:underline"
+          >
+            Lupa kata sandi?
+          </Link>
+        </div>
+      </form>
 
       {/* Link Daftar */}
-      <p className="mt-8 text-sm text-gray-600">
+      <p className="mt-8 text-sm text-gray-600" >
         Belum punya akun?{" "}
         <Link
           to="/register"
-          className="text-[#C4161C] cursor-pointer hover:underline font-bold"
+          className="text-[#C4161C] cursor-pointer hover:underline font-medium"
         >
           Daftar dong Bestie
         </Link>
