@@ -51,7 +51,6 @@ function ResetPassword() {
             </h2>
 
             <div className="space-y-5">
-              {/* Password Baru */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   Kata Sandi Baru
@@ -66,7 +65,6 @@ function ResetPassword() {
                 />
               </div>
 
-              {/* Konfirmasi Password */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   Konfirmasi Kata Sandi
