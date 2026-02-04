@@ -5,9 +5,11 @@ import NavbarGuest from "../components/NavbarGuest";
 import Footer from "../components/Footer";
 
 function Register() {
+  // Inisialisasi hooks untuk registrasi dan navigasi
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // State untuk menyimpan data input form
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,10 +17,12 @@ function Register() {
     password_confirmation: "",
   });
   
+  // State untuk UI dan validasi tambahan
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Handler untuk memperbarui state saat input berubah
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,14 +30,17 @@ function Register() {
     });
   };
 
+  // Handler untuk memproses pendaftaran
   const handleRegister = async (e) => {
     e.preventDefault();
     
+    // Validasi kecocokan password
     if (formData.password !== formData.password_confirmation) {
       setError("Konfirmasi kata sandi tidak cocok.");
       return;
     }
 
+    // Validasi persetujuan syarat dan ketentuan
     if (!agreeTerms) {
       setError("Anda harus menyetujui Ketentuan Penggunaan.");
       return;
@@ -61,23 +68,27 @@ function Register() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
+      {/* Header Navigasi */}
       <NavbarGuest />
 
+      {/* Konten Utama */}
       <main className="flex-grow flex flex-col justify-center items-center px-4 py-12">
         <div className="w-full max-w-xl border border-gray-200 rounded-xl p-8 shadow-sm bg-white">
-          <h2 className="text-center text-2xl font-bold mb-8 text-black">
+          <h2 className="text-center text-2xl font-medium mb-8 text-black">
             Daftar SIVENTA
           </h2>
 
+          {/* Alert jika terjadi error */}
           {error && (
             <div className="mb-6 p-3 bg-red-50 border-l-4 border-[#C4161C] text-[#C4161C] text-sm rounded-r-lg">
               {error}
             </div>
           )}
 
+          {/* Form Pendaftaran */}
           <form onSubmit={handleRegister} className="space-y-5">
             <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Nama lengkap
               </label>
               <input
@@ -93,7 +104,7 @@ function Register() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
               <input
@@ -103,14 +114,15 @@ function Register() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="nama@email.com"
+                placeholder="Nama@email.com"
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#C4161C] focus:border-transparent outline-none transition-all"
               />
             </div>
 
+            {/* Input Password Baris Ganda (Desktop) */}
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                   Kata sandi
                 </label>
                 <input
@@ -125,7 +137,7 @@ function Register() {
                 />
               </div>
               <div className="flex-1">
-                <label htmlFor="password_confirmation" className="block text-sm font-semibold text-gray-700 mb-1">
+                <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700 mb-1">
                   Ulangi kata sandi
                 </label>
                 <input
@@ -141,6 +153,7 @@ function Register() {
               </div>
             </div>
 
+            {/* Checkbox Persetujuan */}
             <div className="flex items-center gap-2 py-2">
               <input
                 type="checkbox"
@@ -154,6 +167,7 @@ function Register() {
               </label>
             </div>
 
+            {/* Tombol Submit */}
             <button
               type="submit"
               disabled={loading || !agreeTerms}
@@ -167,6 +181,7 @@ function Register() {
           </form>
         </div>
 
+        {/* Link Kembali ke Login */}
         <p className="mt-8 text-sm text-gray-600">
           Sudah punya akun?{" "}
           <Link
@@ -178,6 +193,7 @@ function Register() {
         </p>
       </main>
 
+      {/* Footer */}
       <Footer />
     </div>
   );

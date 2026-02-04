@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { Mail, Phone, MapPin, MessageSquare, ChevronDown } from 'lucide-react'; // Import icons
+import { Mail, Phone, MapPin, MessageSquare, ChevronDown } from 'lucide-react';
 
 const Help = () => {
-    // State untuk FAQ (untuk simulasi accordion)
     const [openFaq, setOpenFaq] = useState(null);
 
     const toggleFaq = (index) => {
@@ -49,10 +48,8 @@ const Help = () => {
                 </header>
 
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
-                    {/* Sisi Kiri: Formulir Kontak */}
                     <div className="flex-1">
                         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-                            {/* Header Formulir */}
                             <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
                                 <div className="bg-[#991B1F] p-2 rounded-lg text-white">
                                     <MessageSquare size={18} />
@@ -61,7 +58,6 @@ const Help = () => {
                             </div>
 
                             <form className="p-6 md:p-8 space-y-6" onSubmit={(e) => e.preventDefault()}>
-                                {/* Nama Lengkap & Email Kantor */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label htmlFor="namaLengkap" className="text-sm font-semibold text-gray-700">Nama Lengkap</label>
@@ -83,7 +79,6 @@ const Help = () => {
                                     </div>
                                 </div>
 
-                                {/* Subjek / Kategori Masalah */}
                                 <div className="space-y-2">
                                     <label htmlFor="subjek" className="text-sm font-semibold text-gray-700">Subjek / Kategori Masalah</label>
                                     <div className="relative">
@@ -101,7 +96,6 @@ const Help = () => {
                                     </div>
                                 </div>
 
-                                {/* Pesan Anda */}
                                 <div className="space-y-2">
                                     <label htmlFor="pesan" className="text-sm font-semibold text-gray-700">Pesan Anda</label>
                                     <textarea 
@@ -112,7 +106,6 @@ const Help = () => {
                                     ></textarea>
                                 </div>
 
-                                {/* Submit Button */}
                                 <div className="flex justify-end pt-4">
                                     <button type="submit" className="w-full md:w-auto px-10 py-3 bg-[#991B1F] text-white rounded-xl font-bold text-sm shadow-lg hover:bg-red-800 transition-all flex items-center justify-center gap-2">
                                         Ajukan Pesan
@@ -122,13 +115,10 @@ const Help = () => {
                         </div>
                     </div>
 
-                    {/* Sisi Kanan: Kontak Langsung & FAQ */}
                     <aside className="w-full lg:w-[380px] space-y-8">
-                        {/* Kontak Langsung */}
                         <div className="bg-red-50 p-6 rounded-2xl border border-red-100">
                             <h2 className="font-bold text-gray-900 mb-5">Kontak Langsung</h2>
                             <div className="space-y-4">
-                                {/* Email */}
                                 <div className="flex items-start gap-4">
                                     <div className="bg-red-200 p-3 rounded-full text-red-700 shrink-0">
                                         <Mail size={20} />
@@ -140,7 +130,6 @@ const Help = () => {
                                         </a>
                                     </div>
                                 </div>
-                                {/* Telepon */}
                                 <div className="flex items-start gap-4">
                                     <div className="bg-red-200 p-3 rounded-full text-red-700 shrink-0">
                                         <Phone size={20} />
@@ -152,7 +141,6 @@ const Help = () => {
                                         </a>
                                     </div>
                                 </div>
-                                {/* Lokasi */}
                                 <div className="flex items-start gap-4">
                                     <div className="bg-red-200 p-3 rounded-full text-red-700 shrink-0">
                                         <MapPin size={20} />
@@ -168,7 +156,6 @@ const Help = () => {
                             </div>
                         </div>
 
-                        {/* FAQ Singkat */}
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                             <h2 className="font-bold text-gray-900 mb-5">FAQ Singkat</h2>
                             <div className="space-y-3">

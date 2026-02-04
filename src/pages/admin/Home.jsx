@@ -4,9 +4,7 @@ import { Package, CheckCircle, Wrench, Bell, Box } from "lucide-react";
 import api from "../../services/api";
 
 const Home = () => {
-  // =============================
-  // STATE
-  // =============================
+  // --- STATE MANAGEMENT ---
   const [stats, setStats] = useState([
     {
       label: "Total Aset",
@@ -35,17 +33,15 @@ const Home = () => {
   ]);
   const [pinjaman, setPinjaman] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [tes,setTes] = useState([]);
+  const [tes, setTes] = useState([]);
 
-  // =============================
-  // FETCH DATA (LOGIKA BACKEND)
-  // =============================
+  // --- FETCH DATA DARI API ---
   useEffect(() => {
     const fetchAdminDashboard = async () => {
       try {
         setLoading(true);
 
-        // Ambil data items dan loans secara paralel
+        // Mengambil data aset dan pinjaman secara paralel
         const [itemsRes, loansRes] = await Promise.all([
           api.get("/items"),
           api.get("/allLoans"),
@@ -56,7 +52,7 @@ const Home = () => {
 
         setTes(allLoans);
 
-        // 1. Hitung Statistik
+        // Kalkulasi statistik untuk dashboard
         const totalAset = allItems.length;
         const asetAktif = allItems.filter(
           (item) => item.condition === "baik"
@@ -68,6 +64,7 @@ const Home = () => {
           (loan) => loan.status === "dipinjam"
         ).length;
 
+        // Update state stats dengan data terbaru
         setStats([
           {
             label: "Total Aset",
@@ -95,40 +92,30 @@ const Home = () => {
           },
         ]);
 
-        // 2. Mapping Data Tabel Pinjaman
+        // Transformasi data pinjaman untuk tabel
         const mappedPinjaman = allLoans.map((loan) => {
-          // 1. Tentukan warna berdasarkan status string dari backend
           let statusColor = "bg-gray-400";
           if (loan.status === "dipinjam") statusColor = "bg-[#53EC53]"; // Hijau
           if (loan.status === "menunggu") statusColor = "bg-[#FBBF24]"; // Kuning
           if (loan.status === "terlambat") statusColor = "bg-[#FF0000]"; // Merah
 
           return {
-            // 2. Ambil nama staff dari relasi user
             staff: loan.user?.name || "User Tidak Dikenal",
-
-            // 3. Ambil divisi (jika ada di tabel user)
             divisi: loan.user?.division || "Staff Biro",
-
             kode: loan.loan_items?.map((li) => li.item?.code || "-").join(", "),
             barang: loan.loan_items
               ?.map((li) => li.item?.name || "Aset Terhapus")
               .join(", "),
             pinjam: loan.loan_date,
             kembali: loan.return_date ?? "Belum Kembali",
-
-            // Format status agar huruf kapital di awal (Selesai, Dipinjam, dsb)
             status: loan.status.charAt(0).toUpperCase() + loan.status.slice(1),
             color: statusColor,
             text: "text-white",
-
-            // 4. Gunakan foto user jika ada, jika tidak pakai UI Avatars
             foto: loan.user?.photo_url || null,
           };
         });
 
         setPinjaman(mappedPinjaman);
-    
       } catch (error) {
         console.error("Gagal memuat dashboard admin:", error);
       } finally {
@@ -141,12 +128,13 @@ const Home = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 font-sans">
+      {/* Komponen Navigasi Samping */}
       <Sidebar />
 
       <main className="flex-1 p-4 md:p-10 pt-20 md:pt-10 overflow-x-hidden">
         {/* Header Dashboard */}
         <header className="mb-8">
-          <h1 className="text-xl md:text-2xl font-bold text-black">
+          <h1 className="text-xl md:text-2xl font-medium text-black">
             Dashboard Admin
           </h1>
           <p className="text-gray-500 text-xs md:text-sm">
@@ -156,9 +144,9 @@ const Home = () => {
 
         {console.log(tes)}
 
-        {/* Section Ringkasan Aset */}
+        {/* Seksi Ringkasan / Kartu Statistik */}
         <section className="mb-10">
-          <h2 className="text-lg md:text-xl font-bold text-black mb-6">
+          <h2 className="text-lg md:text-xl font-medium text-black mb-6">
             Ringkasan Global
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -174,7 +162,7 @@ const Home = () => {
                   <p className="text-[11px] font-medium opacity-90 uppercase tracking-tight leading-none mb-1">
                     {stat.label}
                   </p>
-                  <p className="text-2xl font-bold">
+                  <p className="text-2xl font-medium">
                     {loading ? "..." : stat.value}
                   </p>
                 </div>
@@ -183,12 +171,12 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Section Daftar Pinjaman Seluruh Staff */}
+        {/* Tabel Log Aktivitas */}
         <section className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
           <div className="p-5 border-b border-gray-100 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Bell size={20} className="text-[#C4161C]" />
-              <h3 className="font-bold text-gray-800">
+              <h3 className="font-medium text-gray-800">
                 Log Aktivitas Pinjaman
               </h3>
             </div>
@@ -197,7 +185,7 @@ const Home = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left min-w-225">
               <thead>
-                <tr className="bg-gray-50 text-[10px] uppercase tracking-wider text-gray-400 font-bold border-b border-gray-100">
+                <tr className="bg-gray-50 text-[10px] uppercase tracking-wider text-gray-400 font-medium border-b border-gray-100">
                   <th className="px-6 py-4">Staff Peminjam</th>
                   <th className="px-6 py-4">Kode Barang</th>
                   <th className="px-6 py-4">Nama Barang</th>
@@ -232,7 +220,7 @@ const Home = () => {
                             />
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-gray-800">
+                            <p className="text-sm font-medium text-gray-800">
                               {item.staff}
                             </p>
                             <p className="text-[11px] text-gray-400 font-medium">

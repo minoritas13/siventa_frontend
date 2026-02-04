@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaDownload, FaPlus, FaEye } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Tambahkan untuk navigasi
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import api from "../../services/api";
@@ -14,13 +14,14 @@ const ItemData = () => {
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Hook useEffect untuk mengambil data inventaris dari API saat komponen dimuat
   useEffect(() => {
     const fetchItems = async () => {
       try {
         setLoading(true);
         const res = await api.get("/items");
 
-        // SESUAIKAN DENGAN LOGIKA LOANFORM
+        // Mapping data dari API ke format yang dibutuhkan tabel
         const mappedData = res.data.data.map((item) => ({
           id: item.id,
           asset: item.photo ?? "/img/camera-canon-1300d.jpeg",
@@ -42,11 +43,13 @@ const ItemData = () => {
     fetchItems();
   }, []);
 
+  // Logika limitasi tampilan data (default hanya tampil 3 data)
   const limit = 3;
   const displayedItems = isExpanded 
     ? inventoryData 
     : inventoryData.slice(0, limit);
 
+  // Fungsi untuk mengekspor data tabel ke format PDF menggunakan jsPDF
   const exportPDF = () => {
     if (!inventoryData || inventoryData.length === 0) {
       alert("Data tidak ditemukan.");
@@ -73,7 +76,7 @@ const ItemData = () => {
         body: tableRows,
         startY: 30,
         theme: "grid",
-        headStyles: { fillColor: [153, 27, 31] },
+        headStyles: { fillColor: [153, 27, 31] }, // Warna merah khas ANTARA
       });
 
       doc.save(`Laporan_Inventaris_${Date.now()}.pdf`);
@@ -86,14 +89,16 @@ const ItemData = () => {
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Navbar />
 
+      {/* Konten Utama */}
       <main className="max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10 grow">
         <section className="mb-6">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-800">Data Barang</h1>
-          <p className="text-gray-500 text-xs md:text-sm max-w-2xl">
+          <h1 className="text-xl md:text-2xl font-medium text-gray-800">Data Barang</h1>
+          <p className="text-gray-500 text-xs md:text-sm max-w-2xl font-normal">
             Daftar lengkap inventaris kantor berdasarkan stok terbaru yang tersedia.
           </p>
         </section>
 
+        {/* Tombol Aksi: Export & Pinjam */}
         <div className="flex flex-col sm:flex-row justify-end gap-3 mb-6">
           <button
             onClick={exportPDF}
@@ -101,7 +106,6 @@ const ItemData = () => {
           >
             <FaDownload className="text-xs" /> Eksport PDF
           </button>
-          {/* Navigasi langsung ke halaman Loan */}
           <button 
             onClick={() => navigate("/loan")}
             className="flex items-center justify-center gap-2 px-4 py-2 bg-[#C4161C] text-white rounded-md text-[11px] font-medium hover:bg-[#AA1419] transition-all shadow-sm w-full sm:w-auto"
@@ -110,12 +114,12 @@ const ItemData = () => {
           </button>
         </div>
 
+        {/* Tabel Data Inventaris */}
         <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm mb-4">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
-                {/* Header mengikuti style Home/Admin: bg-gray-50 & uppercase */}
-                <tr className="bg-gray-50 text-[10px] md:text-[11px] uppercase tracking-wider text-gray-400 font-bold border-b border-gray-100">
+                <tr className="bg-gray-50 text-[10px] md:text-[11px] uppercase tracking-wider text-gray-400 font-medium border-b border-gray-100">
                   <th className="py-4 px-6">Kode Barang</th>
                   <th className="py-4 px-6">Nama Barang</th>
                   <th className="py-4 px-6">Kategori</th>
@@ -124,7 +128,7 @@ const ItemData = () => {
                   <th className="py-4 px-6 text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
+              <tbody className="divide-y divide-gray-100 bg-white font-normal">
                 {loading ? (
                   <tr>
                     <td colSpan="6" className="py-16 text-center text-gray-400 text-sm">
@@ -151,7 +155,6 @@ const ItemData = () => {
                         <span className="px-6 py-4 text-[12px]">{item.stock} Unit</span>
                       </td>
                       <td className="py-4 px-6 text-center">
-                        {/* Status Badge dalam bentuk Kapsul (Rounded Full) */}
                         <span className={`px-4 py-1.5 rounded-xl text-[10px] font-medium text-white shadow-sm inline-block whitespace-nowrap ${
                           item.status === "Tersedia" ? "bg-[#53EC53]" : "bg-red-500"
                         }`}>
@@ -160,7 +163,7 @@ const ItemData = () => {
                       </td>
                       <td className="py-4 px-6 text-center">
                         <button 
-                          onClick={() => navigate(`/item-detail/${item.id}`)} // Ubah dari /loan/form menjadi /item-detail
+                          onClick={() => navigate(`/item-detail/${item.id}`)}
                           className="p-2.5 bg-gray-50 rounded-lg text-gray-400 hover:text-[#AA1419] hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
                           title="Lihat Detail"
                         >
@@ -175,6 +178,7 @@ const ItemData = () => {
           </div>
         </div>
 
+        {/* Kontrol Ekspansi Data */}
         {!loading && inventoryData.length > limit && (
           <div className="flex justify-end mb-6">
             <button 

@@ -25,12 +25,9 @@ export const AuthProvider = ({ children }) => {
     setToken(token);
     setUser(user);
 
-    return user; // <--- Kembalikan data user di sini
+    return user;
   };
 
-  // =============================
-  // FUNGSI REGISTER
-  // =============================
   const register = async (userData) => {
     try {
       const payload = {
@@ -38,8 +35,8 @@ export const AuthProvider = ({ children }) => {
         email: userData.email,
         password: userData.password,
         password_confirmation: userData.password_confirmation,
-        role: "staff", 
-        divisi: "Uji Coba" // Pastikan ejaannya huruf kecil semua
+        role: "Staff",
+        divisi: ""
       };
 
       const response = await api.post("/register", payload);

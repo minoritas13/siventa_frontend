@@ -5,16 +5,19 @@ import Footer from "../components/Footer";
 import api from "../services/api";
 
 function ResetPassword() {
+  // Mengambil query parameter (email & token) dari URL
   const [params] = useSearchParams();
   const email = params.get("email");
   const token = params.get("token");
 
+  // State untuk manajemen form dan UI feedback
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
 
+  // Handler untuk memproses perubahan password
   const submitResetPassword = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,6 +42,7 @@ function ResetPassword() {
     }
   };
 
+  // Validasi awal: Tampilkan pesan error jika parameter URL tidak lengkap
   if (!email || !token) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -49,18 +53,21 @@ function ResetPassword() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
+      {/* Header Navigasi */}
       <NavbarGuest />
 
+      {/* Konten Utama */}
       <main className="flex-grow flex flex-col justify-center items-center px-4 py-12">
         <form 
           onSubmit={submitResetPassword} 
           className="w-full max-w-md border border-gray-200 rounded-xl p-8 shadow-sm bg-white"
         >
-          <h2 className="text-center text-2xl font-bold mb-6 text-black">
+          {/* Judul Form */}
+          <h2 className="text-center text-2xl font-medium mb-6 text-black">
             Reset Password
           </h2>
 
-          {/* Feedback Message dengan gaya yang sama seperti Login Error */}
+          {/* Alert Feedback (Sukses/Error) */}
           {message && (
             <div className={`mb-4 p-3 border-l-4 text-sm ${
               isError 
@@ -71,9 +78,10 @@ function ResetPassword() {
             </div>
           )}
 
+          {/* Input Password Baru */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Kata Sandi Baru
               </label>
               <input
@@ -86,8 +94,9 @@ function ResetPassword() {
               />
             </div>
 
+            {/* Input Konfirmasi Password */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Konfirmasi Kata Sandi
               </label>
               <input
@@ -101,6 +110,7 @@ function ResetPassword() {
             </div>
           </div>
 
+          {/* Tombol Submit */}
           <button 
             type="submit" 
             disabled={loading} 
@@ -110,6 +120,7 @@ function ResetPassword() {
           </button>
         </form>
 
+        {/* Link Kembali ke Login */}
         <p className="mt-8 text-sm text-gray-600">
           Sudah ingat password Anda?{" "}
           <Link
@@ -121,6 +132,7 @@ function ResetPassword() {
         </p>
       </main>
 
+      {/* Footer Halaman */}
       <Footer />
     </div>
   );

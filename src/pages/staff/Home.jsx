@@ -6,9 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 
 const Home = () => {
-  // =============================
-  // STATE
-  // =============================
   const navigate = useNavigate();
   const [dataPinjaman, setDataPinjaman] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -18,20 +15,20 @@ const Home = () => {
   const [inventoryData, setInventoryData] = useState([]);
   const [showAllItems, setShowAllItems] = useState(false);
 
-  // =============================
-  // FETCH DATA
-  // =============================
+  // Mengambil data dashboard dari API saat komponen dimuat
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
 
+        // Menjalankan beberapa request API secara bersamaan
         const [loanRes, itemRes, userRes] = await Promise.all([
           api.get("/loans"),
           api.get("/items"),
           api.get("/me"),
         ]);
 
+        // Mapping data barang/inventory
         const mappedItems = itemRes.data.data.map((item) => ({
           id: item.id,
           nama: item.name,
@@ -43,6 +40,7 @@ const Home = () => {
 
         setInventoryData(mappedItems);
 
+        // Mapping data pinjaman user
         const mappedLoans = loanRes.data.data.map((loan) => {
           let statusLabel = "Menunggu";
           if (loan.status === "dipinjam") statusLabel = "Aktif";
@@ -54,7 +52,7 @@ const Home = () => {
             nama: loan.loan_items.map((li) => li.item?.name).join(", "),
             masuk: loan.loan_date,
             tenggat: loan.return_date ?? "-",
-            keperluan: loan.note || "-", 
+            keperluan: loan.note || "-",
             status: statusLabel,
             rawStatus: loan.status,
           };
@@ -73,35 +71,32 @@ const Home = () => {
     fetchDashboardData();
   }, []);
 
-  // =============================
-  // DERIVED DATA
-  // =============================
+  // Filter pinjaman yang sedang aktif
   const pinjamanAktif = dataPinjaman.filter(
     (item) => item.rawStatus === "dipinjam"
   );
 
+  // Logika untuk menampilkan data terbatas (limit) atau semua data
   const displayedData = showAll ? dataPinjaman : dataPinjaman.slice(0, 3);
   const limit = 3;
   const displayedItems = showAllItems ? inventoryData : inventoryData.slice(0, limit);
-  // =============================
-  // RENDER
-  // =============================
+
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Navbar />
 
       <main className="max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
-        {/* Header Welcome */}
+        {/* Welcome Section */}
         <section className="mb-8 md:mb-10 text-center md:text-left">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-800">
+          <h1 className="text-xl md:text-2xl font-medium text-gray-800">
             Selamat Siang, {user}!
           </h1>
-          <p className="text-gray-500 text-xs md:text-sm">
+          <p className="text-gray-500 text-xs md:text-sm font-normal">
             Temukan barang dan ringkasan status inventaris anda
           </p>
         </section>
 
-        {/* Stats Cards */}
+        {/* Statistik Ringkas (Stat Cards) */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 md:mb-14">
           <StatCard title="Jumlah Barang" value={totalItems} subValue="Tersedia" />
           <StatCard title="Status Pinjaman" value={pinjamanAktif.length} subValue="Aktif" />
@@ -109,11 +104,11 @@ const Home = () => {
           <StatCard title="Riwayat" value={dataPinjaman.length} subValue="Masuk" />
         </section>
 
-        {/* --- SECTION 1: DATA BARANG --- */}
+        {/* Tabel Data Barang */}
         <section className="mb-10">
           <div className="mb-4">
-            <h2 className="text-xl font-bold text-gray-800">Data Barang</h2>
-            <p className="text-gray-500 text-xs md:text-sm">
+            <h2 className="text-xl font-medium text-gray-800">Data Barang</h2>
+            <p className="text-gray-500 text-xs md:text-sm font-normal">
               Daftar lengkap inventaris kantor berdasarkan stok terbaru yang tersedia.
             </p>
           </div>
@@ -122,7 +117,7 @@ const Home = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50 text-[10px] md:text-[11px] uppercase tracking-wider text-gray-400 font-bold border-b border-gray-100">
+                  <tr className="bg-gray-50 text-[10px] md:text-[11px] uppercase tracking-wider text-gray-400 font-medium border-b border-gray-100">
                     <th className="px-6 py-4">Kode</th>
                     <th className="px-6 py-4">Nama Barang</th>
                     <th className="px-6 py-4 text-center">Stok</th>
@@ -130,7 +125,7 @@ const Home = () => {
                     <th className="px-6 py-4 text-center">Aksi</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 font-normal">
                   {displayedItems.map((item) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-[12px] uppercase">{item.kode}</td>
@@ -162,11 +157,11 @@ const Home = () => {
           </div>
         </section>
 
-        {/* --- SECTION 2: DATA PINJAMAN --- */}
+        {/* Tabel Data Pinjaman User */}
         <section className="mb-10">
           <div className="mb-4">
-            <h2 className="text-xl font-bold text-gray-800">Data Barang Pinjaman</h2>
-            <p className="text-gray-500 text-xs md:text-sm">
+            <h2 className="text-xl font-medium text-gray-800">Data Barang Pinjaman</h2>
+            <p className="text-gray-500 text-xs md:text-sm font-normal">
               Berikut daftar barang pinjaman kamu.
             </p>
           </div>
@@ -175,7 +170,7 @@ const Home = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50 text-[10px] md:text-[11px] uppercase tracking-wider text-gray-400 font-bold border-b border-gray-100">
+                  <tr className="bg-gray-50 text-[10px] md:text-[11px] uppercase tracking-wider text-gray-400 font-medium border-b border-gray-100">
                     <th className="px-6 py-4">Kode Barang</th>
                     <th className="px-6 py-4">Nama Barang</th>
                     <th className="px-6 py-4 text-center">Tanggal Pinjam</th>
@@ -184,7 +179,7 @@ const Home = () => {
                     <th className="px-6 py-4 text-center">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 font-normal">
                   {displayedData.map((item, index) => (
                     <tr key={index} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-[12px] uppercase">{item.kode}</td>
@@ -203,7 +198,7 @@ const Home = () => {
                   ))}
                   {!loading && dataPinjaman.length === 0 && (
                     <tr>
-                      <td colSpan="6" className="text-center py-10 text-gray-400 text-sm">Tidak ada data pinjaman</td>
+                      <td colSpan="6" className="text-center py-10 text-gray-400 text-sm font-normal">Tidak ada data pinjaman</td>
                     </tr>
                   )}
                 </tbody>
@@ -223,21 +218,16 @@ const Home = () => {
   );
 };
 
-// =============================
-// COMPONENT STAT CARD
-// =============================
+// Komponen Card Statistik
 const StatCard = ({ title, value, subValue }) => (
   <div className="bg-[#C4161C] text-white p-4 md:p-5 rounded-lg relative overflow-hidden shadow-md group cursor-pointer active:scale-95 transition-all">
     <p className="text-[9px] md:text-[10px] text-center font-medium mb-1 uppercase tracking-wider">
       {title}
     </p>
-    <h3 className="text-2xl md:text-3xl font-bold text-center mb-1">{value}</h3>
-    <p className="text-[9px] md:text-[10px] text-center opacity-80">
+    <h3 className="text-2xl md:text-3xl font-medium text-center mb-1">{value}</h3>
+    <p className="text-[9px] md:text-[10px] text-center opacity-80 font-normal">
       {subValue}
     </p>
-    <span className="hidden md:block absolute bottom-2 right-3 text-[10px] font-medium opacity-70 group-hover:opacity-100 transition-opacity">
-      Lihat
-    </span>
   </div>
 );
 

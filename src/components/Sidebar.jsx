@@ -8,12 +8,9 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth(); 
   const navigate = useNavigate();
-  
   const [user, setUser] = useState(null);
 
-  // =============================
-  // FETCH DATA USER (IDENTIK DENGAN PROFILE)
-  // =============================
+  // Mengambil data profil pengguna saat komponen dimuat
   useEffect(() => {
     let isMounted = true;
     
@@ -28,12 +25,10 @@ const Sidebar = () => {
     };
 
     fetchProfile();
-    return () => { isMounted = false }; // Cleanup function
+    return () => { isMounted = false };
   }, []);
 
-  // =============================
-  // LOGIKA LOGOUT
-  // =============================
+  // Handler untuk fungsi logout dengan konfirmasi
   const handleLogout = async () => {
     const confirmLogout = window.confirm("Apakah Anda yakin ingin keluar?");
     if (confirmLogout) {
@@ -42,6 +37,7 @@ const Sidebar = () => {
     }
   };
 
+  // Konfigurasi item menu navigasi utama
   const menuUtama = [
     { name: "Dashboard", path: "/admin", icon: <LayoutDashboard size={18} /> },
     { name: "Kelola Aset", path: "/manage-asset", icon: <Package size={18} /> },
@@ -49,44 +45,46 @@ const Sidebar = () => {
     { name: "Laporan", path: "/report", icon: <FileText size={18} /> },
   ];
 
+  // Konfigurasi item menu navigasi tambahan
   const menuLainnya = [
     { name: "Pengguna", path: "/manage-user", icon: <Users size={18} /> },
   ];
 
   return (
     <>
-      {/* MOBILE HEADER */}
+      {/* Header Mobile (Hanya tampil di layar kecil) */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between p-4 bg-white border-b shadow-sm">
         <button onClick={() => setIsOpen(true)} className="text-[#C4161C]">
           <Menu size={26} />
         </button>
-        <h1 className="font-black text-[#C4161C] tracking-tight pr-3">SIVENTA</h1>
+        <h1 className="font-medium text-[#C4161C] tracking-tight pr-3">SIVENTA</h1>
       </div>
 
-      {/* OVERLAY */}
+      {/* Overlay saat sidebar mobile terbuka */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/40 z-40 md:hidden" onClick={() => setIsOpen(false)} />
       )}
 
-      {/* SIDEBAR ASIDE */}
+      {/* Sidebar Container */}
       <aside
         className={`fixed md:sticky top-0 inset-y-0 left-0 z-50 w-[280px] h-screen bg-[#C4161C] flex flex-col text-white transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
-        {/* LOGO SECTION */}
+        {/* Logo & Branding */}
         <div className="p-8 text-center border-b border-white/20 relative">
           <button onClick={() => setIsOpen(false)} className="absolute top-4 right-4 md:hidden text-white/70 hover:text-white">
             <X size={20} />
           </button>
           <div className="bg-white inline-block px-4 py-0.5 mb-2 rounded-sm">
-            <h1 className="text-[#C4161C] text-2xl font-black tracking-tighter">
+            <h1 className="text-[#C4161C] text-2xl font-medium tracking-tighter">
               <span>SIVE</span><span className="text-black">NTA</span>
             </h1>
           </div>
           <p className="text-[10px] leading-tight font-normal tracking-widest">Sistem Inventaris Biro ANTARA Lampung</p>
         </div>
 
-        {/* NAV LINKS */}
+        {/* List Menu Navigasi */}
         <div className="flex-1 overflow-y-auto py-6 px-4">
+          {/* Kelompok Menu Utama */}
           <div className="mb-8">
             <p className="text-[10px] font-medium uppercase opacity-60 mb-4 ml-4 tracking-widest">MENU UTAMA</p>
             <nav className="space-y-1">
@@ -96,7 +94,7 @@ const Sidebar = () => {
                   to={item.path}
                   end={item.path === "/admin"}
                   onClick={() => setIsOpen(false)}
-                  className={({ isActive }) => `flex items-center gap-4 px-6 py-3 rounded-xl transition-all font-bold ${isActive ? "bg-white text-[#C4161C] shadow-md" : "hover:bg-white/10 text-white"}`}
+                  className={({ isActive }) => `flex items-center gap-4 px-6 py-3 rounded-xl transition-all font-medium ${isActive ? "bg-white text-[#C4161C] shadow-md" : "hover:bg-white/10 text-white"}`}
                 >
                   {item.icon} <span className="text-[15px]">{item.name}</span>
                 </NavLink>
@@ -104,6 +102,7 @@ const Sidebar = () => {
             </nav>
           </div>
 
+          {/* Kelompok Menu Lainnya */}
           <div>
             <p className="text-[10px] font-medium uppercase opacity-60 mb-4 ml-4 tracking-widest">LAINNYA</p>
             <nav className="space-y-1">
@@ -112,7 +111,7 @@ const Sidebar = () => {
                   key={item.name}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={({ isActive }) => `flex items-center gap-4 px-6 py-3 rounded-xl transition-all font-bold ${isActive ? "bg-white text-[#C4161C] shadow-lg" : "hover:bg-white/10 text-white"}`}
+                  className={({ isActive }) => `flex items-center gap-4 px-6 py-3 rounded-xl transition-all font-medium ${isActive ? "bg-white text-[#C4161C] shadow-lg" : "hover:bg-white/10 text-white"}`}
                 >
                   {item.icon} <span className="text-[15px]">{item.name}</span>
                 </NavLink>
@@ -121,11 +120,10 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* FOOTER USER INFO (DISAMAKAN DENGAN HALAMAN PROFILE) */}
+        {/* Profil Pengguna & Tombol Keluar */}
         <div className="p-4 border-t border-white/10 bg-black/10">
           <div className="flex items-center gap-3 mb-4 p-2">
             <div className="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden bg-gray-200 shrink-0">
-              {/* LOGIKA FOTO IDENTIK DENGAN PROFILE */}
               <img 
                 src={user?.photo 
                     ? `${process.env.REACT_APP_API_URL}/storage/${user.photo}` 
@@ -135,17 +133,17 @@ const Sidebar = () => {
               />
             </div>
             <div className="truncate">
-              <h2 className="text-[12px] font-bold leading-none truncate">
+              <h2 className="text-[12px] font-medium leading-none truncate">
                 {user?.name || "Loading..."}
               </h2>
-              <p className="text-[10px] opacity-60 truncate mt-1">
+              <p className="text-[10px] opacity-60 truncate mt-1 font-normal">
                 {user?.email || "Memuat email..."}
               </p>
             </div>
           </div>
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white hover:text-[#AA1419] text-white py-2 rounded-lg text-xs font-semibold transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white hover:text-[#AA1419] text-white py-2 rounded-lg text-xs font-medium transition-colors"
           >
             <LogOut size={16} /> Keluar
           </button>

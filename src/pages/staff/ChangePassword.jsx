@@ -48,7 +48,6 @@ function ChangePassword() {
           </h2>
 
           <div className="space-y-5">
-            {/* Input Kata Sandi Lama */}
             <form onSubmit={submitChangePassword}>
               <div className="mb-3">
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
@@ -64,7 +63,6 @@ function ChangePassword() {
                 />
               </div>
 
-              {/* Input Kata Sandi Baru */}
               <div className="mb-3">
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Kata Sandi Baru
@@ -79,7 +77,6 @@ function ChangePassword() {
                 />
               </div>
 
-              {/* Input Konfirmasi Kata Sandi */}
               <div className="mb-3">
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Konfirmasi Kata Sandi
