@@ -2,8 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import api from "../../services/api"
+import { useNavigate } from "react-router-dom";
 
 function ChangePassword() {
+  const navigate = useNavigate();
   const [currentPassword, setCurrentPassword] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -16,7 +19,7 @@ function ChangePassword() {
     setMessage("");
 
     try {
-      await api.post("/change-password", {
+      await api.put("/change-password", {
         current_password: currentPassword,
         password: password,
         password_confirmation: passwordConfirmation,
@@ -30,6 +33,7 @@ function ChangePassword() {
       setMessage(err.response?.data?.message || "Gagal mengubah password");
     } finally {
       setLoading(false);
+      navigate("/profile")
     }
   };
 
@@ -91,7 +95,7 @@ function ChangePassword() {
               </div>
 
               {message && (
-                <p className="mt-4 text-sm text-center text-red-600">
+                <p className="mt-4 text-sm text-center text-green-600">
                   {message}
                 </p>
               )}
