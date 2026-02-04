@@ -173,7 +173,7 @@ const LoanForm = () => {
                   <button
                     type="submit"
                     disabled={item.stock === 0 || loading}
-                    className="w-full md:w-auto px-10 py-3 bg-[#C4161C] text-white rounded-xl font-bold text-sm shadow-lg hover:bg-[#AA1419] transition-all disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="w-full md:w-auto px-10 py-3 bg-[#C4161C] text-white rounded-xl font-medium text-sm shadow-lg hover:bg-[#AA1419] transition-all disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
                     {loading ? "Mengajukan..." : "Ajukan Peminjaman"}
                   </button>

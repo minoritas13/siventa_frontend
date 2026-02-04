@@ -212,7 +212,7 @@ const Loan = () => {
 
                     <button
                       onClick={() => navigate(`/loan/form/${item.id}`)}
-                      className="w-full py-3 bg-[#C4161C] text-white rounded-xl text-[11px] font-bold hover:opacity-90 transition-all shadow-sm active:scale-95"
+                      className="w-full py-3 bg-[#C4161C] text-white rounded-xl text-[11px] font-medium hover:opacity-90 transition-all shadow-sm active:scale-95"
                     >
                       + PINJAM BARANG
                     </button>

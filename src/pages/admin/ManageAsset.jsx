@@ -67,7 +67,7 @@ const ManageAsset = () => {
               Kelola seluruh aset dan inventaris Kantor Berita ANTARA.
             </p>
           </div>
-          <button className="flex items-center gap-2 bg-[#991B1F] text-white px-4 py-2 rounded-lg text-xs font-semibold shadow-sm hover:bg-red-800">
+          <button className="flex items-center gap-2 bg-[#C4161C] text-white px-4 py-2 rounded-lg text-xs font-semibold shadow-sm hover:bg-[#AA1419]">
             <Download size={16} />
             Ekspor CSV
           </button>
@@ -85,12 +85,12 @@ const ManageAsset = () => {
               <input
                 type="text"
                 placeholder="Cari nama atau kode aset..."
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-red-500 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-[#C4161C] transition-all"
               />
             </div>
 
             <button
-              className="flex items-center gap-2 bg-[#991B1F] text-white px-6 py-2.5 rounded-lg text-sm font-bold"
+              className="flex items-center gap-2 bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-medium"
               onClick={handleAddAsset}
             >
               <Plus size={18} />
@@ -101,7 +101,7 @@ const ManageAsset = () => {
 
         {/* Table */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-          <div className="p-5 flex items-center gap-2 text-[#991B1F]">
+          <div className="p-5 flex items-center gap-2 text-[#C4161C]">
             <Archive size={20} />
             <h2 className="font-bold text-gray-800">Daftar Barang</h2>
           </div>
@@ -153,7 +153,7 @@ const ManageAsset = () => {
                           src={
                             item.photo
                               ? `${STORAGE_URL}/${item.photo}`
-                              : "/img/default.png"
+                              : "/img/camera-canon-1300d.jpeg"
                           }
                           className="w-10 h-10 rounded-lg object-cover"
                         />
@@ -189,7 +189,7 @@ const ManageAsset = () => {
                           <Eye size={14} />
                         </button>
                         <button
-                          className="p-1.5 bg-red-600 text-white rounded"
+                          className="p-1.5 bg-[#C4161C] text-white rounded"
                           onClick={() => handleDelete(item.id)}
                         >
                           <Trash2 size={14} />

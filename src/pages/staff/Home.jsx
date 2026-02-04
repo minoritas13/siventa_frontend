@@ -156,7 +156,7 @@ const Home = () => {
             </div>
           </div>
           <div className="flex justify-end mt-4">
-            <button onClick={() => setShowAllItems(!showAllItems)} className="text-[#C4161C] text-xs font-bold hover:underline transition-all">
+            <button onClick={() => setShowAllItems(!showAllItems)} className="text-[#C4161C] text-xs font-medium hover:underline transition-all">
               {showAllItems ? "Tampilkan Sedikit" : `Lihat Semua (${inventoryData.length} Barang)`}
             </button>
           </div>
@@ -211,7 +211,7 @@ const Home = () => {
             </div>
           </div>
           <div className="flex justify-end mt-4">
-            <button onClick={() => setShowAll((prev) => !prev)} className="text-[#C4161C] text-xs font-bold hover:underline transition-all">
+            <button onClick={() => setShowAll((prev) => !prev)} className="text-[#C4161C] text-xs font-medium hover:underline transition-all">
               {showAll ? "Tampilkan Sedikit" : `Lihat Semua (${dataPinjaman.length} Pinjaman)`}
             </button>
           </div>

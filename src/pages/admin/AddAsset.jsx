@@ -116,7 +116,7 @@ const AddAsset = () => {
               value={form.code}
               onChange={handleChange}
               placeholder="Contoh: Camera sony HD-1280"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
@@ -131,7 +131,7 @@ const AddAsset = () => {
               required
               value={form.tanggal_perolehan || ""}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
@@ -147,7 +147,7 @@ const AddAsset = () => {
               value={form.name}
               onChange={handleChange}
               placeholder="Masukkan nama barang lengkap"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
@@ -163,7 +163,7 @@ const AddAsset = () => {
               value={form.nilai_perolehan || ""}
               onChange={handleChange}
               placeholder="Masukkan nilai barang"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
@@ -177,7 +177,7 @@ const AddAsset = () => {
               required
               value={form.category_id}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none bg-white"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none bg-white"
             >
               <option value="">Pilih Kategori</option>
               {categories.map((cat) => (
@@ -200,7 +200,7 @@ const AddAsset = () => {
               value={form.umur_barang || ""}
               onChange={handleChange}
               placeholder="Masukkan umur barang"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
@@ -214,7 +214,7 @@ const AddAsset = () => {
               required
               value={form.condition}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none bg-white"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none bg-white"
             >
               <option value="">Pilih Kondisi</option>
               <option value="baik">Baik</option>
@@ -234,7 +234,7 @@ const AddAsset = () => {
               value={form.stock}
               onChange={handleChange}
               placeholder="Masukkan jumlah"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
@@ -264,7 +264,7 @@ const AddAsset = () => {
                 />
               ) : (
                 <>
-                  <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[#C4161C] rounded-full flex items-center justify-center">
                     <Camera size={18} className="text-white" />
                   </div>
                   <span className="text-sm text-gray-500">
@@ -286,7 +286,7 @@ const AddAsset = () => {
               value={form.description}
               onChange={handleChange}
               placeholder="Keterangan kondisi atau kelengkapan lainnya"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
         </div>
@@ -296,7 +296,7 @@ const AddAsset = () => {
           <button
             type="button"
             onClick={handleBack}
-            className="px-8 py-2 border border-red-600 text-red-600 rounded-md hover:bg-red-50 transition-colors"
+            className="px-8 py-2 border border-[#C4161C] text-[#C4161C] rounded-md hover:bg-red-50 transition-colors"
           >
             Batal
           </button>
@@ -304,7 +304,7 @@ const AddAsset = () => {
           <button
             type="button"
             onClick={handleSubmit}
-            className="px-8 py-2 bg-red-700 text-white rounded-md flex items-center gap-2 hover:bg-red-800 transition-colors"
+            className="px-8 py-2 bg-[#C4161C] text-white rounded-md flex items-center gap-2 hover:bg-[#AA1419] transition-colors"
           >
             <Save size={18} />
             Simpan

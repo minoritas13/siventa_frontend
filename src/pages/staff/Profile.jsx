@@ -174,7 +174,7 @@ const Profile = () => {
                       ? `${process.env.REACT_APP_API_URL}/storage/${user.photo}`
                       : `https://ui-avatars.com/api/?name=${
                           user?.name || "User"
-                        }&background=991B1F&color=fff`
+                        }&background=C4161C&color=fff`
                   }
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover border-4 border-gray-50"
@@ -237,7 +237,8 @@ const Profile = () => {
                       Nomor Telepon
                     </p>
                     <p className="text-sm text-gray-700 font-medium">
-                      {formData.phone || "-"}
+                      {/* Ganti formData.phone menjadi user?.phone agar sinkron dengan database setelah update */}
+                      {user?.phone || "-"}
                     </p>
                   </div>
                 </div>
@@ -406,6 +407,7 @@ const Profile = () => {
               </div>
 
               {/* Nomor Telepon */}
+              {/* Nomor Telepon */}
               <div>
                 <label className="text-[11px] font-bold text-gray-400">
                   Nomor Telepon
@@ -414,9 +416,9 @@ const Profile = () => {
                   type="text"
                   placeholder="Contoh: 08123456789"
                   className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C4161C] outline-none text-sm"
-                  value={formData.phone}
+                  value={formData.phone} // Mengambil dari state formData.phone
                   onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
+                    setFormData({ ...formData, phone: e.target.value }) // Mengupdate key "phone"
                   }
                 />
               </div>

@@ -97,14 +97,14 @@ const ItemData = () => {
         <div className="flex flex-col sm:flex-row justify-end gap-3 mb-6">
           <button
             onClick={exportPDF}
-            className="flex items-center justify-center gap-2 px-4 py-2 border border-[#C4161C] rounded-md text-[11px] font-bold text-[#C4161C] hover:bg-gray-50 transition-all w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 px-4 py-2 border border-[#C4161C] rounded-md text-[11px] font-medium text-[#C4161C] hover:bg-gray-50 transition-all w-full sm:w-auto"
           >
             <FaDownload className="text-xs" /> Eksport PDF
           </button>
           {/* Navigasi langsung ke halaman Loan */}
           <button 
             onClick={() => navigate("/loan")}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-[#C4161C] text-white rounded-md text-[11px] font-bold hover:bg-[#AA1419] transition-all shadow-sm w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-[#C4161C] text-white rounded-md text-[11px] font-medium hover:bg-[#AA1419] transition-all shadow-sm w-full sm:w-auto"
           >
             <FaPlus className="text-xs" /> Pinjam Barang
           </button>
@@ -179,7 +179,7 @@ const ItemData = () => {
           <div className="flex justify-end mb-6">
             <button 
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-[#C4161C] text-xs font-bold hover:underline transition-all"
+              className="text-[#C4161C] text-xs font-medium hover:underline transition-all"
             >
               {isExpanded ? "Tampilkan Sedikit" : `Lihat Semua (${inventoryData.length} Barang)`}
             </button>

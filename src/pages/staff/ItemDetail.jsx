@@ -128,7 +128,7 @@ const ItemDetail = () => {
                     {/* Tombol Pinjam Barang sesuai halaman Loan */}
                     <button
                       onClick={() => navigate(`/loan/form/${sItem.id}`)}
-                      className="w-full mt-auto py-3 bg-[#C4161C] text-white rounded-xl text-[11px] font-bold hover:opacity-90 transition-all shadow-sm active:scale-95"
+                      className="w-full mt-auto py-3 bg-[#C4161C] text-white rounded-xl text-[11px] font-medium hover:opacity-90 transition-all shadow-sm active:scale-95"
                     >
                       + PINJAM BARANG
                     </button>
@@ -136,7 +136,7 @@ const ItemDetail = () => {
                     {/* Tombol Lihat Detail (Opsional: Jika ingin tetap ada akses ke detail) */}
                     <button
                       onClick={() => navigate(`/item-detail/${sItem.id}`)}
-                      className="w-full mt-2 py-1.5 text-[#C4161C] text-[10px] font-bold hover:underline"
+                      className="w-full mt-2 py-1.5 text-[#C4161C] text-[10px] font-medium hover:underline"
                     >
                       Lihat Detail
                     </button>

@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
-import {
-  Search,
-  Download,
-  FileText,
-  Filter,
-  ChevronLeft,
-  ChevronRight,
-  ClipboardList,
-  Box,
-} from "lucide-react";
+import {Search, Download, FileText, Filter, ChevronLeft, ChevronRight, ClipboardList, Box } from "lucide-react";
 import api from "../../services/api";
 import { STORAGE_URL } from "../../services/api";
 
@@ -73,60 +64,6 @@ const Report = () => {
     fetchData();
   }, []);
 
-  // Data Dummy Laporan Peminjaman
-  const dataPeminjaman = [
-    {
-      staff: "Budi Santoso",
-      divisi: "Redaksi Foto",
-      kode: "CAM CANON D1200-001",
-      barang: "Sony Alpha A7 III",
-      pinjam: "12 Oktober 2025",
-      kembali: "14 Oktober 2025",
-      status: "Selesai",
-      foto: "/foto-andi.png",
-    },
-    {
-      staff: "Siti Aminah",
-      divisi: "Redaksi Video",
-      kode: "CAM CANON D1200-001",
-      barang: "DJI Ronin S",
-      pinjam: "13 Oktober 2025",
-      kembali: "21 Oktober 2025",
-      status: "Selesai",
-      foto: "/foto-andi.png",
-    },
-    {
-      staff: "Rizky Pratama",
-      divisi: "IT Support",
-      kode: "CAM CANON D1200-001",
-      barang: "MacBook Pro M2",
-      pinjam: "12 Oktober 2025",
-      kembali: "21 Oktober 2025",
-      status: "Selesai",
-      foto: "/foto-andi.png",
-    },
-    {
-      staff: "Anton Wijaya",
-      divisi: "Redaksi Video",
-      kode: "CAM CANON D1200-001",
-      barang: "Sennheiser Mic Kit",
-      pinjam: "12 Oktober 2025",
-      kembali: "21 Oktober 2025",
-      status: "Terlambat",
-      foto: "/foto-andi.png",
-    },
-    {
-      staff: "Dewi Lestari",
-      divisi: "Koresponden",
-      kode: "CAM CANON D1200-001",
-      barang: "Lensa Canon 70-200mm",
-      pinjam: "12 Oktober 2025",
-      kembali: "21 Oktober 2025",
-      status: "Dipinjam",
-      foto: "/foto-andi.png",
-    },
-  ];
-
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 font-sans">
       <Sidebar />
@@ -142,7 +79,7 @@ const Report = () => {
               Kelola laporan inventaris dan peminjaman secara berkala.
             </p>
           </div>
-          <button className="flex items-center gap-2 bg-[#991B1F] text-white px-5 py-2.5 rounded-lg text-xs font-bold shadow-md hover:bg-red-800 transition-all active:scale-95">
+          <button className="flex items-center gap-2 bg-[#C4161C] text-white px-5 py-2.5 rounded-lg text-xs font-bold shadow-md hover:bg-[#AA1419] transition-all active:scale-95">
             <Download size={16} />
             Ekspor CSV
           </button>
@@ -158,7 +95,7 @@ const Report = () => {
               onClick={() => setActiveTab("inventaris")}
               className={`pb-4 text-sm font-bold flex items-center gap-2 transition-all border-b-2 whitespace-nowrap ${
                 activeTab === "inventaris"
-                  ? "border-[#991B1F] text-[#991B1F]"
+                  ? "border-[#C4161C] text-[#C4161C]"
                   : "border-transparent text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -168,7 +105,7 @@ const Report = () => {
               onClick={() => setActiveTab("peminjaman")}
               className={`pb-4 text-sm font-bold flex items-center gap-2 transition-all border-b-2 whitespace-nowrap ${
                 activeTab === "peminjaman"
-                  ? "border-[#991B1F] text-[#991B1F]"
+                  ? "border-[#C4161C] text-[#C4161C]"
                   : "border-transparent text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -178,7 +115,7 @@ const Report = () => {
 
           {/* Search & Filter Section */}
           <div className="p-5 flex flex-col md:flex-row gap-4 items-center bg-white">
-            <div className="relative w-full md:w-80">
+            <div className="relative w-full md:w-full">
               <Search
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 size={16}
@@ -186,7 +123,7 @@ const Report = () => {
               <input
                 type="text"
                 placeholder="Cari nama staf atau barang ..."
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-red-500 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-[#C4161C] transition-all"
               />
             </div>
 
@@ -250,7 +187,7 @@ const Report = () => {
                               src={
                                 item.foto
                                   ? `${STORAGE_URL}/${item.foto}`
-                                  : "/img/default.png"
+                                  : "/img/camera-canon-1300d.jpeg"
                               }
                               alt={item.nama_barang}
                               className="w-10 h-10 rounded-lg object-cover shadow-sm border border-gray-100 shrink-0"
@@ -302,7 +239,7 @@ const Report = () => {
                                 alt={item.staff}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                  e.target.src = `https://ui-avatars.com/api/?name=${item.staff}&background=random`;
+                                  e.target.src = `https://ui-avatars.com/api/?name=${item.staff}&background=C4161C&color=fff`;
                                 }}
                               />
                             </div>
@@ -356,7 +293,7 @@ const Report = () => {
               <button className="flex-1 sm:flex-none px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
                 Sebelumnya
               </button>
-              <button className="flex-1 sm:flex-none px-4 py-2 border border-red-200 text-[#991B1F] rounded-xl hover:bg-red-50 transition-all font-bold">
+              <button className="flex-1 sm:flex-none px-4 py-2 border border-red-200 text-[#C4161C] rounded-xl hover:bg-red-50 transition-all font-bold">
                 Selanjutnya
               </button>
             </div>

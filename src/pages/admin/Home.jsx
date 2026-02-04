@@ -12,25 +12,25 @@ const Home = () => {
       label: "Total Aset",
       value: "0",
       icon: <Box size={20} />,
-      bg: "bg-[#991B1F]",
+      bg: "bg-[#C4161C]",
     },
     {
       label: "Aset Aktif",
       value: "0",
       icon: <CheckCircle size={20} />,
-      bg: "bg-[#991B1F]",
+      bg: "bg-[#C4161C]",
     },
     {
       label: "Aset Rusak",
       value: "0",
       icon: <Wrench size={20} />,
-      bg: "bg-[#991B1F]",
+      bg: "bg-[#C4161C]",
     },
     {
       label: "Dipinjam",
       value: "0",
       icon: <Package size={20} />,
-      bg: "bg-[#991B1F]",
+      bg: "bg-[#C4161C]",
     },
   ]);
   const [pinjaman, setPinjaman] = useState([]);
@@ -73,25 +73,25 @@ const Home = () => {
             label: "Total Aset",
             value: totalAset.toString(),
             icon: <Box size={20} />,
-            bg: "bg-[#991B1F]",
+            bg: "bg-[#C4161C]",
           },
           {
             label: "Aset Aktif",
             value: asetAktif.toString(),
             icon: <CheckCircle size={20} />,
-            bg: "bg-[#991B1F]",
+            bg: "bg-[#C4161C]",
           },
           {
             label: "Aset Rusak",
             value: asetRusak.toString(),
             icon: <Wrench size={20} />,
-            bg: "bg-[#991B1F]",
+            bg: "bg-[#C4161C]",
           },
           {
             label: "Dipinjam",
             value: totalDipinjam.toString(),
             icon: <Package size={20} />,
-            bg: "bg-[#991B1F]",
+            bg: "bg-[#C4161C]",
           },
         ]);
 
@@ -187,7 +187,7 @@ const Home = () => {
         <section className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
           <div className="p-5 border-b border-gray-100 flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Bell size={20} className="text-[#991B1F]" />
+              <Bell size={20} className="text-[#C4161C]" />
               <h3 className="font-bold text-gray-800">
                 Log Aktivitas Pinjaman
               </h3>
@@ -225,7 +225,7 @@ const Home = () => {
                             <img
                               src={
                                 item.foto ||
-                                `https://ui-avatars.com/api/?name=${item.staff}&background=random`
+                                `https://ui-avatars.com/api/?name=${item.staff}&background=C4161C&color=fff`
                               }
                               alt="avatar"
                               className="w-full h-full object-cover"
