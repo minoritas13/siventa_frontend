@@ -27,9 +27,6 @@ const EditAsset = () => {
     nilai_perolehan: "",
   });
 
-  /* =========================
-     FETCH DATA
-  ========================= */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -72,9 +69,6 @@ const EditAsset = () => {
     fetchData();
   }, [id]);
 
-  /* =========================
-     HANDLER
-  ========================= */
   const handleBack = () => {
     navigate("/manage-asset");
   };
@@ -103,9 +97,6 @@ const EditAsset = () => {
     reader.readAsDataURL(file);
   };
 
-  /* =========================
-     SUBMIT (FIX LARAVEL 422)
-  ========================= */
   const handleSubmit = async () => {
     try {
       const formData = new FormData();
@@ -116,7 +107,6 @@ const EditAsset = () => {
         }
       });
 
-      // METHOD SPOOFING UNTUK LARAVEL (WAJIB UNTUK MULTIPART)
       formData.append("_method", "PUT");
 
       await api.post(`/item/update/${id}`, formData, {
@@ -150,7 +140,7 @@ const EditAsset = () => {
 
       <main className="flex-1 p-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="text-2xl font-medium text-gray-800">
             Formulir Tambah Aset
           </h1>
           <p className="text-gray-500">Tambah detail barang inventaris</p>
@@ -159,7 +149,7 @@ const EditAsset = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* KODE BARANG */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Kode Barang
             </label>
             <input
@@ -169,13 +159,13 @@ const EditAsset = () => {
               value={form.code}
               onChange={handleChange}
               placeholder="Contoh: Camera sony HD-1280"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
           {/* TANGGAL PEROLEHAN */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Tanggal Perolehan
             </label>
             <input
@@ -184,13 +174,13 @@ const EditAsset = () => {
               required
               value={form.tanggal_perolehan || ""}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
           {/* NAMA BARANG */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Nama Barang
             </label>
             <input
@@ -200,13 +190,13 @@ const EditAsset = () => {
               value={form.name}
               onChange={handleChange}
               placeholder="Masukkan nama barang lengkap"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
           {/* NILAI PEROLEHAN */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Nilai Perolehan
             </label>
             <input
@@ -216,13 +206,13 @@ const EditAsset = () => {
               value={form.nilai_perolehan || ""}
               onChange={handleChange}
               placeholder="Masukkan nilai barang"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
           {/* KATEGORI */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Kategori
             </label>
             <select
@@ -230,7 +220,7 @@ const EditAsset = () => {
               required
               value={form.category_id}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none bg-white"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none bg-white"
             >
               <option value="">Pilih Kategori</option>
               {categories.map((cat) => (
@@ -243,7 +233,7 @@ const EditAsset = () => {
 
           {/* UMUR BARANG */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Umur Barang
             </label>
             <input
@@ -253,13 +243,13 @@ const EditAsset = () => {
               value={form.umur_barang || ""}
               onChange={handleChange}
               placeholder="Masukkan umur barang"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
 
           {/* KONDISI */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Kondisi
             </label>
             <select
@@ -278,7 +268,7 @@ const EditAsset = () => {
 
           {/* JUMLAH BARANG */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Jumlah Barang (opsional)
             </label>
             <input
@@ -293,7 +283,7 @@ const EditAsset = () => {
 
           {/* FOTO BARANG */}
           <div className="lg:col-span-1">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Foto Barang
             </label>
 
@@ -317,7 +307,7 @@ const EditAsset = () => {
                 />
               ) : (
                 <>
-                  <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[#C4161C] rounded-full flex items-center justify-center">
                     <Camera size={18} className="text-white" />
                   </div>
                   <span className="text-sm text-gray-500">
@@ -330,7 +320,7 @@ const EditAsset = () => {
 
           {/* DESKRIPSI */}
           <div className="lg:col-span-1">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Deskripsi Tambahan
             </label>
             <textarea
@@ -339,7 +329,7 @@ const EditAsset = () => {
               value={form.description}
               onChange={handleChange}
               placeholder="Keterangan kondisi atau kelengkapan lainnya"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 focus:outline-none"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
             />
           </div>
         </div>
@@ -349,7 +339,7 @@ const EditAsset = () => {
           <button
             type="button"
             onClick={handleBack}
-            className="px-8 py-2 border border-red-600 text-red-600 rounded-md hover:bg-red-50 transition-colors"
+            className="px-8 py-2 border border-[#C4161C] text-[#C4161C] rounded-md hover:bg-red-50 transition-colors"
           >
             Batal
           </button>
@@ -357,7 +347,7 @@ const EditAsset = () => {
           <button
             type="button"
             onClick={handleSubmit}
-            className="px-8 py-2 bg-red-700 text-white rounded-md flex items-center gap-2 hover:bg-red-800 transition-colors"
+            className="px-8 py-2 bg-[#C4161C] text-white rounded-md flex items-center gap-2 hover:bg-[#AA1419] transition-colors"
           >
             <Save size={18} />
             Simpan

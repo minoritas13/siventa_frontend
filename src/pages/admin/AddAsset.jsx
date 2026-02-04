@@ -24,9 +24,6 @@ const AddAsset = () => {
     nilai_perolehan: "",
   });
 
-  /* =========================
-     FETCH KATEGORI
-  ========================= */
   useEffect(() => {
     api
       .get("/categories")
@@ -38,9 +35,6 @@ const AddAsset = () => {
       });
   }, []);
 
-  /* =========================
-     HANDLER
-  ========================= */
   const handleBack = () => {
     navigate("/manage-asset");
   };
@@ -97,7 +91,7 @@ const AddAsset = () => {
 
       <main className="flex-1 p-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="text-2xl font-medium text-gray-800">
             Formulir Tambah Aset
           </h1>
           <p className="text-gray-500">Tambah detail barang inventaris</p>
@@ -106,7 +100,7 @@ const AddAsset = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* KODE BARANG */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Kode Barang
             </label>
             <input
@@ -122,7 +116,7 @@ const AddAsset = () => {
 
           {/* TANGGAL PEROLEHAN */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Tanggal Perolehan
             </label>
             <input
@@ -137,7 +131,7 @@ const AddAsset = () => {
 
           {/* NAMA BARANG */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Nama Barang
             </label>
             <input
@@ -153,7 +147,7 @@ const AddAsset = () => {
 
           {/* NILAI PEROLEHAN */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Nilai Perolehan
             </label>
             <input
@@ -169,7 +163,7 @@ const AddAsset = () => {
 
           {/* KATEGORI */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Kategori
             </label>
             <select
@@ -190,7 +184,7 @@ const AddAsset = () => {
 
           {/* UMUR BARANG */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Umur Barang
             </label>
             <input
@@ -206,7 +200,7 @@ const AddAsset = () => {
 
           {/* KONDISI */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Kondisi
             </label>
             <select
@@ -225,7 +219,7 @@ const AddAsset = () => {
 
           {/* JUMLAH BARANG */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Jumlah Barang (opsional)
             </label>
             <input
@@ -240,7 +234,7 @@ const AddAsset = () => {
 
           {/* FOTO BARANG (FIXED) */}
           <div className="lg:col-span-1">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Foto Barang
             </label>
 
@@ -277,7 +271,7 @@ const AddAsset = () => {
 
           {/* DESKRIPSI */}
           <div className="lg:col-span-1">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Deskripsi Tambahan
             </label>
             <textarea

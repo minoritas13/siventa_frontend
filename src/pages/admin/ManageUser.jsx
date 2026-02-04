@@ -34,7 +34,6 @@ const ManageUser = () => {
     if (confirmDelete) {
       try {
         await api.delete(`/user/${id}`);
-        // Update state lokal agar user yang dihapus hilang dari tabel tanpa reload full
         setUsers(users.filter((user) => user.id !== id));
         alert("User berhasil dihapus");
       } catch (error) {
@@ -117,7 +116,7 @@ const ManageUser = () => {
                           </div>
                           <div>
                             <p className="text-sm font-medium text-gray-800">{user.name}</p>
-                            <p className="text-[11px] text-gray-400 font-medium uppercase tracking-tighter">
+                            <p className="text-[11px] text-gray-400 font-medium tracking-tighter">
                               {user.divisi || 'STAFF'}
                             </p>
                           </div>
@@ -164,13 +163,6 @@ const ManageUser = () => {
                 )}
               </tbody>
             </table>
-          </div>
-
-          {/* Footer Tabel */}
-          <div className="p-5 bg-gray-50/50 border-t border-gray-100">
-            <p className="text-[10px] text-gray-400 font-medium uppercase tracking-widest">
-              Total Entitas: {filteredUsers.length} User Terdaftar
-            </p>
           </div>
         </section>
       </main>

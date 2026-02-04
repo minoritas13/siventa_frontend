@@ -223,7 +223,7 @@ const Home = () => {
                             <p className="text-sm font-medium text-gray-800">
                               {item.staff}
                             </p>
-                            <p className="text-[11px] text-gray-400 font-medium">
+                            <p className="text-[11px] text-gray-400 font-normal">
                               {item.divisi}
                             </p>
                           </div>
