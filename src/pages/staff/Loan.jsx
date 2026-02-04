@@ -264,7 +264,7 @@ const Loan = () => {
                               />
                             </div>
                             <div className="flex-1 overflow-hidden">
-                              <h3 className="text-xs font-medium text-gray-800 leading-tight mb-1 uppercase truncate font-medium">
+                              <h3 className="text-xs font-medium text-gray-800 leading-tight mb-1 uppercase truncate">
                                 {li.item?.name}
                               </h3>
                               <p className="text-[9px] font-mono text-gray-400 font-normal">{li.item?.code}</p>
@@ -292,9 +292,9 @@ const Loan = () => {
                 {/* Tautan Riwayat Lengkap */}
                 <div className="pt-6 border-t border-gray-50 text-center">
                    <button 
-                    onClick={() => navigate("/loan-data")}
-                    className="text-[11px] font-medium text-red-700 hover:text-red-900 transition-colors underline decoration-dotted font-medium"
-                   >
+                      onClick={() => navigate("/loan-data")}
+                      className="text-[11px] font-medium text-red-700 hover:text-red-900 transition-colors underline decoration-dotted"
+                    >
                     Lihat Riwayat Lengkap
                    </button>
                 </div>
