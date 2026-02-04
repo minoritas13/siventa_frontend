@@ -65,7 +65,7 @@ function Register() {
 
       <main className="flex-grow flex flex-col justify-center items-center px-4 py-12">
         <div className="w-full max-w-xl border border-gray-200 rounded-xl p-8 shadow-sm bg-white">
-          <h2 className="text-center text-3xl font-bold mb-8 text-black">
+          <h2 className="text-center text-2xl font-bold mb-8 text-black">
             Daftar SIVENTA
           </h2>
 

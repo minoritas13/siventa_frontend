@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import api from "../services/api";
 import NavbarGuest from "../components/NavbarGuest";
 
-function ResetPassword() {
+function ForgotPassword() {
   // --- Logika Backend ---
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -79,4 +79,4 @@ function ResetPassword() {
   );
 }
 
-export default ResetPassword;
+export default ForgotPassword;

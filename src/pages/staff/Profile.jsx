@@ -210,7 +210,7 @@ const Profile = () => {
 
             <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
               <div className="p-4 border-b border-gray-100 text-center lg:text-left">
-                <h3 className="text-sm font-bold text-gray-800 uppercase tracking-tight">
+                <h3 className="text-sm font-bold text-gray-800 tracking-tight">
                   Kontak Cepat
                 </h3>
               </div>
@@ -220,7 +220,7 @@ const Profile = () => {
                     <Mail size={18} />
                   </div>
                   <div className="overflow-hidden">
-                    <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
+                    <p className="text-[10px] text-gray-400 font-medium tracking-wider">
                       Email Kantor
                     </p>
                     <p className="text-sm text-gray-700 font-medium truncate">
@@ -233,7 +233,7 @@ const Profile = () => {
                     <Phone size={18} />
                   </div>
                   <div>
-                    <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
+                    <p className="text-[10px] text-gray-400 font-medium tracking-wider">
                       Nomor Telepon
                     </p>
                     <p className="text-sm text-gray-700 font-medium">
@@ -256,8 +256,8 @@ const Profile = () => {
                       name: user?.name || "",
                       phone: user?.phone || "",
                       divisi: user?.divisi || "",
-                      email: user?.email || "", // Tambahkan ini agar tidak hilang saat edit
-                      role: user?.role || "",   // Tambahkan ini agar tidak hilang saat edit
+                      email: user?.email || "",
+                      role: user?.role || "",
                     });
                     setIsEditing(true);
                   }}
@@ -269,7 +269,7 @@ const Profile = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                  <label className="text-[11px] font-medium text-gray-400">
                     Nama Lengkap
                   </label>
                   <input
@@ -281,7 +281,7 @@ const Profile = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                  <label className="text-[11px] font-medium text-gray-400">
                     Email
                   </label>
                   <input
@@ -293,7 +293,7 @@ const Profile = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                  <label className="text-[11px] font-medium text-gray-400">
                     Unit Kerja/Divisi
                   </label>
                   <input
@@ -305,7 +305,7 @@ const Profile = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                  <label className="text-[11px] font-medium text-gray-400">
                     Role
                   </label>
                   <input
@@ -317,7 +317,7 @@ const Profile = () => {
                 </div>
 
                 <div className="md:col-span-2 space-y-1.5">
-                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                  <label className="text-[11px] font-medium text-gray-400">
                     Alamat Kantor
                   </label>
                   <textarea
@@ -349,7 +349,7 @@ const Profile = () => {
               <div className="space-y-6">
                 <form onSubmit={submitForgotPassword} className="space-y-1.5">
                   <div className="my-5">
-                    <label className="text-[11px] font-medium text-gray-400 uppercase">
+                    <label className="text-[11px] font-medium text-gray-400">
                       Email
                     </label>
                     <input
@@ -391,7 +391,7 @@ const Profile = () => {
               
               {/* Nama Lengkap */}
               <div>
-                <label className="text-[11px] font-bold text-gray-400 uppercase">
+                <label className="text-[11px] font-bold text-gray-400">
                   Nama Lengkap
                 </label>
                 <input
@@ -407,7 +407,7 @@ const Profile = () => {
 
               {/* Nomor Telepon */}
               <div>
-                <label className="text-[11px] font-bold text-gray-400 uppercase">
+                <label className="text-[11px] font-bold text-gray-400">
                   Nomor Telepon
                 </label>
                 <input
@@ -423,7 +423,7 @@ const Profile = () => {
 
               {/* Unit Kerja / Divisi */}
               <div>
-                <label className="text-[11px] font-bold text-gray-400 uppercase">
+                <label className="text-[11px] font-bold text-gray-400">
                   Unit Kerja / Divisi
                 </label>
                 <select
@@ -434,13 +434,16 @@ const Profile = () => {
                   }
                 >
                   <option value="">Pilih Divisi</option>
-                  <option value="IT Support">IT Support</option>
-                  <option value="Sumber Daya Manusia">
-                    Sumber Daya Manusia (SDM)
-                  </option>
-                  <option value="Keuangan">Keuangan</option>
-                  <option value="Operasional">Operasional</option>
+                  <option value="Kepala Biro">Kepala Biro</option>
+                  <option value="Redaktur">Redaktur</option>
+                  <option value="Admin dan Keuangan">Admin dan Keuangan</option>
+                  <option value="Koordinator Liputan">Koordinator Liputan</option>
                   <option value="Pemasaran">Pemasaran</option>
+                  <option value="Penagihan">Penagihan</option>
+                  <option value="PKWT Biro">PKWT Biro</option>
+                  <option value="Stringer Foto">Stringer Foto</option>
+                  <option value="Kontributor Portal">Kontributor Portal</option>
+                  <option value="Redaktur Portal">Redaktur Portal</option>
                 </select>
               </div>
 

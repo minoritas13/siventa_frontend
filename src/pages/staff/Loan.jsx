@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { Search, Filter, Calendar } from "lucide-react"; // Tambahan ikon untuk estetika
+import { Search, Filter, Calendar, ChevronDown } from "lucide-react"; 
 import { MdAssignmentReturn } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -18,6 +18,9 @@ const Loan = () => {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("terbaru");
+
+  /* ================= DROPDOWN STATE ================= */
+  const [openDropdown, setOpenDropdown] = useState(null); // 'category' atau 'sort'
 
   /* ================= FETCH DATA ================= */
   useEffect(() => {
@@ -76,22 +79,17 @@ const Loan = () => {
     .sort((a, b) => sortBy === "terbaru" ? new Date(b.createdAt) - new Date(a.createdAt) : new Date(a.createdAt) - new Date(b.createdAt));
 
   const handleReturn = async (loanId) => {
-    // 1. Tambahkan konfirmasi agar tidak tidak sengaja tertekan
     const confirmReturn = window.confirm("Apakah Anda yakin ingin mengembalikan barang ini?");
     if (!confirmReturn) return;
 
     try {
-      // 2. Kirim payload status 'dikembalikan' dan tanggal hari ini
       const payload = { 
         status: "dikembalikan", 
         return_date: new Date().toISOString().slice(0, 10) 
       };
 
       await api.put(`/loan/update/${loanId}`, payload);
-
-      // 3. Update state di UI agar item yang dikembalikan langsung hilang dari sidebar
       setDataPinjaman((prev) => prev.filter((l) => l.id !== loanId));
-      
       alert("Barang berhasil dikembalikan!");
     } catch (error) {
       console.error("Gagal mengembalikan:", error);
@@ -99,8 +97,15 @@ const Loan = () => {
     }
   };
 
+  /* ================= RENDER HELPER ================= */
+  const getCategoryLabel = () => {
+    if (selectedCategory === "all") return "SEMUA KATEGORI";
+    const cat = categories.find(c => String(c.id) === String(selectedCategory));
+    return cat ? cat.category.toUpperCase() : "SEMUA KATEGORI";
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-white font-sans">
+    <div className="flex flex-col min-h-screen bg-white font-sans text-gray-800" onClick={() => setOpenDropdown(null)}>
       <Navbar />
 
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 md:px-12 py-8 md:py-12">
@@ -112,7 +117,7 @@ const Loan = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* LEFT CONTENT */}
           <div className="flex-1">
-            {/* SEARCH & FILTER BAR - Style Desain Tabel */}
+            {/* SEARCH & FILTER BAR */}
             <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-8 shadow-sm flex flex-wrap gap-3 items-center">
               <div className="relative flex-1 min-w-[200px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -120,28 +125,70 @@ const Loan = () => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Cari aset atau kode..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-xl text-xs focus:ring-2 focus:ring-[#991B1F]/20 outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-xl text-xs focus:ring-2 focus:ring-[#C4161C]/10 outline-none transition-all"
                 />
               </div>
 
-              <div className="flex gap-2 w-full sm:w-auto">
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-50 border-none rounded-xl text-[11px] font-bold text-gray-600 outline-none cursor-pointer hover:bg-gray-100 transition-all"
-                >
-                  <option value="all">SEMUA KATEGORI</option>
-                  {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.category.toUpperCase()}</option>)}
-                </select>
+              <div className="flex gap-2 w-full sm:w-auto relative">
+                {/* Custom Category Dropdown */}
+                <div className="relative flex-1 sm:flex-none w-full sm:w-auto" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    onClick={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')}
+                    className="w-full flex items-center justify-between gap-3 px-4 py-2.5 bg-gray-50 border-none rounded-xl text-[11px] font-bold text-gray-600 hover:bg-gray-100 transition-all"
+                  >
+                    <span className="truncate">{getCategoryLabel()}</span> {/* truncate agar teks panjang tidak merusak tombol */}
+                    <ChevronDown size={14} className={`shrink-0 transition-transform duration-300 ${openDropdown === 'category' ? 'rotate-180' : ''}`} />
+                  </button>
 
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-50 border-none rounded-xl text-[11px] font-bold text-gray-600 outline-none cursor-pointer hover:bg-gray-100 transition-all"
-                >
-                  <option value="terbaru">TERBARU</option>
-                  <option value="terlama">TERLAMA</option>
-                </select>
+                  {openDropdown === 'category' && (
+                    /* w-full di sini akan mengikuti lebar button di atasnya karena parent-nya relative */
+                    <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-1">
+                      <div 
+                        onClick={() => { setSelectedCategory("all"); setOpenDropdown(null); }}
+                        className={`px-4 py-3 text-[11px] font-bold cursor-pointer hover:bg-gray-50 ${selectedCategory === "all" ? "text-[#C4161C] bg-red-50" : "text-gray-600"}`}
+                      >
+                        SEMUA KATEGORI
+                      </div>
+                      {categories.map((cat) => (
+                        <div 
+                          key={cat.id}
+                          onClick={() => { setSelectedCategory(cat.id); setOpenDropdown(null); }}
+                          className={`px-4 py-3 text-[11px] font-bold cursor-pointer hover:bg-gray-50 border-t border-gray-50 ${String(selectedCategory) === String(cat.id) ? "text-[#C4161C] bg-red-50" : "text-gray-600"}`}
+                        >
+                          {cat.category.toUpperCase()}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Custom Sort Dropdown */}
+                <div className="relative flex-1 sm:flex-none w-full sm:w-auto" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    onClick={() => setOpenDropdown(openDropdown === 'sort' ? null : 'sort')}
+                    className="w-full flex items-center justify-between gap-3 px-4 py-2.5 bg-gray-50 border-none rounded-xl text-[11px] font-bold text-gray-600 hover:bg-gray-100 transition-all"
+                  >
+                    <span>{sortBy.toUpperCase()}</span>
+                    <ChevronDown size={14} className={`shrink-0 transition-transform duration-300 ${openDropdown === 'sort' ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {openDropdown === 'sort' && (
+                    <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-1">
+                      <div 
+                        onClick={() => { setSortBy("terbaru"); setOpenDropdown(null); }}
+                        className={`px-4 py-3 text-[11px] font-bold cursor-pointer hover:bg-gray-50 ${sortBy === "terbaru" ? "text-[#C4161C] bg-red-50" : "text-gray-600"}`}
+                      >
+                        TERBARU
+                      </div>
+                      <div 
+                        onClick={() => { setSortBy("terlama"); setOpenDropdown(null); }}
+                        className={`px-4 py-3 text-[11px] font-bold cursor-pointer hover:bg-gray-50 border-t border-gray-50 ${sortBy === "terlama" ? "text-[#C4161C] bg-red-50" : "text-gray-600"}`}
+                      >
+                        TERLAMA
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -175,7 +222,7 @@ const Loan = () => {
             </div>
           </div>
 
-          {/* SIDEBAR STATUS - Style Card Login/Home */}
+          {/* SIDEBAR STATUS */}
           <aside className="w-full lg:w-[340px]">
             <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm sticky top-24">
               <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-4">
