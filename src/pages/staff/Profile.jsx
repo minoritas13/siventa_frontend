@@ -20,7 +20,7 @@ const Profile = () => {
   // State Form Edit
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
+    no_hp: "",
     divisi: "",
     email: "", // Tambahkan ini
     role: "", // Tambahkan ini
@@ -38,7 +38,7 @@ const Profile = () => {
       // Sinkronkan form dengan data user dari backend
       setFormData({
         name: userData.name || "",
-        phone: userData.phone || "", // Sesuai kolom di DB
+        no_hp: userData.phone || "", // Sesuai kolom di DB
         divisi: userData.divisi || "",
         email: userData.email || "", // WAJIB untuk backend
         role: userData.role || "", // WAJIB untuk backend
@@ -218,7 +218,7 @@ const Profile = () => {
                       Nomor Telepon
                     </p>
                     <p className="text-sm text-gray-700 font-medium">
-                      {formData.phone || "-"}
+                      {user?.phone || "-"}
                     </p>
                   </div>
                 </div>
