@@ -23,7 +23,7 @@ import LoanForm from "./pages/staff/LoanForm";
 import Profile from "./pages/staff/Profile";
 import Help from "./pages/staff/Help";
 import ItemDetail from "./pages/staff/ItemDetail";
-import ChangePassword from "./pages/ChangePassword";
+import ChangePassword from "./pages/staff/ChangePassword";
 
 // Admin Pages
 import HomeAdmin from "./pages/admin/Home";
