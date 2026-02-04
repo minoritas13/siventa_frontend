@@ -23,7 +23,7 @@ const Profile = () => {
     phone: "",
     divisi: "",
     email: "", // Tambahkan ini
-    role: "",  // Tambahkan ini
+    role: "", // Tambahkan ini
   });
 
   // =========================
@@ -41,7 +41,7 @@ const Profile = () => {
         phone: userData.phone || "", // Sesuai kolom di DB
         divisi: userData.divisi || "",
         email: userData.email || "", // WAJIB untuk backend
-        role: userData.role || "",   // WAJIB untuk backend
+        role: userData.role || "", // WAJIB untuk backend
       });
     } catch (error) {
       console.error("Gagal fetch data profile:", error);
@@ -62,15 +62,17 @@ const Profile = () => {
     setLoading(true);
     try {
       // Kirim formData lengkap (name, email, role, divisi, phone)
-      await api.put(`/users/update/${user.id}`, formData); 
+      await api.put(`/users/update/${user.id}`, formData);
 
-      await fetchMe(); 
+      await fetchMe();
       setIsEditing(false);
       alert("Profil berhasil diperbarui!");
     } catch (error) {
       if (error.response?.data?.errors) {
         // Menampilkan pesan error validasi spesifik dari Laravel
-        const messages = Object.values(error.response.data.errors).flat().join("\n");
+        const messages = Object.values(error.response.data.errors)
+          .flat()
+          .join("\n");
         alert("Validasi Gagal:\n" + messages);
       } else {
         alert("Gagal memperbarui profil.");
@@ -102,7 +104,7 @@ const Profile = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      
+
       await fetchMe(); // Ambil data terbaru untuk menampilkan foto baru
       alert("Foto profil berhasil diperbarui!");
     } catch (error) {
@@ -117,29 +119,8 @@ const Profile = () => {
     navigate("/login");
   };
 
-  const submitForgotPassword = async (e) => {
-    e.preventDefault();
-
-    if (!user?.email) {
-      alert("Email user tidak ditemukan");
-      return;
-    }
-
-    try {
-      const res = await api.post("/forgot-password", {
-        email: user.email,
-      });
-
-      const token = res.data.token;
-
-      // redirect ke halaman reset password
-      window.location.href = `/reset-password?email=${encodeURIComponent(
-      user.email
-    )}&token=${encodeURIComponent(token)}`;
-    
-    } catch (err) {
-      alert(err.response?.data?.message || "Gagal mengirim reset password");
-    }
+  const handleChangePassword = () => {
+    navigate("/change-password");
   };
 
   return (
@@ -249,15 +230,17 @@ const Profile = () => {
           <div className="lg:col-span-8 space-y-8">
             <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-gray-900">Informasi Pribadi</h3>
-                <button 
+                <h3 className="text-lg font-bold text-gray-900">
+                  Informasi Pribadi
+                </h3>
+                <button
                   onClick={() => {
                     setFormData({
                       name: user?.name || "",
                       phone: user?.phone || "",
                       divisi: user?.divisi || "",
                       email: user?.email || "", // Tambahkan ini agar tidak hilang saat edit
-                      role: user?.role || "",   // Tambahkan ini agar tidak hilang saat edit
+                      role: user?.role || "", // Tambahkan ini agar tidak hilang saat edit
                     });
                     setIsEditing(true);
                   }}
@@ -347,24 +330,22 @@ const Profile = () => {
               </div>
 
               <div className="space-y-6">
-                <form onSubmit={submitForgotPassword} className="space-y-1.5">
-                  <div className="my-5">
-                    <label className="text-[11px] font-medium text-gray-400 uppercase">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={user?.email || "-"}
-                      readOnly
-                      disabled
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 outline-none"
-                    />
-                  </div>
-                  <button className="w-full md:w-auto bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#AA1419] transition shadow-md">
-                    <Save size={18} />
-                    Ganti Password
-                  </button>
-                </form>
+                <div className="my-5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={user?.email || "-"}
+                    readOnly
+                    disabled
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 outline-none"
+                  />
+                </div>
+                <button onClick={handleChangePassword} className="w-full md:w-auto bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#AA1419] transition shadow-md">
+                  <Save size={18} />
+                  Ganti Password
+                </button>
               </div>
             </div>
           </div>
@@ -388,7 +369,7 @@ const Profile = () => {
             <form onSubmit={handleUpdateProfile} className="p-6 space-y-4">
               <input type="hidden" value={formData.email} />
               <input type="hidden" value={formData.role} />
-              
+
               {/* Nama Lengkap */}
               <div>
                 <label className="text-[11px] font-bold text-gray-400 uppercase">
