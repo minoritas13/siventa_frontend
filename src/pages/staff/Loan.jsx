@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, ChevronDown, Calendar } from "lucide-react"; 
+import { Search, ChevronDown } from "lucide-react"; 
 import { MdAssignmentReturn } from "react-icons/md";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -14,7 +14,6 @@ const Loan = () => {
   const [loadingLoan, setLoadingLoan] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sortBy, setSortBy] = useState("terbaru");
   const [openDropdown, setOpenDropdown] = useState(null);
 
   // Mengambil semua data yang dibutuhkan (Barang, Kategori, dan Riwayat Pinjam)
@@ -69,15 +68,14 @@ const Loan = () => {
     .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
     .slice(0, 3);
 
-  // Logika Pencarian, Filter Kategori, dan Pengurutan Barang
+  // Logika Pencarian dan Filter Kategori (Tanpa Sortir)
   const filteredInventory = inventoryData
     .filter((item) => {
       const matchSearch = item.nama.toLowerCase().includes(search.toLowerCase()) || 
                           item.kode.toLowerCase().includes(search.toLowerCase());
       const matchCategory = selectedCategory === "all" || String(item.kategoriId) === String(selectedCategory);
       return matchSearch && matchCategory;
-    })
-    .sort((a, b) => sortBy === "terbaru" ? new Date(b.createdAt) - new Date(a.createdAt) : new Date(a.createdAt) - new Date(b.createdAt));
+    });
 
   // Fungsi untuk mengajukan pengembalian barang
   const handleReturn = async (loanId) => {
@@ -97,7 +95,7 @@ const Loan = () => {
   const getCategoryLabel = () => {
     if (selectedCategory === "all") return "SEMUA KATEGORI";
     const cat = categories.find(c => String(c.id) === String(selectedCategory));
-    return cat ? cat.category.toUpperCase() : "SEMUA KATEGORI";
+    return cat ? (cat.category || cat.name).toUpperCase() : "SEMUA KATEGORI";
   };
 
   return (
@@ -114,7 +112,7 @@ const Loan = () => {
           
           {/* --- BAGIAN KIRI: DAFTAR INVENTARIS --- */}
           <div className="flex-1">
-            {/* Toolbar: Search, Filter & Sort */}
+            {/* Toolbar: Search & Filter Kategori */}
             <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-8 shadow-sm flex flex-wrap gap-3 items-center">
               <div className="relative flex-1 min-w-[200px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -151,37 +149,9 @@ const Loan = () => {
                           onClick={() => { setSelectedCategory(cat.id); setOpenDropdown(null); }}
                           className={`px-4 py-3 text-[11px] font-medium cursor-pointer hover:bg-gray-50 border-t border-gray-50 ${String(selectedCategory) === String(cat.id) ? "text-[#C4161C] bg-red-50" : "text-gray-600"}`}
                         >
-                          {cat.category.toUpperCase()}
+                          {(cat.category || cat.name).toUpperCase()}
                         </div>
                       ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Dropdown Sort */}
-                <div className="relative flex-1 sm:flex-none w-full sm:w-auto" onClick={(e) => e.stopPropagation()}>
-                  <button
-                    onClick={() => setOpenDropdown(openDropdown === 'sort' ? null : 'sort')}
-                    className="w-full flex items-center justify-between gap-3 px-4 py-2.5 bg-gray-50 border-none rounded-xl text-[11px] font-medium text-gray-600 hover:bg-gray-100 transition-all"
-                  >
-                    <span>{sortBy.toUpperCase()}</span>
-                    <ChevronDown size={14} className={`shrink-0 transition-transform duration-300 ${openDropdown === 'sort' ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {openDropdown === 'sort' && (
-                    <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden">
-                      <div 
-                        onClick={() => { setSortBy("terbaru"); setOpenDropdown(null); }}
-                        className={`px-4 py-3 text-[11px] font-medium cursor-pointer hover:bg-gray-50 ${sortBy === "terbaru" ? "text-[#C4161C] bg-red-50" : "text-gray-600"}`}
-                      >
-                        TERBARU
-                      </div>
-                      <div 
-                        onClick={() => { setSortBy("terlama"); setOpenDropdown(null); }}
-                        className={`px-4 py-3 text-[11px] font-medium cursor-pointer hover:bg-gray-50 border-t border-gray-50 ${sortBy === "terlama" ? "text-[#C4161C] bg-red-50" : "text-gray-600"}`}
-                      >
-                        TERLAMA
-                      </div>
                     </div>
                   )}
                 </div>
@@ -241,7 +211,7 @@ const Loan = () => {
                       const isWaiting = loan.status === "menunggu" || loan.status === "pending";
                       const isBorrowed = loan.status === "dipinjam";
                       const isReturned = loan.status === "dikembalikan" || loan.status === "selesai";
-                      const isRejected = loan.status === "ditolak"; // Tambahan logika status ditolak
+                      const isRejected = loan.status === "ditolak";
 
                       return (
                         <div key={li.id} className="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden transition-all duration-300">
