@@ -5,6 +5,7 @@ import { Mail, Phone, Camera, Lock, LogOut, Save, X, ChevronDown } from "lucide-
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import { STORAGE_URL } from "../../services/api";
 
 const Profile = () => {
   const { logout } = useAuth();
@@ -24,7 +25,7 @@ const Profile = () => {
   // State untuk menangani perubahan data pada form edit
   const [formData, setFormData] = useState({
     name: "",
-    no_hp: "",
+    phone: "",
     divisi: "",
     email: "",
     role: "",
@@ -39,7 +40,7 @@ const Profile = () => {
 
       setFormData({
         name: userData.name || "",
-        no_hp: userData.phone || "",
+        phone: userData.phone || "", // Sesuai kolom di DB
         divisi: userData.divisi || "",
         email: userData.email || "",
         role: userData.role || "",
@@ -57,14 +58,29 @@ const Profile = () => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      await api.put(`/users/update/${user.id}`, formData);
+      const data = new FormData();
+      data.append("_method", "PUT");
+
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      data.append("role", formData.role);
+      data.append("divisi", formData.divisi || "");
+      data.append("phone", formData.phone);
+
+      await api.post(`/users/update/${user.id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       await fetchMe();
       setIsEditing(false);
       alert("Profil berhasil diperbarui!");
     } catch (error) {
       if (error.response?.data?.errors) {
-        const messages = Object.values(error.response.data.errors).flat().join("\n");
+        const messages = Object.values(error.response.data.errors)
+          .flat()
+          .join("\n");
         alert("Validasi Gagal:\n" + messages);
       } else {
         alert("Gagal memperbarui profil.");
@@ -87,13 +103,23 @@ const Profile = () => {
     }
 
     const data = new FormData();
+    data.append("_method", "PUT");
+
+    data.append("name", user.name);
+    data.append("email", user.email);
+    data.append("role", user.role);
+    data.append("phone", user.phone);
+    data.append("divisi", user.divisi || "");
+
     data.append("photo", file);
 
     try {
       setLoading(true);
-      await api.post("/user/photo", data, {
+
+      await api.post(`/users/update/${user.id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       await fetchMe();
       alert("Foto profil berhasil diperbarui!");
     } catch (error) {
@@ -139,7 +165,13 @@ const Profile = () => {
             <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm text-center">
               <div className="relative w-28 h-28 md:w-32 md:h-32 mx-auto mb-4">
                 <img
-                  src={user?.photo ? `${process.env.REACT_APP_API_URL}/storage/${user.photo}` : `https://ui-avatars.com/api/?name=${user?.name || "User"}&background=C4161C&color=fff`}
+                  src={
+                    user?.photo
+                      ? `${STORAGE_URL}/${user.photo}`
+                      : `https://ui-avatars.com/api/?name=${
+                          user?.name || "User"
+                        }&background=991B1F&color=fff`
+                  }
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover border-4 border-gray-50"
                 />
@@ -248,8 +280,12 @@ const Profile = () => {
                   <label className="text-[11px] font-medium text-gray-400 uppercase">Email</label>
                   <input type="email" value={user?.email || "-"} readOnly disabled className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 outline-none" />
                 </div>
-                <button onClick={handleChangePassword} className="w-full md:w-auto bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 hover:bg-[#AA1419] transition shadow-md">
-                  <Save size={18} /> Ganti Password
+                <button
+                  onClick={handleChangePassword}
+                  className="w-full md:w-auto bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#AA1419] transition shadow-md"
+                >
+                  <Save size={18} />
+                  Ganti Password
                 </button>
               </div>
             </div>

@@ -33,7 +33,7 @@ const ManageUser = () => {
     
     if (confirmDelete) {
       try {
-        await api.delete(`/user/${id}`);
+        await api.delete(`/users/delete/${id}`);
         setUsers(users.filter((user) => user.id !== id));
         alert("User berhasil dihapus");
       } catch (error) {
