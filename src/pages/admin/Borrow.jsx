@@ -29,7 +29,6 @@ const Borrow = () => {
           staff: loan.user?.name ?? "-",
           divisi: "-",
 
-          // ⬅️ JOIN NAMA BARANG
           barang: loan.loan_items
             .map((li) => li.item?.name)
             .filter(Boolean)
@@ -52,7 +51,6 @@ const Borrow = () => {
           status: loan.status,
           note: loan.note,
 
-          // ⬅️ AMBIL FOTO ITEM PERTAMA (OPSIONAL)
           foto: loan.loan_items[0]?.item?.photo
             ? `/storage/${loan.loan_items[0].item.photo}`
             : "/foto-default.png",
@@ -76,7 +74,6 @@ const Borrow = () => {
       return loans.filter((item) => item.status === "dipinjam");
     }
 
-    // riwayat → semua status
     return loans;
   }, [activeTab, loans]);
 
@@ -363,7 +360,9 @@ const Borrow = () => {
                       <div className="flex items-center justify-center gap-2">
                         {activeTab === "pengajuan" ? (
                           <>
-                            <button className="text-red-500 hover:bg-red-50 p-1 rounded transition-colors">
+                            <button onClick={ () => {
+                              handleUpdateStatus(item.id, "ditolak")
+                            }} className="text-red-500 hover:bg-red-50 p-1 rounded transition-colors">
                               <X size={18} />
                             </button>
                             <button
