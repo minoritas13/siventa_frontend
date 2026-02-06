@@ -86,7 +86,9 @@ const LoanData = () => {
                       <td className="px-6 py-4 text-[12px] min-w-[150px]">{item.keperluan}</td>
                       <td className="px-6 py-4 text-center">
                         <span className={`text-[10px] px-4 py-1.5 rounded-full shadow-sm font-medium text-white whitespace-nowrap ${
-                          item.status === "Aktif" ? "bg-blue-600" : item.status === "Menunggu" ? "bg-orange-500" : "bg-[#53EC53]"
+                          item.status === "Aktif" ? "bg-blue-600" : 
+                          item.status === "Menunggu" ? "bg-orange-500" : 
+                          item.status === "Ditolak" ? "bg-red-500" : "bg-[#53EC53]"
                         }`}>
                           {item.status}
                         </span>

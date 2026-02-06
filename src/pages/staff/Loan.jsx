@@ -241,16 +241,21 @@ const Loan = () => {
                       const isWaiting = loan.status === "menunggu" || loan.status === "pending";
                       const isBorrowed = loan.status === "dipinjam";
                       const isReturned = loan.status === "dikembalikan" || loan.status === "selesai";
+                      const isRejected = loan.status === "ditolak"; // Tambahan logika status ditolak
 
                       return (
                         <div key={li.id} className="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden transition-all duration-300">
                           {/* Badge Status */}
                           <div className="px-4 pt-3">
                             <span className={`px-2.5 py-1 rounded-full text-[9px] font-medium text-white flex items-center gap-1.5 w-fit ${
-                              isBorrowed ? "bg-[#53EC53]" : isWaiting ? "bg-orange-400" : "bg-blue-500"
+                              isBorrowed ? "bg-[#53EC53]" : 
+                              isWaiting ? "bg-orange-400" : 
+                              isRejected ? "bg-red-500" : "bg-blue-500"
                             }`}>
-                              <span className={`w-1.5 h-1.5 rounded-full bg-white ${!isReturned ? 'animate-pulse' : ''}`} />
-                              {isBorrowed ? "Sedang Dipinjam" : isWaiting ? "Menunggu" : "Selesai"}
+                              <span className={`w-1.5 h-1.5 rounded-full bg-white ${(!isReturned && !isRejected) ? 'animate-pulse' : ''}`} />
+                              {isBorrowed ? "Sedang Dipinjam" : 
+                               isWaiting ? "Menunggu" : 
+                               isRejected ? "Ditolak" : "Selesai"}
                             </span>
                           </div>
 
@@ -291,12 +296,12 @@ const Loan = () => {
 
                 {/* Tautan Riwayat Lengkap */}
                 <div className="pt-6 border-t border-gray-50 text-center">
-                   <button 
+                    <button 
                       onClick={() => navigate("/loan-data")}
                       className="text-[11px] font-medium text-red-700 hover:text-red-900 transition-colors underline decoration-dotted"
                     >
                     Lihat Riwayat Lengkap
-                   </button>
+                    </button>
                 </div>
               </div>
             </div>

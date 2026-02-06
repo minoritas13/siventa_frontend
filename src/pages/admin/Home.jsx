@@ -92,12 +92,33 @@ const Home = () => {
           },
         ]);
 
-        // Transformasi data pinjaman untuk tabel
+        // Transformasi data pinjaman untuk tabel dengan pembedaan warna status
         const mappedPinjaman = allLoans.map((loan) => {
           let statusColor = "bg-gray-400";
-          if (loan.status === "dipinjam") statusColor = "bg-[#53EC53]"; // Hijau
-          if (loan.status === "menunggu") statusColor = "bg-[#FBBF24]"; // Kuning
-          if (loan.status === "terlambat") statusColor = "bg-[#FF0000]"; // Merah
+          let statusLabel = loan.status.charAt(0).toUpperCase() + loan.status.slice(1);
+          
+          // Logika default untuk tanggal kembali
+          let tanggalKembaliLabel = loan.return_date ?? "Belum Kembali";
+
+          // Logika pembedaan warna status dan label tanggal
+          if (loan.status === "dipinjam") {
+            statusColor = "bg-blue-600";
+            statusLabel = "Aktif";
+          } else if (loan.status === "menunggu") {
+            statusColor = "bg-orange-500";
+            statusLabel = "Menunggu";
+            tanggalKembaliLabel = "-"; // Menunggu persetujuan tidak tampil tanggal kembali
+          } else if (loan.status === "dikembalikan" || loan.status === "selesai") {
+            statusColor = "bg-[#53EC53]";
+            statusLabel = "Selesai";
+          } else if (loan.status === "ditolak") {
+            statusColor = "bg-red-500";
+            statusLabel = "Ditolak";
+            tanggalKembaliLabel = "-"; // Jika ditolak, tanggal kembali diubah menjadi strip
+          } else if (loan.status === "terlambat") {
+            statusColor = "bg-red-700";
+            statusLabel = "Terlambat";
+          }
 
           return {
             staff: loan.user?.name || "User Tidak Dikenal",
@@ -107,8 +128,8 @@ const Home = () => {
               ?.map((li) => li.item?.name || "Aset Terhapus")
               .join(", "),
             pinjam: loan.loan_date,
-            kembali: loan.return_date ?? "Belum Kembali",
-            status: loan.status.charAt(0).toUpperCase() + loan.status.slice(1),
+            kembali: tanggalKembaliLabel,
+            status: statusLabel,
             color: statusColor,
             text: "text-white",
             foto: loan.user?.photo_url || null,
@@ -189,8 +210,8 @@ const Home = () => {
                   <th className="px-6 py-4">Staff Peminjam</th>
                   <th className="px-6 py-4">Kode Barang</th>
                   <th className="px-6 py-4">Nama Barang</th>
-                  <th className="px-6 py-4">Tanggal Pinjam</th>
-                  <th className="px-6 py-4">Tanggal Kembali</th>
+                  <th className="px-6 py-4 text-center">Tanggal Pinjam</th>
+                  <th className="px-6 py-4 text-center">Tanggal Kembali</th>
                   <th className="px-6 py-4 text-center">Status</th>
                 </tr>
               </thead>
@@ -235,15 +256,15 @@ const Home = () => {
                       <td className="px-6 py-4 text-sm font-medium text-gray-700">
                         {item.barang}
                       </td>
-                      <td className="px-6 py-4 text-[12px] text-gray-600">
+                      <td className="px-6 py-4 text-[12px] text-gray-600 text-center">
                         {item.pinjam}
                       </td>
-                      <td className="px-6 py-4 text-[12px] text-gray-600">
+                      <td className="px-6 py-4 text-[12px] text-gray-600 text-center">
                         {item.kembali}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <span
-                          className={`${item.color} ${item.text} text-[10px] px-4 py-1.5 rounded-full shadow-sm`}
+                          className={`${item.color} ${item.text} text-[10px] px-4 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap inline-block`}
                         >
                           {item.status}
                         </span>

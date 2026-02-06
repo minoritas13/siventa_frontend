@@ -10,6 +10,7 @@ const AddAsset = () => {
 
   const [categories, setCategories] = useState([]);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [errors, setErrors] = useState({}); // State untuk menampung error per input
 
   const [form, setForm] = useState({
     category_id: "",
@@ -19,7 +20,7 @@ const AddAsset = () => {
     stock: "",
     condition: "",
     description: "",
-    umur_barang: "",
+    umur_barang: 0,
     tanggal_perolehan: "",
     nilai_perolehan: "",
   });
@@ -41,15 +42,41 @@ const AddAsset = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    // Hapus error saat user mulai mengetik ulang
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+
+    setForm((prev) => {
+      const updatedForm = { ...prev, [name]: value };
+
+      if (name === "tanggal_perolehan") {
+        if (value) {
+          const birthDate = new Date(value);
+          const today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const monthDiff = today.getMonth() - birthDate.getMonth();
+
+          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+          }
+          updatedForm.umur_barang = age < 0 ? 0 : age;
+        } else {
+          updatedForm.umur_barang = 0;
+        }
+      }
+
+      return updatedForm;
+    });
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // Hapus error foto jika ada
+    setErrors((prev) => ({ ...prev, photo: null }));
 
     setForm((prev) => ({
       ...prev,
@@ -64,6 +91,24 @@ const AddAsset = () => {
   };
 
   const handleSubmit = async () => {
+    const newErrors = {};
+
+    // Validasi setiap field wajib
+    if (!form.code) newErrors.code = "Kode barang wajib diisi";
+    if (!form.name) newErrors.name = "Nama barang wajib diisi";
+    if (!form.category_id) newErrors.category_id = "Kategori wajib dipilih";
+    if (!form.condition) newErrors.condition = "Kondisi wajib dipilih";
+    if (!form.tanggal_perolehan) newErrors.tanggal_perolehan = "Tanggal perolehan wajib diisi";
+    if (!form.nilai_perolehan) newErrors.nilai_perolehan = "Nilai perolehan wajib diisi";
+    if (!form.photo) newErrors.photo = "Foto barang wajib diunggah";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Scroll ke atas agar user melihat input yang error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     const formData = new FormData();
     Object.keys(form).forEach((key) => {
       if (form[key] !== null && form[key] !== "") {
@@ -77,11 +122,10 @@ const AddAsset = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-
       navigate("/manage-asset");
     } catch (error) {
       console.error(error);
-      alert("Gagal menyimpan data");
+      alert("Gagal menyimpan data ke server");
     }
   };
 
@@ -101,77 +145,86 @@ const AddAsset = () => {
           {/* KODE BARANG */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Kode Barang
+              Kode Barang <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="code"
-              required
               value={form.code}
               onChange={handleChange}
               placeholder="Contoh: Camera sony HD-1280"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
+              className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none transition-all ${
+                errors.code ? "border-red-500 bg-red-50" : "border-gray-300"
+              }`}
             />
+            {errors.code && <p className="text-red-500 text-xs mt-1">{errors.code}</p>}
           </div>
 
           {/* TANGGAL PEROLEHAN */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tanggal Perolehan
+              Tanggal Perolehan <span className="text-red-500">*</span>
             </label>
             <input
               type="date"
               name="tanggal_perolehan"
-              required
-              value={form.tanggal_perolehan || ""}
+              value={form.tanggal_perolehan}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
+              className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none transition-all ${
+                errors.tanggal_perolehan ? "border-red-500 bg-red-50" : "border-gray-300"
+              }`}
             />
+            {errors.tanggal_perolehan && <p className="text-red-500 text-xs mt-1">{errors.tanggal_perolehan}</p>}
           </div>
 
           {/* NAMA BARANG */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nama Barang
+              Nama Barang <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="name"
-              required
               value={form.name}
               onChange={handleChange}
               placeholder="Masukkan nama barang lengkap"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
+              className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none transition-all ${
+                errors.name ? "border-red-500 bg-red-50" : "border-gray-300"
+              }`}
             />
+            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
 
           {/* NILAI PEROLEHAN */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nilai Perolehan
+              Nilai Perolehan <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
               name="nilai_perolehan"
-              required
-              value={form.nilai_perolehan || ""}
+              value={form.nilai_perolehan}
               onChange={handleChange}
               placeholder="Masukkan nilai barang"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
+              className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none transition-all ${
+                errors.nilai_perolehan ? "border-red-500 bg-red-50" : "border-gray-300"
+              }`}
             />
+            {errors.nilai_perolehan && <p className="text-red-500 text-xs mt-1">{errors.nilai_perolehan}</p>}
           </div>
 
           {/* KATEGORI */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Kategori
+              Kategori <span className="text-red-500">*</span>
             </label>
             <select
               name="category_id"
-              required
               value={form.category_id}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none bg-white"
+              className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none bg-white transition-all ${
+                errors.category_id ? "border-red-500 bg-red-50" : "border-gray-300"
+              }`}
             >
               <option value="">Pilih Kategori</option>
               {categories.map((cat) => (
@@ -180,41 +233,42 @@ const AddAsset = () => {
                 </option>
               ))}
             </select>
+            {errors.category_id && <p className="text-red-500 text-xs mt-1">{errors.category_id}</p>}
           </div>
 
-          {/* UMUR BARANG */}
+          {/* UMUR BARANG (Otomatis) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Umur Barang
+              Umur Barang (Tahun)
             </label>
             <input
-              type="number"
+              type="text"
               name="umur_barang"
-              required
-              value={form.umur_barang || ""}
-              onChange={handleChange}
-              placeholder="Masukkan umur barang"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none"
+              readOnly
+              value={form.umur_barang}
+              className="w-full p-3 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed focus:outline-none font-semibold text-gray-600"
             />
           </div>
 
           {/* KONDISI */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Kondisi
+              Kondisi <span className="text-red-500">*</span>
             </label>
             <select
               name="condition"
-              required
               value={form.condition}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none bg-white"
+              className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C4161C] focus:outline-none bg-white transition-all ${
+                errors.condition ? "border-red-500 bg-red-50" : "border-gray-300"
+              }`}
             >
               <option value="">Pilih Kondisi</option>
               <option value="baik">Baik</option>
               <option value="rusak ringan">Rusak Ringan</option>
               <option value="rusak berat">Rusak Berat</option>
             </select>
+            {errors.condition && <p className="text-red-500 text-xs mt-1">{errors.condition}</p>}
           </div>
 
           {/* JUMLAH BARANG */}
@@ -232,15 +286,17 @@ const AddAsset = () => {
             />
           </div>
 
-          {/* FOTO BARANG (FIXED) */}
+          {/* FOTO BARANG */}
           <div className="lg:col-span-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Foto Barang
+              Foto Barang <span className="text-red-500">*</span>
             </label>
 
             <div
               onClick={() => fileInputRef.current.click()}
-              className="border border-dashed border-gray-300 rounded-md p-6 flex items-center gap-4 cursor-pointer hover:bg-gray-50"
+              className={`border border-dashed rounded-md p-6 flex items-center gap-4 cursor-pointer hover:bg-gray-50 transition-all ${
+                errors.photo ? "border-red-500 bg-red-50" : "border-gray-300"
+              }`}
             >
               <input
                 ref={fileInputRef}
@@ -262,11 +318,12 @@ const AddAsset = () => {
                     <Camera size={18} className="text-white" />
                   </div>
                   <span className="text-sm text-gray-500">
-                    atau drag and drop upload gambar disini
+                    klik untuk upload gambar disini
                   </span>
                 </>
               )}
             </div>
+            {errors.photo && <p className="text-red-500 text-xs mt-1">{errors.photo}</p>}
           </div>
 
           {/* DESKRIPSI */}
@@ -285,7 +342,6 @@ const AddAsset = () => {
           </div>
         </div>
 
-        {/* ACTION BUTTON */}
         <div className="flex justify-end gap-4 mt-10">
           <button
             type="button"
@@ -298,7 +354,7 @@ const AddAsset = () => {
           <button
             type="button"
             onClick={handleSubmit}
-            className="px-8 py-2 bg-[#C4161C] text-white rounded-md flex items-center gap-2 hover:bg-[#AA1419] transition-colors"
+            className="px-8 py-2 bg-[#C4161C] text-white rounded-md flex items-center gap-2 hover:bg-[#AA1419] transition-colors shadow-md"
           >
             <Save size={18} />
             Simpan
