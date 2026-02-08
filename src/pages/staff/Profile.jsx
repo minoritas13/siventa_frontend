@@ -1,0 +1,376 @@
+import React, { useEffect, useState, useRef } from "react";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import { Mail, Phone, Camera, Lock, LogOut, Save, X, ChevronDown } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import { STORAGE_URL } from "../../services/api";
+
+const Profile = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+  const [user, setUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [openDivisi, setOpenDivisi] = useState(false);
+  const divisiOptions = [
+    "Kepala Biro", "Redaktur", "Admin dan Keuangan", "Koordinator Liputan",
+    "Pemasaran", "Penagihan", "PKWT Biro", "Stringer Foto",
+    "Kontributor Portal", "Redaktur Portal"
+  ];
+
+  // State untuk menangani perubahan data pada form edit
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    divisi: "",
+    email: "",
+    role: "",
+  });
+
+  // Fungsi untuk mengambil data profil pengguna yang sedang login
+  const fetchMe = async () => {
+    try {
+      const res = await api.get("/me");
+      const userData = res.data.data || res.data;
+      setUser(userData);
+
+      setFormData({
+        name: userData.name || "",
+        phone: userData.phone || "", // Sesuai kolom di DB
+        divisi: userData.divisi || "",
+        email: userData.email || "",
+        role: userData.role || "",
+      });
+    } catch (error) {
+      console.error("Gagal fetch data profile:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMe();
+  }, []);
+
+  // Handler untuk memperbarui informasi profil teks
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const data = new FormData();
+      data.append("_method", "PUT");
+
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      data.append("role", formData.role);
+      data.append("divisi", formData.divisi || "");
+      data.append("phone", formData.phone);
+
+      await api.post(`/users/update/${user.id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      await fetchMe();
+      setIsEditing(false);
+      alert("Profil berhasil diperbarui!");
+    } catch (error) {
+      if (error.response?.data?.errors) {
+        const messages = Object.values(error.response.data.errors)
+          .flat()
+          .join("\n");
+        alert("Validasi Gagal:\n" + messages);
+      } else {
+        alert("Gagal memperbarui profil.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fungsi untuk memicu input file saat ikon kamera diklik
+  const handlePhotoClick = () => fileInputRef.current.click();
+
+  // Handler untuk mengunggah foto profil baru
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      return alert("Ukuran file terlalu besar (Maksimal 2MB)");
+    }
+
+    const data = new FormData();
+    data.append("_method", "PUT");
+
+    data.append("name", user.name);
+    data.append("email", user.email);
+    data.append("role", user.role);
+    data.append("phone", user.phone);
+    data.append("divisi", user.divisi || "");
+
+    data.append("photo", file);
+
+    try {
+      setLoading(true);
+
+      await api.post(`/users/update/${user.id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      await fetchMe();
+      alert("Foto profil berhasil diperbarui!");
+    } catch (error) {
+      alert(error.response?.data?.message || "Gagal mengunggah foto.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
+  const handleChangePassword = () => {
+    navigate("/change-password");
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen bg-[#FDFDFD] font-sans">
+      <Navbar />
+
+      <main className="grow max-w-7xl mx-auto w-full px-4 md:px-12 py-6 md:py-10">
+        {/* Header Profile */}
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
+          <div>
+            <h1 className="text-2xl font-medium text-gray-900">Profile Akun</h1>
+            <p className="text-sm text-gray-500 mt-1 font-normal">
+              Kelola informasi pribadi dan keamanan akun anda.
+            </p>
+          </div>
+          <button
+            className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-1.5 border border-[#C4161C] text-[#C4161C] rounded-lg text-sm font-medium hover:bg-red-50 transition"
+            onClick={handleLogout}
+          >
+            <LogOut size={16} /> Keluar
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Kolom Kiri: Foto & Kontak */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm text-center">
+              <div className="relative w-28 h-28 md:w-32 md:h-32 mx-auto mb-4">
+                <img
+                  src={
+                    user?.photo
+                      ? `${STORAGE_URL}/${user.photo}`
+                      : `https://ui-avatars.com/api/?name=${
+                          user?.name || "User"
+                        }&background=991B1F&color=fff`
+                  }
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover border-4 border-gray-50"
+                />
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
+                <button
+                  onClick={handlePhotoClick}
+                  className="absolute bottom-1 right-1 bg-[#C4161C] text-white p-2 rounded-full border-2 border-white hover:bg-[#AA1419] transition"
+                >
+                  <Camera size={14} />
+                </button>
+              </div>
+
+              <h2 className="text-lg md:text-xl font-medium text-gray-900">
+                {user?.name || "Loading..."}
+              </h2>
+              <p className="text-xs text-gray-400 mt-1 tracking-wider font-normal">
+                {user?.role || "Staff"} - {user?.divisi || "Divisi"}
+              </p>
+
+              <div className="mt-6">
+                <span className="bg-blue-600 text-white text-[10px] md:text-[11px] px-6 py-2 rounded-md font-medium inline-block">
+                  Status : Aktif
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+              <div className="p-4 border-b border-gray-100 text-center lg:text-left">
+                <h3 className="text-sm font-medium text-gray-800 uppercase tracking-tight">Kontak Cepat</h3>
+              </div>
+              <div className="p-4 space-y-4 font-normal">
+                <div className="flex items-center gap-4">
+                  <div className="bg-[#C4161C] p-2.5 rounded-full text-white shrink-0"><Mail size={18} /></div>
+                  <div className="overflow-hidden">
+                    <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Email Kantor</p>
+                    <p className="text-sm text-gray-700 truncate">{user?.email || "-"}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="bg-[#C4161C] p-2.5 rounded-full text-white shrink-0"><Phone size={18} /></div>
+                  <div>
+                    <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Nomor Telepon</p>
+                    <p className="text-sm text-gray-700">{user?.phone || "-"}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Kolom Kanan: Detail Informasi & Keamanan */}
+          <div className="lg:col-span-8 space-y-8 font-normal">
+            <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-medium text-gray-900">Informasi Pribadi</h3>
+                <button
+                  onClick={() => {
+                    setFormData({
+                      name: user?.name || "",
+                      phone: user?.phone || "",
+                      divisi: user?.divisi || "",
+                      email: user?.email || "",
+                      role: user?.role || "",
+                    });
+                    setIsEditing(true);
+                  }}
+                  className="text-[#C4161C] text-xs font-medium hover:underline"
+                >
+                  Edit Data
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">Nama Lengkap</label>
+                  <input type="text" value={user?.name || "-"} readOnly className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">Email</label>
+                  <input type="text" value={user?.email || "-"} readOnly className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">Unit Kerja/Divisi</label>
+                  <input type="text" value={user?.divisi || "-"} readOnly className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">Role</label>
+                  <input type="text" value={user?.role || "-"} readOnly className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none cursor-default" />
+                </div>
+                <div className="md:col-span-2 space-y-1.5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">Alamat Kantor</label>
+                  <textarea readOnly rows="2" className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none resize-none" defaultValue="Jl. Abdi Negara No.2, Gulak Galik, Kec. Tlk. Betung Utara, Bandar Lampung" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-[#C4161C] p-2.5 rounded-full text-white shrink-0"><Lock size={18} /></div>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">Keamanan Akun</h3>
+                  <p className="text-[10px] text-gray-400 font-medium">Ubah password anda secara berkala untuk keamanan.</p>
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div className="my-5">
+                  <label className="text-[11px] font-medium text-gray-400 uppercase">Email</label>
+                  <input type="email" value={user?.email || "-"} readOnly disabled className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 outline-none" />
+                </div>
+                <button
+                  onClick={handleChangePassword}
+                  className="w-full md:w-auto bg-[#C4161C] text-white px-6 py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#AA1419] transition shadow-md"
+                >
+                  <Save size={18} />
+                  Ganti Password
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Modal Edit Profil */}
+      {isEditing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Edit Profil</h3>
+              <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+            </div>
+            <form onSubmit={handleUpdateProfile} className="p-6 space-y-4 font-normal">
+              <div>
+                <label className="text-[11px] font-medium text-gray-400 uppercase">Nama Lengkap</label>
+                <input type="text" required className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C4161C] outline-none text-sm" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+              </div>
+              <div>
+                <label className="text-[11px] font-medium text-gray-400 uppercase">Nomor Telepon</label>
+                <input type="text" placeholder="Contoh: 08123456789" className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C4161C] outline-none text-sm" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+              </div>
+              <div>
+                <label className="text-[11px] font-medium text-gray-400 uppercase">Unit Kerja / Divisi</label>
+                
+                {/* Custom Dropdown Container */}
+                <div className="relative mt-1">
+                  <button
+                    type="button"
+                    onClick={() => setOpenDivisi(!openDivisi)}
+                    className="w-full flex items-center justify-between px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-sm text-gray-700 focus:ring-2 focus:ring-[#C4161C] outline-none transition-all"
+                  >
+                    <span className={formData.divisi ? "text-gray-700" : "text-gray-400"}>
+                      {formData.divisi || "Pilih Divisi"}
+                    </span>
+                    <ChevronDown 
+                      size={16} 
+                      className={`text-gray-400 transition-transform duration-300 ${openDivisi ? 'rotate-180' : ''}`} 
+                    />
+                  </button>
+
+                  {/* Dropdown Menu (Muncul jika openDivisi true) */}
+                  {openDivisi && (
+                    <>
+                      {/* Overlay untuk menutup dropdown saat klik di luar */}
+                      <div className="fixed inset-0 z-10" onClick={() => setOpenDivisi(false)}></div>
+                      
+                      <div className="absolute left-0 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                          {divisiOptions.map((opt) => (
+                            <div
+                              key={opt}
+                              onClick={() => {
+                                setFormData({ ...formData, divisi: opt });
+                                setOpenDivisi(false);
+                              }}
+                              className={`px-4 py-3 text-sm cursor-pointer hover:bg-gray-50 border-b border-gray-50 last:border-none transition-colors ${
+                                formData.divisi === opt ? "text-[#C4161C] bg-red-50 font-medium" : "text-gray-600"
+                              }`}
+                            >
+                              {opt}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button type="button" onClick={() => setIsEditing(false)} className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-gray-600 font-medium text-sm hover:bg-gray-50">Batal</button>
+                <button type="submit" disabled={loading} className="flex-1 px-4 py-2.5 bg-[#C4161C] text-white rounded-xl font-medium text-sm hover:bg-[#AA1419] transition disabled:opacity-50">
+                  {loading ? "Menyimpan..." : "Simpan Perubahan"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <Footer />
+    </div>
+  );
+};
+
+export default Profile;
