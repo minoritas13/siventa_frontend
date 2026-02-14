@@ -58,7 +58,7 @@ function Register() {
       });
 
       alert("Pendaftaran berhasil! Silakan masuk.");
-      navigate("/login");
+      navigate("/register");
     } catch (err) {
       setError(err.response?.data?.message || "Pendaftaran gagal. Coba lagi.");
     } finally {

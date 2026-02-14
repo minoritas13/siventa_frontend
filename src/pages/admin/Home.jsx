@@ -163,8 +163,6 @@ const Home = () => {
           </p>
         </header>
 
-        {console.log(tes)}
-
         {/* Seksi Ringkasan / Kartu Statistik */}
         <section className="mb-10">
           <h2 className="text-lg md:text-xl font-medium text-black mb-6">
